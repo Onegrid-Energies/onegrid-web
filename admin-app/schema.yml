@@ -1283,7 +1283,6 @@ collections:
                     widget: select
                     multiple: true
                     required: false
-                    hint: "youtube:VIDEO_ID, instagram:REEL_ID, or a full YouTube link"
                     options:
                       - label: Yellow
                         value: story-video-card__media--yellow

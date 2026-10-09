@@ -404,7 +404,9 @@ function schemaElement(html, el, ctx) {
   if (a['data-cms-mod']) {
     const { key, classes } = parseModSpec(a['data-cms-mod']);
     const options = classes.map(value => ({ label: humanize(value.split('--').pop()), value }));
-    addField(ctx, key, { ...fieldOptions(el, { widget: 'select', multiple: true, required: false }), options });
+    const field = { ...fieldOptions(el, { widget: 'select', multiple: true, required: false }), options };
+    delete field.hint; // the element's hint describes its other fields (e.g. the video link)
+    addField(ctx, key, field);
   }
   if (has(el, 'data-cms')) {
     const { inner } = ranges(html, el);

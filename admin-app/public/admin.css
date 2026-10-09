@@ -65,7 +65,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary); box-sh
 .login-page { min-height: 100vh; display: grid; place-items: center; padding: 24px; background: radial-gradient(60% 60% at 80% 10%, rgba(255, 212, 0, .12), transparent 60%), radial-gradient(50% 60% at 0% 100%, rgba(255, 212, 0, .05), transparent 60%), var(--bg); }
 .login-card { width: min(420px, 100%); padding: 36px 32px; border-radius: 22px; border: 1px solid var(--line); background: var(--surface); box-shadow: var(--shadow); }
 .login-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 26px; }
-.login-brand img { width: auto; height: 40px; }
+.login-brand img { width: 48px; height: 48px; }
 .login-brand b { display: block; font: 800 19px var(--display); }
 .login-brand span { color: var(--accent); font-weight: 600; font-size: 13px; letter-spacing: .12em; text-transform: uppercase; }
 .login-card form { display: grid; gap: 12px; }
@@ -85,7 +85,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--primary); box-sh
 .app { display: grid; grid-template-columns: 260px 1fr; min-height: 100vh; }
 .sidebar { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; gap: 4px; padding: 20px 14px; border-right: 1px solid var(--line); background: var(--bg-2); overflow-y: auto; }
 .sidebar .brand { display: flex; align-items: center; gap: 10px; padding: 4px 10px 18px; text-decoration: none; color: var(--ink); }
-.sidebar .brand img { width: auto; height: 30px; }
+.sidebar .brand img { width: 38px; height: 38px; }
 .sidebar .brand b { font: 800 16px var(--display); }
 .sidebar .brand span { display: block; color: var(--accent); font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; }
 .nav-label { padding: 14px 12px 6px; font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3); }
@@ -159,6 +159,9 @@ details.group:not([open]) > summary { margin-bottom: 0; }
 .list-item-head { display: flex; align-items: center; gap: 8px; padding: 10px 12px; cursor: pointer; }
 .list-item-head .title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; font-size: 14px; }
 .list-item-head .num { color: var(--ink-3); font-size: 12px; font-variant-numeric: tabular-nums; }
+.list-item-head .thumb { flex: none; width: 46px; height: 34px; object-fit: cover; border-radius: 6px; border: 1px solid var(--line); background: var(--surface-2); }
+.list-item-head .head-actions { flex: none; display: flex; gap: 8px; }
+.list-item-actions { display: none; }
 .list-item-body { padding: 4px 14px 2px; border-top: 1px solid var(--line); }
 .list-item.collapsed .list-item-body { display: none; }
 .list-simple { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: start; }
@@ -217,9 +220,9 @@ details.group:not([open]) > summary { margin-bottom: 0; }
   .crumb a { display: inline-block; padding: 6px 0; }
   .cards { grid-template-columns: 1fr; }
   .card { padding: 16px 18px; }
-  .entry-row { padding: 14px; gap: 10px; flex-wrap: wrap; }
-  .entry-row .title { white-space: normal; flex-basis: 100%; }
-  .entry-row .muted.small { margin-left: auto; }
+  .entry-row { padding: 14px; gap: 10px; min-height: 52px; }
+  .entry-row .title { white-space: normal; }
+  .entry-row .muted.small { flex: none; }
   .toolbar input { max-width: none; }
 
   /* Comfortable tap targets, and 16px text so phones don't zoom in on fields */
@@ -232,9 +235,21 @@ details.group:not([open]) > summary { margin-bottom: 0; }
   .toggle .track::after { width: 22px; height: 22px; }
   .toggle input:checked + .track::after { transform: translateX(22px); }
   .group { padding: 16px 14px 2px; }
-  .list-item-head { padding: 8px 8px 8px 12px; gap: 6px; }
-  .list-item-head .title { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+  /* List items: the whole row opens the item; move/remove sit inside it, with words */
+  .list-item-head { min-height: 52px; padding: 8px 12px; gap: 10px; }
+  .list-item-head .title { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; font-size: 15px; }
+  .list-item-head .head-actions { display: none; }
+  .list-item-head::after { content: '›'; flex: none; margin-left: auto; color: var(--ink-3); font-size: 22px; line-height: 1; transition: transform .15s; }
+  .list-item:not(.collapsed) > .list-item-head::after { transform: rotate(90deg); }
   .list-item-body { padding: 4px 12px 2px; }
+  .list-item-actions { display: flex; flex-wrap: wrap; gap: 8px; padding: 4px 0 14px; }
+  .list-item-actions .btn { flex: 1 1 auto; }
+  /* Nested lists (e.g. a plan's materials) indent less so fields keep their width */
+  .list-item .list-item-body .list-item-body { padding: 4px 10px 2px; }
+  .list-item .list-item .list-item-head { min-height: 46px; padding: 6px 10px; }
+  .group .group { padding: 14px 10px 2px; }
+  /* Nearly every field is optional; the label just adds noise on a small screen */
+  .field .optional { display: none; }
   .list-simple { grid-template-columns: 1fr; }
   .list-simple .actions { padding-top: 0; justify-content: flex-end; }
   .media-row { flex-direction: column; }
@@ -277,6 +292,8 @@ html[data-theme="light"] .theme-toggle .i-moon { display: inline; }
 html[data-theme="light"] .login-page { background: radial-gradient(60% 60% at 80% 10%, rgba(255, 212, 0, .22), transparent 60%), radial-gradient(50% 60% at 0% 100%, rgba(255, 212, 0, .1), transparent 60%), var(--bg); }
 html[data-theme="light"] .btn-google { border-color: var(--line-2); }
 
-/* The OneGrid logo is white; show it in black on the light theme. */
-html[data-theme="light"] .brand-logo { filter: invert(1); }
-.mobile-brand img { width: auto; height: 22px; }
+/* The OneGrid logo (yellow mark, white lettering) always sits on a dark tile, so it reads in both themes. */
+.brand-logo { flex: none; padding: 4px; background: #0a0a0a; border-radius: 10px; object-fit: contain; }
+.login-brand .brand-logo { width: 48px; height: 48px; }
+.sidebar .brand .brand-logo { width: 38px; height: 38px; }
+.mobile-brand .brand-logo { width: 32px; height: 32px; border-radius: 8px; }

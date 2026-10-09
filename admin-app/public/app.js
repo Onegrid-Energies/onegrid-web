@@ -338,7 +338,12 @@
       case 'markdown': {
         control = h('textarea', { id, rows: 3 });
         control.value = obj[key] ?? '';
-        const grow = () => { control.style.height = 'auto'; control.style.height = Math.min(control.scrollHeight + 2, 480) + 'px'; };
+        const grow = () => {
+          if (!control.offsetParent) return; // hidden (closed section): measured again when it opens
+          control.style.height = 'auto';
+          control.style.height = Math.min(control.scrollHeight + 2, 480) + 'px';
+        };
+        control._grow = grow;
         control.addEventListener('input', () => { set(control.value); grow(); });
         requestAnimationFrame(grow);
         break;
@@ -423,6 +428,12 @@
   }
 
   // ---- lists
+  // Re-measure text boxes that were hidden when they were drawn (closed sections and items).
+  function growTextareas(root) {
+    requestAnimationFrame(() => root.querySelectorAll('textarea').forEach(area => area._grow?.()));
+  }
+  document.addEventListener('toggle', event => { if (event.target.open) growTextareas(event.target); }, true);
+
   function listControl(field, obj, key) {
     if (!Array.isArray(obj[key])) obj[key] = obj[key] == null || obj[key] === '' ? [] : String(obj[key]).split(',').map(s => s.trim()).filter(Boolean);
     const items = obj[key];
@@ -468,25 +479,53 @@
       return String(text || '').replace(/\s+/g, ' ').trim() || `Item ${index + 1}`;
     };
 
+    // A small preview of the item's photo (gallery, logos…) next to its title.
+    const thumbField = isObjects ? itemFields.find(f => f.widget === 'image' || f.widget === 'file') : null;
+    const drawThumb = (thumb, item) => {
+      const url = thumbField && String(item?.[thumbField.name] || '').trim();
+      thumb.hidden = !url;
+      if (url && thumb.dataset.url !== url) { thumb.dataset.url = url; thumb.src = cloudinaryThumb(url); }
+    };
+
     function draw(openIndex = null) {
       listEl.replaceChildren(...items.map((item, index) => {
-        const controls = [
+        const iconButtons = () => [
           h('button', { class: 'btn-icon', type: 'button', title: 'Move up', 'aria-label': 'Move up', disabled: index === 0, onclick: e => { e.stopPropagation(); move(index, -1); } }, '↑'),
           h('button', { class: 'btn-icon', type: 'button', title: 'Move down', 'aria-label': 'Move down', disabled: index === items.length - 1, onclick: e => { e.stopPropagation(); move(index, 1); } }, '↓'),
           h('button', { class: 'btn-icon', type: 'button', title: 'Remove', 'aria-label': 'Remove', onclick: e => { e.stopPropagation(); removeAt(index); } }, '✕')
         ];
         if (!isObjects) {
           const inner = renderField(itemField, items, index, { bare: true });
-          return h('div', { class: 'list-simple' }, inner, h('div', { class: 'actions' }, controls));
+          return h('div', { class: 'list-simple' }, inner, h('div', { class: 'actions' }, iconButtons()));
         }
         const titleEl = h('span', { class: 'title', text: itemTitle(item, index) });
+        const thumb = h('img', { class: 'thumb', alt: '', loading: 'lazy', hidden: true });
+        drawThumb(thumb, item);
         const body = h('div', { class: 'list-item-body' });
-        renderFields(itemFields, item, body);
-        body.addEventListener('input', () => { titleEl.textContent = itemTitle(item, index); });
-        body.addEventListener('change', () => { titleEl.textContent = itemTitle(item, index); });
+        // Phones: move/remove live here, with words, instead of crowding the title row.
+        const bodyActions = h('div', { class: 'list-item-actions' },
+          h('button', { class: 'btn btn-ghost btn-small', type: 'button', disabled: index === 0, onclick: () => move(index, -1) }, '↑ Move up'),
+          h('button', { class: 'btn btn-ghost btn-small', type: 'button', disabled: index === items.length - 1, onclick: () => move(index, 1) }, '↓ Move down'),
+          h('button', { class: 'btn btn-danger btn-small', type: 'button', onclick: () => removeAt(index) }, 'Remove'));
+        // Fields are built the first time an item is opened, so long lists stay quick on phones.
+        let built = false;
+        const build = () => {
+          if (built) return;
+          built = true;
+          renderFields(itemFields, item, body);
+          body.append(bodyActions);
+        };
+        const refresh = () => { titleEl.textContent = itemTitle(item, index); drawThumb(thumb, item); };
+        body.addEventListener('input', refresh);
+        body.addEventListener('change', refresh);
         const card = h('div', { class: `list-item${openIndex === index ? '' : ' collapsed'}` },
-          h('div', { class: 'list-item-head', onclick: () => card.classList.toggle('collapsed') }, h('span', { class: 'num', text: String(index + 1).padStart(2, '0') }), titleEl, controls),
+          h('div', { class: 'list-item-head', onclick: () => {
+            build();
+            card.classList.toggle('collapsed');
+            growTextareas(card);
+          } }, h('span', { class: 'num', text: String(index + 1).padStart(2, '0') }), thumb, titleEl, h('span', { class: 'head-actions' }, iconButtons())),
           body);
+        if (openIndex === index) { build(); requestAnimationFrame(() => growTextareas(card)); }
         return card;
       }));
       addButton.disabled = Boolean(field.max && items.length >= field.max);
