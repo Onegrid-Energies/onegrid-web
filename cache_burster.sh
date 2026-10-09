@@ -62,10 +62,10 @@ for EXT in "${EXTENSIONS[@]}"; do
     # 8. Update the reference inside every static route document
     if sed --version >/dev/null 2>&1; then
         # GNU sed (Linux)
-        find . -type f -name "index.html" -exec sed -i "s/$CURRENT_REF/$NEW_FILE/g" {} +
+        find . -type f -name "index.html" -not -path "*/node_modules/*" -exec sed -i "s/$CURRENT_REF/$NEW_FILE/g" {} +
     else
         # BSD sed (macOS)
-        find . -type f -name "index.html" -exec sed -i "" "s/$CURRENT_REF/$NEW_FILE/g" {} +
+        find . -type f -name "index.html" -not -path "*/node_modules/*" -exec sed -i "" "s/$CURRENT_REF/$NEW_FILE/g" {} +
     fi
 
     echo "  -> 🎉 Successfully updated $EXT references in all route documents!"

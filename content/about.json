@@ -1,0 +1,161 @@
+{
+  "seo": {
+    "title": "About OneGrid Energies | Clean Energy & Circular Innovation",
+    "description": "Discover how OneGrid Energies turns clean-energy innovation, recycling, and human empowerment into practical impact across Nigeria."
+  },
+  "intro": {
+    "video": "https://res.cloudinary.com/dj2ciluyx/video/upload/v1781116924/Background_video_3_jshjf7.mp4",
+    "poster": "https://res.cloudinary.com/dj2ciluyx/video/upload/so_0,q_auto:low,w_800,c_limit/v1781116924/Background_video_3_jshjf7.jpg",
+    "label": "Our Story",
+    "title": "Small innovations can create big change.",
+    "subtitle": "Background Video 3 opens the About story before you continue into OneGrid Energies, its journey, and its mission."
+  },
+  "hero": {
+    "tag": "Our Story",
+    "title": "We Believe Small\n*Innovations*\nCreate Big Change",
+    "subtitle": "From a single spark of conviction in Onitsha to 12,000 lives touched across Nigeria — this is the story of OneGrid Energies."
+  },
+  "belief": {
+    "tag": "Our Belief",
+    "lead": "OneGrid Energies was founded on a simple belief: sustainable change does not always begin with massive systems, but with simple ideas capable of transforming lives.",
+    "paragraphs": [
+      {
+        "text": "What started as a vision to reduce energy poverty and environmental waste has grown into a movement focused on reducing darkness across underserved communities."
+      },
+      {
+        "text": "Through the recycling of waste plastic bottles and discarded laptop batteries, we create solar-powered lanterns that provide light, hope, and opportunity to children and families without reliable access to electricity."
+      },
+      {
+        "text": "Beyond our community impact projects, we also provide solar installation services, CCTV solutions, renewable energy training, and clean energy products that help homes, businesses, schools, and healthcare centers transition toward sustainable energy."
+      },
+      {
+        "text": "At OneGrid Energies, we are not just building energy systems. We are building hope, opportunity, and a brighter future."
+      }
+    ],
+    "commitments_title": "We are committed to",
+    "commitments": [
+      {
+        "number": "01",
+        "text": "Expanding access to renewable energy."
+      },
+      {
+        "number": "02",
+        "text": "Transforming waste plastic and discarded batteries into sustainable solutions."
+      },
+      {
+        "number": "03",
+        "text": "Empowering young people through technical training."
+      },
+      {
+        "number": "04",
+        "text": "Building systems that create hope, dignity, and opportunity in underserved communities."
+      }
+    ]
+  },
+  "journey": {
+    "tag": "Our Journey",
+    "title": "From Conviction To Movement",
+    "milestones": [
+      {
+        "year": "2019",
+        "title": "The Spark",
+        "description": "OneGrid Energies was registered with a mission to reduce energy poverty in Nigeria through innovation and recycling."
+      },
+      {
+        "year": "2020",
+        "title": "OnePlastic Is Born",
+        "description": "First prototype lanterns built from waste plastic and discarded laptop batteries. The world's attention begins to turn."
+      },
+      {
+        "year": "2021",
+        "title": "OneHealth Launch",
+        "description": "Partnership with rural maternity clinics. Solar boxes delivered to help midwives work safely after sunset."
+      },
+      {
+        "year": "2022",
+        "title": "Community Scale",
+        "description": "OneBox stations deployed. Training Academy launched. 40+ green jobs created for young Nigerians."
+      },
+      {
+        "year": "2024+",
+        "title": "National Expansion",
+        "description": "12,000+ lives impacted. Investors, NGOs and government agencies take notice. The movement grows."
+      }
+    ],
+    "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/f_auto,q_auto:good,w_900,c_limit/v1784549132/IMG_0836_iyves8.jpg",
+    "image_alt": "OneGrid Energies community impact work"
+  },
+  "values": {
+    "tag": "Our Values",
+    "title": "What We Stand For",
+    "subtitle": "These principles guide every decision, every lantern, every life we touch.",
+    "items": [
+      {
+        "icon": "♻️",
+        "title": "Circular Innovation",
+        "description": "We believe waste is a resource waiting to be unlocked. Every discarded battery, every plastic bottle is an opportunity."
+      },
+      {
+        "icon": "🤝",
+        "title": "Community First",
+        "description": "We design for people, not boardrooms. Every solution must work for the communities it serves before it works for anyone else."
+      },
+      {
+        "icon": "💡",
+        "title": "Radical Simplicity",
+        "description": "The best solutions are the ones anyone can use, anyone can fix, and anyone can replicate. Complexity is a barrier to impact."
+      },
+      {
+        "icon": "🌱",
+        "title": "Environmental Integrity",
+        "description": "Clean energy delivered by clean means. We hold ourselves to the same environmental standards we advocate for."
+      },
+      {
+        "icon": "🔥",
+        "title": "Youth Empowerment",
+        "description": "Africa's greatest resource is her young people. We invest in them as technicians, entrepreneurs, and climate leaders."
+      },
+      {
+        "icon": "📊",
+        "title": "Transparent Impact",
+        "description": "We count every lantern, measure every tonne, and report every outcome with honesty — because trust is earned, not assumed."
+      }
+    ]
+  },
+  "sustainability": {
+    "tag": "Sustainability",
+    "title": "Built To Last,\nBuilt To Scale",
+    "paragraph_1": "OneGrid Energies isn't built on charity — it's built on circular economics. Every lantern sold funds the next one. Every charging station generates revenue that sustains the community that hosts it.",
+    "paragraph_2": "Our model proves that social impact and commercial viability are not in tension — they amplify each other. We're a social enterprise designed to outlast its funding rounds.",
+    "paragraph_3": "By diverting waste plastics and batteries from landfills, we address two environmental crises simultaneously: solid waste pollution and energy poverty. One problem, one solution, twice the impact.",
+    "numbers_title": "By The Numbers",
+    "numbers": [
+      {
+        "label": "CO₂ Emissions Avoided",
+        "value": "2,000+ tonnes/yr",
+        "bar_width": "78%"
+      },
+      {
+        "label": "Plastics Diverted From Landfill",
+        "value": "10,000+",
+        "bar_width": "62%"
+      },
+      {
+        "label": "Healthcare Outcomes Improved",
+        "value": "7,000+",
+        "bar_width": "55%"
+      },
+      {
+        "label": "Household Income Increase",
+        "value": "$6,000+",
+        "bar_width": "42%"
+      }
+    ]
+  },
+  "cta": {
+    "title": "Join The Movement",
+    "text": "Whether you're an investor, a donor, an NGO, or just someone who believes no child should study by candlelight — there is a place for you in this story.",
+    "primary_button": "Get Involved",
+    "secondary_button": "Read Stories of Hope"
+  }
+}

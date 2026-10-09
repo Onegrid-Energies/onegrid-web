@@ -1,0 +1,717 @@
+{
+  "seo": {
+    "title": "Get a Solar Quote | OneGrid Energies",
+    "description": "Get a tailored solar or CCTV installation quote from OneGrid Energies for your home, business, school, or community."
+  },
+  "intro": {
+    "video": "https://res.cloudinary.com/dj2ciluyx/video/upload/v1781117070/Background_video_1_nwdtxu.mp4",
+    "poster": "https://res.cloudinary.com/dj2ciluyx/video/upload/so_0,q_auto:low,w_800,c_limit/v1781117070/Background_video_1_nwdtxu.jpg",
+    "label": "Solar Installations",
+    "title": "Let’s build the right solar solution for you.",
+    "subtitle": "Share your energy needs and receive a tailored solar installation quote from OneGrid Energies."
+  },
+  "hero": {
+    "tag": "Solar & CCTV Solutions",
+    "title": "Don’t Just Buy Solar. *Buy Peace of Mind.*",
+    "subtitle": "Thoughtfully specified solar systems, professional installation, and dependable support for your home, business, or community.",
+    "primary_button": "Get your free quote",
+    "secondary_button": "View plans",
+    "stats": [
+      {
+        "value": "Solar solutions",
+        "label": "Made for your needs"
+      },
+      {
+        "value": "Clean",
+        "label": "Reliable energy"
+      },
+      {
+        "value": "24/7",
+        "label": "Peace of mind"
+      }
+    ]
+  },
+  "award": {
+    "tag": "Award-winning impact",
+    "eyebrow": "Proud recipient of the",
+    "title": "Anambra Man of the Year Award 2026\n*Company of the Year*",
+    "text": "Recognised for innovation, clean-energy leadership, and community impact across Anambra State.",
+    "image_1": "https://res.cloudinary.com/dj2ciluyx/image/upload/f_auto,q_auto,w_900/v1786724652/award_cert_amty_tb3pip.png",
+    "image_1_alt": "Anambra Man of the Year Company of the Year award certificate",
+    "image_2": "https://res.cloudinary.com/dj2ciluyx/image/upload/f_auto,q_auto,w_900/v1786724652/logo_amty_award_ltsr1z.png",
+    "image_2_alt": "Anambra Man of the Year award logo"
+  },
+  "benefits": {
+    "tag": "Benefits",
+    "title": "Why switch to solar?",
+    "items": [
+      {
+        "icon": "₦",
+        "title": "Reduce generator costs",
+        "text": "Replace unpredictable fuel expenses with dependable solar power."
+      },
+      {
+        "icon": "◌",
+        "title": "Silence the noise",
+        "text": "Enjoy cleaner, quieter energy for your home or business."
+      },
+      {
+        "icon": "ϟ",
+        "title": "Power through outages",
+        "text": "Battery storage keeps essentials running when the grid fails."
+      },
+      {
+        "icon": "✓",
+        "title": "Protect appliances",
+        "text": "Stable power helps safeguard the equipment you rely on every day."
+      },
+      {
+        "icon": "↗",
+        "title": "Build lasting value",
+        "text": "A well-designed solar system is an investment in your property and productivity."
+      },
+      {
+        "icon": "♧",
+        "title": "Choose cleaner energy",
+        "text": "Lower your reliance on fossil fuels and support a healthier future."
+      }
+    ]
+  },
+  "offer": {
+    "eyebrow": "Limited-time solar offer",
+    "title": "Save on the switch to solar.",
+    "text": "Get free delivery and professional installation anywhere in Anambra State when you choose your OneGrid solar plan.",
+    "points": [
+      {
+        "text": "Free delivery and free professional installation in Anambra State"
+      },
+      {
+        "text": "5-year system warranty included"
+      },
+      {
+        "text": "Installed by our experienced team"
+      },
+      {
+        "text": "Solar cables are not included"
+      }
+    ],
+    "payment_label": "Payment details",
+    "bank": "UBA Bank · OneGrid Energies",
+    "account_number": "1025406079",
+    "button": "Get your free quote"
+  },
+  "plans": {
+    "tag": "Solar plans",
+    "title": "A reliable fit for every kind of home.",
+    "subtitle": "Select a plan to start your consultation. Final sizing is confirmed after a site assessment.",
+    "items": [
+      {
+        "highlight": [],
+        "badge": "",
+        "name": "Starter 1",
+        "subtitle": "Okay for a small shop or house",
+        "size": "1",
+        "unit": "kVA",
+        "price": "₦500,000",
+        "old_price": "₦620,000",
+        "materials": [
+          {
+            "text": "1 × 1kWh Solar Generator"
+          },
+          {
+            "text": "1 × 350W Solar Panel"
+          },
+          {
+            "text": "Accessories"
+          }
+        ],
+        "powers": [
+          {
+            "text": "<svg class=\"quote-load-icon\" aria-hidden=\"true\"><use href=\"#load-icon-fan\"></use></svg>1–2 Solar Fans · <span aria-hidden=\"true\">💡</span>1–5 Bulbs"
+          },
+          {
+            "text": "<span aria-hidden=\"true\">💻</span>1 Laptop · <span aria-hidden=\"true\">📱</span>Phone charging"
+          }
+        ],
+        "plan_name": "Starter 1 — 1kVA",
+        "whatsapp_link": "https://wa.me/2347015613314?text=Hello%20OneGrid%20Energies%2C%20I%20am%20interested%20in%20the%20Starter%201%20solar%20plan%20%281kVA%29%20priced%20at%20%E2%82%A6500%2C000.%20Please%20share%20the%20next%20steps.",
+        "button_text": "Select Starter 1"
+      },
+      {
+        "highlight": [],
+        "name": "Starter 2",
+        "subtitle": "Perfect for a small shop or house",
+        "size": "1.2",
+        "unit": "kVA",
+        "price": "₦805,000",
+        "old_price": "₦930,000",
+        "materials": [
+          {
+            "text": "1 × 1.2kVA Hybrid Inverter"
+          },
+          {
+            "text": "1 × 1.2kWh Lithium Battery"
+          },
+          {
+            "text": "1 × 620W Solar Panel"
+          },
+          {
+            "text": "Accessories"
+          }
+        ],
+        "powers": [
+          {
+            "text": "<svg class=\"quote-load-icon\" aria-hidden=\"true\"><use href=\"#load-icon-fridge\"></use></svg>1 Small Fridge · <span aria-hidden=\"true\">📺</span>1 TV · <span aria-hidden=\"true\">💡</span>5 Bulbs"
+          },
+          {
+            "text": "<svg class=\"quote-load-icon\" aria-hidden=\"true\"><use href=\"#load-icon-fan\"></use></svg>1 Fan · <span aria-hidden=\"true\">💻</span>1 Laptop · <span aria-hidden=\"true\">📱</span>1 Phone"
+          }
+        ],
+        "plan_name": "Starter 2 — 1.2kVA",
+        "whatsapp_link": "https://wa.me/2347015613314?text=Hello%20OneGrid%20Energies%2C%20I%20am%20interested%20in%20the%20Starter%202%20solar%20plan%20%281.2kVA%29%20priced%20at%20%E2%82%A6805%2C000.%20Please%20share%20the%20next%20steps.",
+        "button_text": "Select Starter 2"
+      },
+      {
+        "highlight": [],
+        "name": "Basic",
+        "subtitle": "Perfect for a medium shop or house",
+        "size": "2",
+        "unit": "kVA",
+        "price": "₦1,500,000",
+        "old_price": "₦1,610,000",
+        "materials": [
+          {
+            "text": "1 × 2kVA Hybrid Inverter"
+          },
+          {
+            "text": "1 × 2.5kWh Lithium Battery"
+          },
+          {
+            "text": "3 × 620W Solar Panels"
+          },
+          {
+            "text": "Accessories"
+          }
+        ],
+        "powers": [
+          {
+            "text": "<svg class=\"quote-load-icon\" aria-hidden=\"true\"><use href=\"#load-icon-fridge\"></use></svg>1 Freezer · <span aria-hidden=\"true\">📺</span>1 TV · <span aria-hidden=\"true\">💡</span>5 Bulbs · <svg class=\"quote-load-icon\" aria-hidden=\"true\"><use href=\"#load-icon-fan\"></use></svg>3 Fans"
+          },
+          {
+            "text": "<span aria-hidden=\"true\">💻</span>2 Laptops · <span aria-hidden=\"true\">📱</span>1 Phone"
+          }
+        ],
+        "plan_name": "Basic — 2kVA",
+        "whatsapp_link": "https://wa.me/2347015613314?text=Hello%20OneGrid%20Energies%2C%20I%20am%20interested%20in%20the%20Basic%20solar%20plan%20%282kVA%29%20priced%20at%20%E2%82%A61%2C500%2C000.%20Please%20share%20the%20next%20steps.",
+        "button_text": "Select Basic"
+      },
+      {
+        "highlight": [],
+        "name": "Economy",
+        "subtitle": "Perfect for a 2-bedroom apartment",
+        "size": "3.6",
+        "unit": "kVA",
+        "price": "₦2,400,000",
+        "old_price": "₦2,570,000",
+        "materials": [
+          {
+            "text": "1 × 3.6kVA Hybrid Inverter"
+          },
+          {
+            "text": "1 × 5kWh Lithium Battery"
+          },
+          {
+            "text": "4 × 620W Solar Panels"
+          },
+          {
+            "text": "Accessories"
+          }
+        ],
+        "powers": [
+          {
+            "text": "<span aria-hidden=\"true\">🧺</span>1 Washing Machine · <svg class=\"quote-load-icon\" aria-hidden=\"true\"><use href=\"#load-icon-fridge\"></use></svg>1 Freezer · <span aria-hidden=\"true\">📺</span>1 TV"
+          },
+          {
+            "text": "<span aria-hidden=\"true\">💡</span>10 Bulbs · <svg class=\"quote-load-icon\" aria-hidden=\"true\"><use href=\"#load-icon-fan\"></use></svg>3 Fans · <svg class=\"quote-load-icon\" aria-hidden=\"true\"><use href=\"#load-icon-iron\"></use></svg>Iron · <span aria-hidden=\"true\">💻</span>3 Laptops"
+          }
+        ],
+        "plan_name": "Economy — 3.6kVA",
+        "whatsapp_link": "https://wa.me/2347015613314?text=Hello%20OneGrid%20Energies%2C%20I%20am%20interested%20in%20the%20Economy%20solar%20plan%20%283.6kVA%29%20priced%20at%20%E2%82%A62%2C400%2C000.%20Please%20share%20the%20next%20steps.",
+        "button_text": "Select Economy"
+      },
+      {
+        "highlight": [
+          "quote-package--featured"
+        ],
+        "badge": "Most popular",
+        "name": "Standard",
+        "subtitle": "Perfect for a 3-bedroom apartment",
+        "size": "4.2",
+        "unit": "kVA",
+        "price": "₦2,800,000",
+        "old_price": "₦2,980,000",
+        "materials": [
+          {
+            "text": "1 × 4.2kVA Hybrid Inverter"
+          },
+          {
+            "text": "1 × 7.6kWh Lithium Battery"
+          },
+          {
+            "text": "5 × 620W Solar Panels"
+          },
+          {
+            "text": "Accessories"
+          }
+        ],
+        "powers": [
+          {
+            "text": "<span aria-hidden=\"true\">💧</span>1 Pumping Machine · <span aria-hidden=\"true\">🧺</span>1 Washing Machine"
+          },
+          {
+            "text": "<svg class=\"quote-load-icon\" aria-hidden=\"true\"><use href=\"#load-icon-fridge\"></use></svg>2 Freezers · <span aria-hidden=\"true\">📺</span>3 TVs · <span aria-hidden=\"true\">💡</span>10 Bulbs · <svg class=\"quote-load-icon\" aria-hidden=\"true\"><use href=\"#load-icon-fan\"></use></svg>3 Fans"
+          },
+          {
+            "text": "<svg class=\"quote-load-icon\" aria-hidden=\"true\"><use href=\"#load-icon-iron\"></use></svg>1 Iron · <span aria-hidden=\"true\">💻</span>3 Laptops"
+          }
+        ],
+        "plan_name": "Standard — 4.2kVA",
+        "whatsapp_link": "https://wa.me/2347015613314?text=Hello%20OneGrid%20Energies%2C%20I%20am%20interested%20in%20the%20Standard%20solar%20plan%20%284.2kVA%29%20priced%20at%20%E2%82%A62%2C800%2C000.%20Please%20share%20the%20next%20steps.",
+        "button_text": "Select Standard"
+      },
+      {
+        "highlight": [],
+        "name": "Family",
+        "subtitle": "Built for Duplex 1",
+        "size": "5",
+        "unit": "kVA",
+        "price": "₦3,500,000",
+        "old_price": "₦3,700,000",
+        "materials": [
+          {
+            "text": "1 × 5kVA Hybrid Inverter"
+          },
+          {
+            "text": "1 × 7.6kWh Lithium Battery"
+          },
+          {
+            "text": "10 × 620W Solar Panels"
+          },
+          {
+            "text": "Accessories"
+          }
+        ],
+        "powers": [
+          {
+            "text": "<svg class=\"quote-load-icon\" aria-hidden=\"true\"><use href=\"#load-icon-ac\"></use></svg>1 × 1/1.5Hp AC (day) · <span aria-hidden=\"true\">💧</span>1 Pump"
+          },
+          {
+            "text": "<span aria-hidden=\"true\">🧺</span>1 Washing Machine · <svg class=\"quote-load-icon\" aria-hidden=\"true\"><use href=\"#load-icon-fridge\"></use></svg>2 Freezers · <span aria-hidden=\"true\">📺</span>3 TVs"
+          },
+          {
+            "text": "<span aria-hidden=\"true\">💡</span>15 Bulbs · <svg class=\"quote-load-icon\" aria-hidden=\"true\"><use href=\"#load-icon-fan\"></use></svg>5 Fans · <svg class=\"quote-load-icon\" aria-hidden=\"true\"><use href=\"#load-icon-iron\"></use></svg>1 Iron · <span aria-hidden=\"true\">💻</span>5 Laptops"
+          }
+        ],
+        "plan_name": "Family — 5kVA",
+        "whatsapp_link": "https://wa.me/2347015613314?text=Hello%20OneGrid%20Energies%2C%20I%20am%20interested%20in%20the%20Family%20solar%20plan%20%285kVA%29%20priced%20at%20%E2%82%A63%2C500%2C000.%20Please%20share%20the%20next%20steps.",
+        "button_text": "Select Family"
+      },
+      {
+        "highlight": [],
+        "name": "Premium",
+        "subtitle": "Built for Duplex 2",
+        "size": "6.5",
+        "unit": "kVA",
+        "price": "₦4,500,000",
+        "old_price": "₦4,700,000",
+        "materials": [
+          {
+            "text": "1 × 6.5kVA Hybrid Inverter"
+          },
+          {
+            "text": "1 × 15kWh Lithium Battery"
+          },
+          {
+            "text": "10 × 620W Solar Panels"
+          },
+          {
+            "text": "Accessories"
+          }
+        ],
+        "powers": [
+          {
+            "text": "<svg class=\"quote-load-icon\" aria-hidden=\"true\"><use href=\"#load-icon-ac\"></use></svg>1 × 1/1.5Hp AC (day/night) · <span aria-hidden=\"true\">💧</span>1 Pump"
+          },
+          {
+            "text": "<span aria-hidden=\"true\">🧺</span>1 Washing Machine · <svg class=\"quote-load-icon\" aria-hidden=\"true\"><use href=\"#load-icon-fridge\"></use></svg>2 Freezers · <span aria-hidden=\"true\">📺</span>3 TVs"
+          },
+          {
+            "text": "<span aria-hidden=\"true\">💡</span>20 Bulbs · <svg class=\"quote-load-icon\" aria-hidden=\"true\"><use href=\"#load-icon-fan\"></use></svg>5 Fans · <svg class=\"quote-load-icon\" aria-hidden=\"true\"><use href=\"#load-icon-iron\"></use></svg>1 Iron · <span aria-hidden=\"true\">💻</span>5 Laptops"
+          }
+        ],
+        "plan_name": "Premium — 6.5kVA",
+        "whatsapp_link": "https://wa.me/2347015613314?text=Hello%20OneGrid%20Energies%2C%20I%20am%20interested%20in%20the%20Premium%20solar%20plan%20%286.5kVA%29%20priced%20at%20%E2%82%A64%2C500%2C000.%20Please%20share%20the%20next%20steps.",
+        "button_text": "Select Premium"
+      },
+      {
+        "highlight": [],
+        "name": "VIP",
+        "subtitle": "Built for large-scale and commercial needs",
+        "size": "12",
+        "unit": "kVA",
+        "price": "₦9,500,000",
+        "old_price": "₦9,800,000",
+        "materials": [
+          {
+            "text": "1 × 12kVA Hybrid Inverter"
+          },
+          {
+            "text": "2 × 15kWh Lithium Batteries"
+          },
+          {
+            "text": "24 × 620W Solar Panels"
+          },
+          {
+            "text": "Accessories"
+          }
+        ],
+        "powers": [
+          {
+            "text": "<svg class=\"quote-load-icon\" aria-hidden=\"true\"><use href=\"#load-icon-ac\"></use></svg>2 × 1.5Hp AC (day/night) · <span aria-hidden=\"true\">💧</span>2 Pumps"
+          },
+          {
+            "text": "<span aria-hidden=\"true\">🧺</span>3 Washers · <svg class=\"quote-load-icon\" aria-hidden=\"true\"><use href=\"#load-icon-fridge\"></use></svg>5 Freezers · <span aria-hidden=\"true\">📺</span>5 TVs"
+          },
+          {
+            "text": "<span aria-hidden=\"true\">💡</span>30 Bulbs · <svg class=\"quote-load-icon\" aria-hidden=\"true\"><use href=\"#load-icon-fan\"></use></svg>10 Fans · <svg class=\"quote-load-icon\" aria-hidden=\"true\"><use href=\"#load-icon-iron\"></use></svg>3 Irons · <span aria-hidden=\"true\">💻</span>10 Laptops"
+          }
+        ],
+        "plan_name": "VIP — 12kVA",
+        "whatsapp_link": "https://wa.me/2347015613314?text=Hello%20OneGrid%20Energies%2C%20I%20am%20interested%20in%20the%20VIP%20solar%20plan%20%2812kVA%29%20priced%20at%20%E2%82%A69%2C500%2C000.%20Please%20share%20the%20next%20steps.",
+        "button_text": "Select VIP"
+      }
+    ]
+  },
+  "payment": {
+    "tag": "Payment",
+    "title": "Pay outright or spread it out.",
+    "subtitle": "Discuss the payment option that best fits your project with our team.",
+    "options": [
+      {
+        "icon": "₦",
+        "title": "Outright purchase",
+        "text": "Pay once and own your system outright."
+      },
+      {
+        "icon": "◫",
+        "title": "Flexible payment plan",
+        "text": "Ask our team about available instalment options for your selected system."
+      },
+      {
+        "icon": "⌂",
+        "title": "Bank financing",
+        "text": "Discuss financing options for qualifying projects."
+      }
+    ]
+  },
+  "calculator": {
+    "tag": "Savings calculator",
+    "title": "See what generator costs add up to.",
+    "text": "Adjust the inputs to reflect your actual generator spend and see a simple five-year comparison."
+  },
+  "cctv": {
+    "tag": "CCTV installation",
+    "title": "Secure your home and office with reliable 24/7 monitoring.",
+    "text": "Our PTZ Solar Security Camera Package gives you dependable visibility without relying on grid power.",
+    "features": [
+      {
+        "text": "1 × Dual-view PTZ camera"
+      },
+      {
+        "text": "1 × 64GB memory card"
+      },
+      {
+        "text": "Smart Tracking Function"
+      },
+      {
+        "text": "Solar-powered System"
+      },
+      {
+        "text": "Real-time Mobile Phone Viewing"
+      },
+      {
+        "text": "Playback & Recorded Video Access"
+      },
+      {
+        "text": "Professional Installation"
+      }
+    ],
+    "whatsapp_link": "https://wa.me/2347015613314?text=Hello%20OneGrid%20Energies%2C%20I%20am%20interested%20in%20the%20PTZ%20Solar%20Security%20Camera%20Package%20priced%20at%20%E2%82%A6120%2C000.%20Please%20share%20the%20next%20steps.",
+    "button": "Request CCTV installation",
+    "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1787232738/dual-ptz-cam_aczdrx.jpg",
+    "image_alt": "Solar-powered PTZ security camera",
+    "package_name": "PTZ Solar Security\nCamera Package",
+    "price": "₦120K",
+    "price_note": "Installed and ready to monitor"
+  },
+  "installations": {
+    "tag": "Recent installations",
+    "title": "Powering homes and businesses across Nigeria.",
+    "items": [
+      {
+        "size": [
+          "quote-project--large"
+        ],
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1787234772/Onitsha_u6omxm.jpg",
+        "image_alt": "OneGrid solar installation in Onitsha",
+        "location": "Onitsha, Anambra",
+        "title": "6.5kVA System"
+      },
+      {
+        "size": [],
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1786729750/ikoyi_dav8fl.jpg",
+        "image_alt": "OneGrid solar installation in Ikoyi",
+        "location": "Ikoyi, Lagos",
+        "title": "20kVA Luxury Villa"
+      },
+      {
+        "size": [],
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1787234766/maitama_1_j4w35x.jpg",
+        "image_alt": "OneGrid solar installation in Maitama",
+        "location": "Maitama, Abuja",
+        "title": "20kVA Smart Home"
+      },
+      {
+        "size": [],
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1786729753/GRA_ffghk4.jpg",
+        "image_alt": "OneGrid solar installation in Port Harcourt",
+        "location": "GRA, Port Harcourt",
+        "title": "5kVA Family Home"
+      },
+      {
+        "size": [],
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1786729755/unuahia_wwoii8.jpg",
+        "image_alt": "Placeholder for OneGrid solar installation in Umuahia",
+        "location": "Umuahia, Abia",
+        "title": "10kVA Commercial Complex"
+      },
+      {
+        "size": [],
+        "image": "https://picsum.photos/seed/asaba-solar/720/520",
+        "image_alt": "Placeholder for OneGrid solar installation in Asaba",
+        "location": "Asaba, Delta",
+        "title": "8kVA Modern Residence"
+      },
+      {
+        "size": [],
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1787234773/nsukka_vpzacu.jpg",
+        "image_alt": "Placeholder for OneGrid solar installation in Nsukka",
+        "location": "Nsukka, Enugu",
+        "title": "7.5kVA Country Home"
+      },
+      {
+        "size": [],
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1787234768/owerri_1_jp8xev.jpg",
+        "image_alt": "OneGrid solar installation in Owerri",
+        "location": "Owerri, Imo",
+        "title": "12kVA Executive Duplex"
+      },
+      {
+        "size": [],
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1786729749/abeokuta_o9qmv5.jpg",
+        "image_alt": "Placeholder for OneGrid solar installation in Abeokuta",
+        "location": "Abeokuta, Ogun",
+        "title": "15kVA Industrial Facility"
+      },
+      {
+        "size": [],
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1787234770/ibadan_vduhvb.jpg",
+        "image_alt": "Placeholder for OneGrid solar installation in Ibadan",
+        "location": "Ibadan, Oyo",
+        "title": "10kVA Corporate Office"
+      },
+      {
+        "size": [],
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1787234771/uyo_fdlmdu.jpg",
+        "image_alt": "Placeholder for OneGrid solar installation in Uyo",
+        "location": "Uyo, Akwa Ibom",
+        "title": "8kVA Premium Bungalow"
+      },
+      {
+        "size": [],
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1786729750/kano_rvxykn.jpg",
+        "image_alt": "Placeholder for OneGrid solar installation in Kano",
+        "location": "Kano, Kano",
+        "title": "30kVA Manufacturing Facility"
+      }
+    ]
+  },
+  "reviews": {
+    "tag": "What clients say",
+    "title": "Trusted for power that stays on.",
+    "items": [
+      {
+        "quote": "“OneGrid Energies delivered exactly what they promised. The installation was neat, professional, and my family now enjoys uninterrupted electricity every day.”",
+        "initials": "KC",
+        "name": "Sir Dr. Kevin Chukwumobi",
+        "role": "MD · CEO · Apams Funeral Ltd · Onitsha"
+      },
+      {
+        "quote": "“Their attention to detail, quality equipment, and after-sales support made the decision worthwhile.”",
+        "initials": "CO",
+        "name": "Mr Cyprian Okongwu",
+        "role": "Chairman · Plywood Market Ogbunike · Onitsha"
+      },
+      {
+        "quote": "“Our electricity bills have reduced significantly. The system has been reliable, even during extended grid outages.”",
+        "initials": "PJ",
+        "name": "Pastor Jude",
+        "role": "Ikoyi, Lagos"
+      }
+    ]
+  },
+  "oneplastic_note": {
+    "text": "Every solar/CCTV installation completed by OneGrid helps strengthen our mission of expanding clean energy access through the OnePlastic initiative in underserved communities.",
+    "button": "See more about OnePlastic"
+  },
+  "partners": {
+    "tag": "Trusted by",
+    "title": "Partners in brighter futures.",
+    "logos": [
+      {
+        "logo": "https://res.cloudinary.com/dj2ciluyx/image/upload/f_auto,q_auto,w_320,h_152,c_limit/v1781601943/IMG_0987_zktqcd.png",
+        "name": "Partner logo"
+      },
+      {
+        "logo": "https://res.cloudinary.com/dj2ciluyx/image/upload/f_auto,q_auto,w_320,h_152,c_limit/v1781601944/IMG_0984_b4xyjz.png",
+        "name": "Partner logo"
+      },
+      {
+        "logo": "https://res.cloudinary.com/dj2ciluyx/image/upload/f_auto,q_auto,w_320,h_152,c_limit/v1781601944/IMG_0986_ieljyl.jpg",
+        "name": "Partner logo"
+      },
+      {
+        "logo": "https://res.cloudinary.com/dj2ciluyx/image/upload/f_auto,q_auto,w_320,h_152,c_limit/v1781601944/IMG_0996_mo1sg4.jpg",
+        "name": "Partner logo"
+      },
+      {
+        "logo": "https://res.cloudinary.com/dj2ciluyx/image/upload/f_auto,q_auto,w_320,h_152,c_limit/v1781601944/IMG_0981_fkct5m.jpg",
+        "name": "Partner logo"
+      },
+      {
+        "logo": "https://res.cloudinary.com/dj2ciluyx/image/upload/f_auto,q_auto,w_320,h_152,c_limit/v1781601944/IMG_0989_bmoudg.jpg",
+        "name": "Partner logo"
+      }
+    ]
+  },
+  "faq": {
+    "tag": "FAQ",
+    "title": "Questions, answered.",
+    "items": [
+      {
+        "question": "How much does a solar system cost?",
+        "answer": "System costs depend on your energy needs, equipment specification, and site requirements. The plans above are starting points; your final quote follows an assessment."
+      },
+      {
+        "question": "Can solar replace my generator completely?",
+        "answer": "With the right system size and battery storage, solar can cover the power needs identified during your assessment."
+      },
+      {
+        "question": "What happens in rainy season?",
+        "answer": "Solar systems use battery storage and still generate from diffused daylight. We recommend capacity that supports reliable use year-round."
+      },
+      {
+        "question": "How long does installation take?",
+        "answer": "Timing depends on system size and site readiness. Our team confirms the installation schedule with your quote."
+      },
+      {
+        "question": "Do you offer payment options?",
+        "answer": "Ask the OneGrid team about available payment and financing options for your selected system."
+      }
+    ]
+  },
+  "promises": {
+    "tag": "Our promise",
+    "title": "Support that stays with you.",
+    "items": [
+      {
+        "icon": "✓",
+        "title": "Quality equipment",
+        "text": "We specify solar components to suit your actual energy needs."
+      },
+      {
+        "icon": "↻",
+        "title": "Clear process",
+        "text": "You will understand the recommended system before work begins."
+      },
+      {
+        "icon": "⌕",
+        "title": "Expert installation",
+        "text": "Our team handles the journey from assessment to installation."
+      },
+      {
+        "icon": "◉",
+        "title": "Ongoing support",
+        "text": "We’re here to help you get the most from your system."
+      }
+    ]
+  },
+  "process": {
+    "tag": "A simple process",
+    "title": "A system designed around your energy needs.",
+    "text": "Every installation starts with understanding how you use power. Share the basics below and we’ll recommend the right next step.",
+    "steps": [
+      {
+        "number": "01",
+        "title": "Share your requirements",
+        "text": "Tell us about your property, location, and appliances."
+      },
+      {
+        "number": "02",
+        "title": "Receive expert guidance",
+        "text": "Our team reviews your request and discusses the best fit."
+      },
+      {
+        "number": "03",
+        "title": "Get your tailored quote",
+        "text": "We provide a clear recommendation for your installation."
+      }
+    ],
+    "assurance": "Solar solutions for homes, businesses, schools, healthcare centres, and communities."
+  },
+  "form": {
+    "tag": "Request a quote",
+    "title": "Let’s plan your solar solution.",
+    "text": "We’ll respond with the information needed to move your project forward.",
+    "plan_options": [
+      {
+        "name": "Starter 1 — 1kVA"
+      },
+      {
+        "name": "Starter 2 — 1.2kVA"
+      },
+      {
+        "name": "Basic — 2kVA"
+      },
+      {
+        "name": "Economy — 3.6kVA"
+      },
+      {
+        "name": "Standard — 4.2kVA"
+      },
+      {
+        "name": "Family — 5kVA"
+      },
+      {
+        "name": "Premium — 6.5kVA"
+      },
+      {
+        "name": "VIP — 12kVA"
+      },
+      {
+        "name": "PTZ Solar Security Camera Package"
+      }
+    ],
+    "button": "Request My Solar Quote"
+  }
+}

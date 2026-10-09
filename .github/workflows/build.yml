@@ -1,0 +1,77 @@
+# Rebuilds the static pages whenever content (usually saved from the admin app) or
+# the template changes, commits the generated files, and optionally uploads
+# the site over FTP when the FTP_* repository secrets are set.
+name: Build site
+
+on:
+  push:
+    branches: [master]
+    # The admin app's own code and schema don't affect the pages.
+    paths-ignore:
+      - 'admin-app/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-site
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      FTP_SERVER: ${{ secrets.FTP_SERVER }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build pages
+        run: npm run build
+
+      - name: Commit generated files
+        run: |
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "Generated files are up to date."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Rebuild pages from ${GITHUB_SHA::7}"
+          for attempt in 1 2 3; do
+            git pull --rebase origin master && git push origin HEAD:master && exit 0
+            sleep 5
+          done
+          echo "Could not push the built pages." >&2
+          exit 1
+
+      - name: Deploy over FTP
+        if: env.FTP_SERVER != ''
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: ${{ secrets.FTP_SERVER_DIR || './' }}
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            .github/**
+            admin-app/**
+            src/**
+            scripts/**
+            content/**
+            package.json
+            package-lock.json
+            build-static-pages.mjs
+            cache_burster.sh
+            README.md

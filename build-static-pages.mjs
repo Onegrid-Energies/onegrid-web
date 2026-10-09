@@ -1,50 +1,27 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { render } from './scripts/cms/template.mjs';
+import { PAGES, readContent } from './scripts/cms/content.mjs';
 
-const source = await readFile('index.html', 'utf8');
-const routes = {
-  home: {
-    directory: 'home',
-    path: '/',
-    title: 'OneGrid Energies | Clean Energy That Reduces Darkness',
-    description: 'OneGrid Energies delivers clean energy, solar installations, circular innovation, and community impact solutions that reduce darkness across Nigeria.'
-  },
-  about: {
-    directory: 'about',
-    path: '/about/',
-    title: 'About OneGrid Energies | Clean Energy & Circular Innovation',
-    description: 'Discover how OneGrid Energies turns clean-energy innovation, recycling, and human empowerment into practical impact across Nigeria.'
-  },
-  oneplastic: {
-    directory: 'oneplastic',
-    path: '/oneplastic/',
-    title: 'OnePlastic Initiative | OneGrid Energies',
-    description: 'OnePlastic transforms waste plastic bottles and discarded batteries into solar-powered lanterns for communities without reliable electricity.'
-  },
-  stories: {
-    directory: 'stories-of-hope',
-    path: '/stories-of-hope/',
-    title: 'Stories of Hope | OneGrid Energies',
-    description: 'Meet the people and communities gaining safer, cleaner light through OneGrid Energies and the OnePlastic initiative.'
-  },
-  recognitions: {
-    directory: 'recognitions',
-    path: '/recognitions/',
-    title: 'Recognition, Milestones & Media | OneGrid Energies',
-    description: 'Explore OneGrid Energies’ recognitions, milestones, and media coverage for clean energy, circular innovation, and community impact.'
-  },
-  quote: {
-    directory: 'quote',
-    path: '/quote/',
-    title: 'Get a Solar Quote | OneGrid Energies',
-    description: 'Get a tailored solar or CCTV installation quote from OneGrid Energies for your home, business, school, or community.'
-  },
-  contact: {
-    directory: 'contact',
-    path: '/contact/',
-    title: 'Contact OneGrid Energies | Partner With Us',
-    description: 'Contact OneGrid Energies to discuss solar solutions, clean-energy partnerships, community impact, or media enquiries.'
-  }
-};
+// src/index.html is the annotated template; content/*.json holds the text and
+// images edited in the admin app (admin-app/). Together they produce index.html and one
+// static document per route.
+const content = await readContent();
+const template = await readFile('src/index.html', 'utf8');
+
+// Per-page data the browser script needs when switching pages (SEO and intro video).
+const pageData = Object.fromEntries(PAGES.map(({ name }) => [name, {
+  seo: content[name]?.seo ?? {},
+  intro: content[name]?.intro ?? {}
+}]));
+const pageDataJson = JSON.stringify({ pages: pageData }).replace(/</g, '\\u003c');
+const cmsDataTag = '<script type="application/json" id="cms-data">{}</script>';
+
+if (!template.includes(cmsDataTag)) {
+  throw new Error('Could not locate the cms-data script tag in src/index.html.');
+}
+
+const source = render(template, content).replace(cmsDataTag, cmsDataTag.replace('{}', pageDataJson));
+await writeFile('index.html', source);
 
 const firstPage = source.indexOf('<div class="page active" id="page-home">');
 const footer = source.indexOf('    <!-- ════════════════ FOOTER ══════════════════════════ -->');
@@ -68,23 +45,28 @@ function pageMarkup(page) {
   return source.slice(pageStart, pageEnd).replace(`class="page${page === 'home' ? ' active' : ''}"`, 'class="page active"');
 }
 
-function setPageMetadata(document, route) {
+const escapeAttribute = value => String(value).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+const escapeText = value => String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+
+function setPageMetadata(document, route, seo) {
   const url = `https://onegridenergies.com${route.path}`;
+  const title = escapeAttribute(seo.title);
+  const description = escapeAttribute(seo.description);
   return document
-    .replace(/<title>[^<]*<\/title>/, `<title>${route.title}</title>`)
-    .replace(/(<meta\s+name="description"\s+content=")[^"]*("\s*\/>)/, `$1${route.description}$2`)
-    .replace(/(<link\s+rel="canonical"\s+href=")[^"]*("\s*\/>)/, `$1${url}$2`)
-    .replace(/(<meta\s+property="og:title"\s+content=")[^"]*("\s*\/>)/, `$1${route.title}$2`)
-    .replace(/(<meta\s+property="og:description"\s+content=")[^"]*("\s*\/>)/, `$1${route.description}$2`)
-    .replace(/(<meta\s+property="og:url"\s+content=")[^"]*("\s*\/>)/, `$1${url}$2`)
-    .replace(/(<meta\s+name="twitter:title"\s+content=")[^"]*("\s*\/>)/, `$1${route.title}$2`)
-    .replace(/(<meta\s+name="twitter:description"\s+content=")[^"]*("\s*\/>)/, `$1${route.description}$2`);
+    .replace(/<title>[^<]*<\/title>/, () => `<title>${escapeText(seo.title)}</title>`)
+    .replace(/(<meta\s+name="description"\s+content=")[^"]*("\s*\/>)/, (_, a, b) => `${a}${description}${b}`)
+    .replace(/(<link\s+rel="canonical"\s+href=")[^"]*("\s*\/>)/, (_, a, b) => `${a}${url}${b}`)
+    .replace(/(<meta\s+property="og:title"\s+content=")[^"]*("\s*\/>)/, (_, a, b) => `${a}${title}${b}`)
+    .replace(/(<meta\s+property="og:description"\s+content=")[^"]*("\s*\/>)/, (_, a, b) => `${a}${description}${b}`)
+    .replace(/(<meta\s+property="og:url"\s+content=")[^"]*("\s*\/>)/, (_, a, b) => `${a}${url}${b}`)
+    .replace(/(<meta\s+name="twitter:title"\s+content=")[^"]*("\s*\/>)/, (_, a, b) => `${a}${title}${b}`)
+    .replace(/(<meta\s+name="twitter:description"\s+content=")[^"]*("\s*\/>)/, (_, a, b) => `${a}${description}${b}`);
 }
 
-await Promise.all(Object.entries(routes).map(async ([page, route]) => {
-  const document = setPageMetadata(`${sharedHeader}${pageMarkup(page)}${sharedFooter}`, route);
+await Promise.all(PAGES.map(async route => {
+  const document = setPageMetadata(`${sharedHeader}${pageMarkup(route.name)}${sharedFooter}`, route, pageData[route.name].seo);
   await mkdir(route.directory, { recursive: true });
   await writeFile(`${route.directory}/index.html`, document);
 }));
 
-console.log(`Generated ${Object.keys(routes).length} static route documents.`);
+console.log(`Generated index.html and ${PAGES.length} static route documents.`);

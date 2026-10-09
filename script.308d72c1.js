@@ -118,6 +118,22 @@ const PAGE_METADATA = {
   }
 };
 
+// Titles, descriptions and intro videos edited in the admin app are written into the
+// page by the build (see content/*.json); they override the defaults above.
+const CMS_PAGES = (() => {
+  try {
+    return JSON.parse(document.getElementById('cms-data')?.textContent || '{}').pages || {};
+  } catch {
+    return {};
+  }
+})();
+
+const withoutEmpty = values => Object.fromEntries(Object.entries(values || {}).filter(([, value]) => value));
+
+Object.entries(CMS_PAGES).forEach(([page, { seo }]) => {
+  if (PAGE_METADATA[page]) Object.assign(PAGE_METADATA[page], withoutEmpty(seo));
+});
+
 function getPageFromPath(pathname = window.location.pathname) {
   const path = pathname.replace(/\/+$/, '') || '/';
   if (path === '/') return 'home';
@@ -532,6 +548,12 @@ const BACKGROUND_VIDEOS = {
     target: '#page-contact .page-hero'
   }
 };
+
+Object.entries(CMS_PAGES).forEach(([page, { intro }]) => {
+  if (!BACKGROUND_VIDEOS[page] || !intro) return;
+  const { video, ...text } = intro;
+  Object.assign(BACKGROUND_VIDEOS[page], withoutEmpty({ src: video, ...text }));
+});
 
 function updateIntroContent(config) {
   const label = document.querySelector('[data-intro-label]');

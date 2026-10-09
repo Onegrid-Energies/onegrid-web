@@ -1,0 +1,20 @@
+{
+  "contact": {
+    "whatsapp_link": "https://wa.me/2347015613314",
+    "phone": "071 2000 3628",
+    "email": "onegridenergies@gmail.com",
+    "address": "89 Upper New Market Rd, GRA,\nOnitsha 431107, Anambra, Nigeria",
+    "map_embed_url": "https://www.google.com/maps?q=89%20Upper%20New%20Market%20Rd%2C%20GRA%2C%20Onitsha%20431107%2C%20Anambra%2C%20Nigeria&output=embed",
+    "email_link": "mailto:onegridenergies@gmail.com"
+  },
+  "social": {
+    "instagram": "https://instagram.com/onegridenergies",
+    "linkedin": "https://www.linkedin.com/company/onegridenergies",
+    "facebook": "https://www.facebook.com/onegridenergies/",
+    "x": "https://x.com/OnegridOfficial"
+  },
+  "footer": {
+    "description": "Reducing darkness through sustainable energy, recycling innovation, and human empowerment across Nigeria and beyond.",
+    "copyright": "© 2026 OneGrid Energies. Registered in Nigeria. All rights reserved."
+  }
+}

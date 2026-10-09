@@ -1,0 +1,547 @@
+{
+  "seo": {
+    "title": "OneGrid Energies | Clean Energy That Reduces Darkness",
+    "description": "OneGrid Energies delivers clean energy, solar installations, circular innovation, and community impact solutions that reduce darkness across Nigeria."
+  },
+  "intro": {
+    "video": "https://res.cloudinary.com/dj2ciluyx/video/upload/v1781117070/Background_video_1_nwdtxu.mp4",
+    "poster": "https://res.cloudinary.com/dj2ciluyx/video/upload/so_0,q_auto:low,w_800,c_limit/v1781117070/Background_video_1_nwdtxu.jpg",
+    "label": "OneGrid Energies",
+    "title": "A brighter future starts with one loop of light.",
+    "subtitle": "This muted video section plays in a continuous loop before you continue down the page to the rest of the OneGrid story."
+  },
+  "hero": {
+    "headline": "We Can\n*Reduce*\nDarkness.",
+    "subheadline": "Transforming waste into light, empowering communities,\nand creating a future where no family is left in darkness.",
+    "body": "OneGrid Energies is a Nigerian clean energy company transforming waste plastic bottles and discarded lithium-ion batteries into solar-powered lanterns while providing renewable energy access, solar installations, technical training, and community empowerment across underserved communities.From community charging stations to healthcare electrification projects, we develop sustainable solutions for communities lacking reliable electricity.",
+    "primary_button": "Explore Our Impact",
+    "secondary_button": "Partner With Us"
+  },
+  "vision": {
+    "background_image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781124760/photo_18_syjjpq.jpg",
+    "tag": "Vision & Mission",
+    "vision_label": "Our Vision",
+    "vision_title": "To inspire a brighter future for humanity",
+    "vision_text": "By creating a world where no community is left in darkness.",
+    "mission_label": "Our Mission",
+    "mission_title": "Reducing darkness",
+    "mission_text": "Through sustainable energy, recycling innovation, and human empowerment."
+  },
+  "story": {
+    "photo": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781118929/photo_19_nebt8w.jpg",
+    "photo_alt": "Valentine Nnamani, Founder of OneGrid Energies",
+    "badge_name": "Valentine Nnamani",
+    "badge_title": "Founder & CEO",
+    "tag": "Our Founder's Story",
+    "title": "Born From Darkness,\nBuilt For Light",
+    "paragraphs_before_quote": [
+      {
+        "text": "Growing up in Nigeria, smoke filled my small room every evening, burning my eyes and lungs, but poverty gave me no other option. I still remember trying to study under that weak yellow flame, praying the kerosene would not finish before I finished my homework."
+      },
+      {
+        "text": "One night while studying with a candle, I mistakenly slept off and fire destroyed my property. Earlier in my life, I had also narrowly survived a devastating flood caused by plastic waste blocking drainage systems in my community. But the experience that truly broke me happened years later."
+      },
+      {
+        "text": "I watched a local midwife trying to deliver a baby using only candlelight because there was no electricity. The room was dark, hot, and filled with fear. Every second felt dangerous. I could not stop thinking about how something as basic as light could decide whether a mother or child lived or died."
+      }
+    ],
+    "pull_quote": "What if waste itself could become hope?",
+    "paragraphs_after_quote": [
+      {
+        "text": "That question gave birth to OneGrid Energies. Today, our work impacts thousands of people every month. Children can now study safely at night. Women no longer inhale kerosene smoke while caring for their families. Rural healthcare centers have better lighting for childbirth and emergencies."
+      },
+      {
+        "text": "There were nights I slept with tears in my eyes, overwhelmed by the scale of the problems around me. Yet every morning, I woke up with the same determination: to reduce darkness in every form — physical darkness, environmental darkness, and even the hopelessness many young people silently carry inside them."
+      },
+      {
+        "text": "I believe innovation is not just about technology. It is about humanity."
+      },
+      {
+        "text": "Even if we cannot solve every problem in the world, while we are here, we can reduce darkness. That is why I continue to build."
+      }
+    ],
+    "signature_name": "Valentine Nnamani",
+    "signature_role": "CEO, OneGrid Energies",
+    "linkedin_link": "https://www.linkedin.com/in/valentinennamani",
+    "linkedin_button": "Valentine on LinkedIn",
+    "video_link": "https://youtu.be/E3JTWDBSRnI",
+    "video_button": "Watch Our Story"
+  },
+  "services": {
+    "tag": "What We Do",
+    "title": "Five Pathways\nOut Of Darkness",
+    "subtitle": "From waste to watts — every initiative we run creates a ripple of impact far beyond its immediate reach.",
+    "oneplastic": {
+      "video": "youtube:GcsAOIsl8Fs",
+      "video_label": "Watch OnePlastic video",
+      "thumbnail": "https://img.youtube.com/vi/GcsAOIsl8Fs/hqdefault.jpg",
+      "tagline": "OnePlastic Initiative",
+      "title": "Turning Waste\nInto Light",
+      "description": "We transform plastic waste and discarded laptop batteries into solar-powered lanterns that reduce darkness in underserved communities and schools. The lanterns are charged through community-based IoT-enabled solar charging stations managed by rural women.",
+      "link_text": "Learn More About OnePlastic"
+    },
+    "onehealth": {
+      "video": "instagram:C0tzLqHoopU",
+      "video_label": "Watch OneHealth video on Instagram",
+      "thumbnail": "https://res.cloudinary.com/dj2ciluyx/image/upload/c_fill,w_640,h_360,q_auto/v1781287846/photo_2_jb0chn.jpg",
+      "tagline": "OneHealth Programme",
+      "title": "Hope For Safe\nChildbirth",
+      "description": "Every two minutes, a woman dies from pregnancy-related causes. In our community, the real cause is not medicine — it is darkness. OneHealth transforms discarded laptop batteries into lifesaving solar power systems for underserved health centres. We help clinics run safer night deliveries, deliver reliable power for lighting, preserve vaccines, and improve maternal healthcare.",
+      "link_text": "Learn About OneHealth"
+    },
+    "onebox": {
+      "video": "youtube:EDaT10VNuNk",
+      "video_label": "Watch OneBox video",
+      "thumbnail": "https://img.youtube.com/vi/EDaT10VNuNk/hqdefault.jpg",
+      "tagline": "OneBox",
+      "title": "Lighting The Future After Sunset",
+      "description": "Onebox builds affordable mesh-grid solar system using smart meters and subscription financing to deliver reliable power.",
+      "link_text": "Explore OneBox"
+    },
+    "solar": {
+      "thumbnail": "https://res.cloudinary.com/dj2ciluyx/image/upload/c_fill,w_640,h_360,q_auto/v1781291396/photo_7_xg313j.jpg",
+      "tagline": "Solar Installations",
+      "title": "Reliable Energy Solutions",
+      "description": "Custom solar installations for homes, schools, churches, healthcare centres and small businesses — clean, reliable power where the grid fails.",
+      "link_text": "Get A Quote"
+    },
+    "training": {
+      "thumbnail": "https://res.cloudinary.com/dj2ciluyx/image/upload/c_fill,w_640,h_360,q_auto/v1781287844/photo_20_vnqklo.jpg",
+      "tagline": "Training Academy",
+      "title": "Empowering The Next Generation",
+      "description": "Practical renewable energy training — turning young Nigerians into solar technicians, entrepreneurs, and climate innovators.",
+      "link_text": "Join The Academy"
+    }
+  },
+  "impact": {
+    "tag": "Our Impact",
+    "title": "The Numbers\nTell The Story",
+    "subtitle": "Every lantern distributed, every job created, every tonne of CO₂ avoided is a life changed — and we're just getting started.",
+    "stats": [
+      {
+        "icon": "<svg viewBox=\"0 0 24 24\"><path d=\"M9 18h6M10 22h4M8 14a6 6 0 1 1 8 0c-.8.7-1.3 1.5-1.5 2.5h-5C9.3 15.5 8.8 14.7 8 14Z\"/><path d=\"M12 2v2M4.9 4.9l1.4 1.4M19.1 4.9l-1.4 1.4M2 12h2M20 12h2\"/></svg>",
+        "prefix": "",
+        "number": "2000",
+        "suffix": "+",
+        "label": "Lanterns Distributed"
+      },
+      {
+        "icon": "<svg viewBox=\"0 0 24 24\"><circle cx=\"9\" cy=\"8\" r=\"3\"/><circle cx=\"17\" cy=\"10\" r=\"2\"/><path d=\"M3 20v-2a6 6 0 0 1 12 0v2M15 16a5 5 0 0 1 6 2v2\"/></svg>",
+        "prefix": "",
+        "number": "12000",
+        "suffix": "+",
+        "label": "Lives Impacted"
+      },
+      {
+        "icon": "<svg viewBox=\"0 0 24 24\"><path d=\"M7 7h4V3M17 17h-4v4M20 9a8 8 0 0 0-13-4L5 7M4 15a8 8 0 0 0 13 4l2-2\"/><path d=\"M4 7h5M15 17h5\"/></svg>",
+        "prefix": "",
+        "number": "10",
+        "suffix": "K+",
+        "label": "Waste Plastics Recycled"
+      },
+      {
+        "icon": "<svg viewBox=\"0 0 24 24\"><path d=\"M12 21s7-3.8 7-10a4 4 0 0 0-7-2.7A4 4 0 0 0 5 11c0 6.2 7 10 7 10Z\"/><path d=\"M12 18V9M12 13c-2 0-3-1-3-3M12 15c2 0 3-1 3-3\"/></svg>",
+        "prefix": "",
+        "number": "2000",
+        "suffix": "+",
+        "label": "Tonnes CO₂ Avoided Yearly"
+      },
+      {
+        "icon": "<svg viewBox=\"0 0 24 24\"><rect x=\"3\" y=\"5\" width=\"18\" height=\"14\" rx=\"2\"/><path d=\"M3 10h18M8 15h2\"/><circle cx=\"16\" cy=\"15\" r=\"1\"/></svg>",
+        "prefix": "$",
+        "number": "616",
+        "suffix": "K",
+        "label": "Fuel Savings Generated"
+      },
+      {
+        "icon": "<svg viewBox=\"0 0 24 24\"><circle cx=\"12\" cy=\"12\" r=\"8\"/><path d=\"M12 7v5l3 2M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4\"/></svg>",
+        "prefix": "",
+        "number": "5",
+        "suffix": "M+",
+        "label": "Hours of Clean Light"
+      },
+      {
+        "icon": "<svg viewBox=\"0 0 24 24\"><path d=\"M4 21v-8h5v8M15 21V9h5v12M9 9V3h5v18\"/><path d=\"M11.5 6h0M17.5 12h0\"/></svg>",
+        "prefix": "",
+        "number": "7000",
+        "suffix": "+",
+        "label": "Improved Healthcare Outcomes"
+      },
+      {
+        "icon": "<svg viewBox=\"0 0 24 24\"><rect x=\"3\" y=\"7\" width=\"18\" height=\"12\" rx=\"2\"/><path d=\"M8 7V5h8v2M3 12h18M10 12v2h4v-2\"/></svg>",
+        "prefix": "",
+        "number": "40",
+        "suffix": "+",
+        "label": "Green Jobs Created"
+      },
+      {
+        "icon": "<svg viewBox=\"0 0 24 24\"><path d=\"M4 19V9M10 19V5M16 19v-8M22 19V3\"/><path d=\"m4 6 5-3 5 4 7-5M18 2h3v3\"/></svg>",
+        "prefix": "$",
+        "number": "6",
+        "suffix": "K+",
+        "label": "Increase in Household Income"
+      }
+    ]
+  },
+  "gallery": {
+    "tag": "Gallery",
+    "title": "Light In Action",
+    "subtitle": "From workshop to community — a glimpse of OneGrid Energies at work across Nigeria.",
+    "photos": [
+      {
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781287830/photo_1_nylwxy.jpg",
+        "category": "oneplastic",
+        "layout": [
+          "wide",
+          "tall"
+        ],
+        "caption": "OnePlastic"
+      },
+      {
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781287846/photo_2_jb0chn.jpg",
+        "category": "onehealth",
+        "layout": [],
+        "caption": "OneHealth"
+      },
+      {
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1784565479/IMG_5729_bwfxdc.jpg",
+        "category": "onehealth",
+        "layout": [],
+        "caption": "OneHealth"
+      },
+      {
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1784565484/IMG_5830_fitdng.jpg",
+        "category": "onehealth",
+        "layout": [],
+        "caption": "OneHealth"
+      },
+      {
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1784565487/IMG_5793_mcclzp.jpg",
+        "category": "onehealth",
+        "layout": [],
+        "caption": "OneHealth"
+      },
+      {
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1784565488/IMG_5854_wlfn1k.jpg",
+        "category": "onehealth",
+        "layout": [],
+        "caption": "OneHealth"
+      },
+      {
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1784565490/IMG_5800_hlul44.jpg",
+        "category": "onehealth",
+        "layout": [],
+        "caption": "OneHealth"
+      },
+      {
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1784565496/IMG_5810_gjl7m4.jpg",
+        "category": "onehealth",
+        "layout": [],
+        "caption": "OneHealth"
+      },
+      {
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1784565496/IMG_5735_w9fjyl.jpg",
+        "category": "onehealth",
+        "layout": [],
+        "caption": "OneHealth"
+      },
+      {
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1784565497/IMG_5773_mlnqhj.jpg",
+        "category": "onehealth",
+        "layout": [],
+        "caption": "OneHealth"
+      },
+      {
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1784565497/IMG_5815_d7llxe.jpg",
+        "category": "onehealth",
+        "layout": [],
+        "caption": "OneHealth"
+      },
+      {
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1784565503/IMG_5841_b1aacd.jpg",
+        "category": "onehealth",
+        "layout": [],
+        "caption": "OneHealth"
+      },
+      {
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1784565505/IMG_5676_yncvvv.jpg",
+        "category": "onehealth",
+        "layout": [],
+        "caption": "OneHealth"
+      },
+      {
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1784565506/IMG_5772_y6dbjp.jpg",
+        "category": "onehealth",
+        "layout": [],
+        "caption": "OneHealth"
+      },
+      {
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1784565507/IMG_5776_narnhx.jpg",
+        "category": "onehealth",
+        "layout": [],
+        "caption": "OneHealth"
+      },
+      {
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1784565508/IMG_5589_z0017y.jpg",
+        "category": "onehealth",
+        "layout": [],
+        "caption": "OneHealth"
+      },
+      {
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1784565509/IMG_6074_q4opri.jpg",
+        "category": "onehealth",
+        "layout": [],
+        "caption": "OneHealth"
+      },
+      {
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1784565510/IMG_5991_updfmn.jpg",
+        "category": "onehealth",
+        "layout": [],
+        "caption": "OneHealth"
+      },
+      {
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1784565514/IMG_5895_jgjw2r.jpg",
+        "category": "onehealth",
+        "layout": [],
+        "caption": "OneHealth"
+      },
+      {
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1784565514/IMG_5763_gew5tn.jpg",
+        "category": "onehealth",
+        "layout": [],
+        "caption": "OneHealth"
+      },
+      {
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1784565515/IMG_5927_do07my.jpg",
+        "category": "onehealth",
+        "layout": [],
+        "caption": "OneHealth"
+      },
+      {
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1784565515/IMG_5987_r35i8w.jpg",
+        "category": "onehealth",
+        "layout": [],
+        "caption": "OneHealth"
+      },
+      {
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1784565516/IMG_5920_bhfcxf.jpg",
+        "category": "onehealth",
+        "layout": [],
+        "caption": "OneHealth"
+      },
+      {
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1784565517/IMG_5900_nsif2p.jpg",
+        "category": "onehealth",
+        "layout": [],
+        "caption": "OneHealth"
+      },
+      {
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1784565518/IMG_5978_srrtvd.jpg",
+        "category": "onehealth",
+        "layout": [],
+        "caption": "OneHealth"
+      },
+      {
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1784565522/DSC_2502_kcthlj.jpg",
+        "category": "onehealth",
+        "layout": [],
+        "caption": "OneHealth"
+      },
+      {
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781287833/photo_3_eng6nz.jpg",
+        "category": "onebox",
+        "layout": [],
+        "caption": "OneBox"
+      },
+      {
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1784564050/photo4_cof80h.jpg",
+        "category": "solar",
+        "layout": [
+          "wide"
+        ],
+        "caption": "Solar Installation"
+      },
+      {
+        "image": "https://example.com/image5.jpg",
+        "category": "training",
+        "layout": [],
+        "caption": "Training Academy"
+      },
+      {
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781287844/photo_20_vnqklo.jpg",
+        "category": "office+workshop",
+        "layout": [],
+        "caption": "Office/Workshop"
+      },
+      {
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781291411/photo_8_owcwag.jpg",
+        "category": "oneplastic",
+        "layout": [],
+        "caption": ""
+      },
+      {
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781291406/photo_9_ezlvjt.jpg",
+        "category": "onebox",
+        "layout": [
+          "tall"
+        ],
+        "caption": ""
+      },
+      {
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781291396/photo_7_xg313j.jpg",
+        "category": "oneplastic",
+        "layout": [],
+        "caption": ""
+      },
+      {
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781291400/photo_13_vh5fiq.jpg",
+        "category": "onebox",
+        "layout": [],
+        "caption": ""
+      },
+      {
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781291405/photo_11_tbuygn.jpg",
+        "category": "onebox",
+        "layout": [],
+        "caption": ""
+      },
+      {
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781291397/photo_10_jtwfj0.jpg",
+        "category": "onebox",
+        "layout": [],
+        "caption": ""
+      },
+      {
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781291388/photo_6_dul4wx.jpg",
+        "category": "onebox",
+        "layout": [],
+        "caption": ""
+      },
+      {
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781291385/photo_14_umodr5.jpg",
+        "category": "onebox",
+        "layout": [],
+        "caption": ""
+      },
+      {
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781291384/photo_12_fde1d9.jpg",
+        "category": "onebox",
+        "layout": [],
+        "caption": ""
+      },
+      {
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781291383/photo_16_ee68cq.jpg",
+        "category": "onebox",
+        "layout": [],
+        "caption": ""
+      },
+      {
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781291382/photo_17_oqwfiz.jpg",
+        "category": "onebox",
+        "layout": [],
+        "caption": ""
+      },
+      {
+        "image": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781291380/photo_15_z1escj.jpg",
+        "category": "onebox",
+        "layout": [],
+        "caption": ""
+      }
+    ]
+  },
+  "partners": {
+    "tag": "Partners & Supporters",
+    "title": "Building Brighter Futures Together",
+    "subtitle": "Trusted by NGOs, corporates, and development partners who share our mission to reduce darkness across Nigeria.",
+    "logos": [
+      {
+        "logo": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781601943/IMG_0987_zktqcd.png"
+      },
+      {
+        "logo": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781601944/IMG_0984_b4xyjz.png"
+      },
+      {
+        "logo": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781601944/IMG_0986_ieljyl.jpg"
+      },
+      {
+        "logo": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781601944/IMG_0996_mo1sg4.jpg"
+      },
+      {
+        "logo": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781601944/IMG_0981_fkct5m.jpg"
+      },
+      {
+        "logo": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781601944/IMG_0989_bmoudg.jpg"
+      },
+      {
+        "logo": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781601945/IMG_0982_aabhlf.png"
+      },
+      {
+        "logo": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781601944/IMG_0985_lma5hw.png"
+      },
+      {
+        "logo": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781601945/IMG_0979_x5cfhs.png"
+      },
+      {
+        "logo": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781601945/IMG_0983_k8dxxa.png"
+      },
+      {
+        "logo": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781601945/IMG_0976_gwmqaa.png"
+      },
+      {
+        "logo": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781601945/IMG_0977_e5nrd0.png"
+      },
+      {
+        "logo": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781601945/IMG_0978_yxsvwz.jpg"
+      },
+      {
+        "logo": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781601945/IMG_0980_w7ztv1.jpg"
+      },
+      {
+        "logo": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781601946/IMG_0975_f8nnnd.jpg"
+      },
+      {
+        "logo": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781601948/IMG_0966_ahvcti.png"
+      },
+      {
+        "logo": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781601948/IMG_0988_vmy0lk.jpg"
+      },
+      {
+        "logo": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781601948/IMG_0972_cqosmc.png"
+      },
+      {
+        "logo": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781601948/IMG_0974_mye4kr.jpg"
+      },
+      {
+        "logo": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781601948/IMG_0968_br6npr.jpg"
+      },
+      {
+        "logo": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781601948/IMG_0970_topied.jpg"
+      },
+      {
+        "logo": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781601949/IMG_0961_opd6xe.png"
+      },
+      {
+        "logo": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781601949/IMG_0964_khxshp.png"
+      },
+      {
+        "logo": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781601949/IMG_0973_kh9tk5.png"
+      },
+      {
+        "logo": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781601949/IMG_0965_ucr1ej.jpg"
+      },
+      {
+        "logo": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781601949/IMG_0967_dbsk1b.jpg"
+      },
+      {
+        "logo": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1781601950/IMG_0963_jsktse.png"
+      }
+    ],
+    "footnote": "27+ organizations · NGOs · Corporates · Development partners"
+  },
+  "contact": {
+    "tag": "Get In Touch",
+    "title": "Ready To Reduce\nDarkness Together?",
+    "subtitle": "Whether you're looking to partner, fund, invest, or simply learn more — we'd love to hear from you.",
+    "form_title": "Send Us A Message"
+  }
+}

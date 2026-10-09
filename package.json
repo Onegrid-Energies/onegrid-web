@@ -1,0 +1,15 @@
+{
+  "name": "onegrid-web",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build-static-pages.mjs && bash cache_burster.sh",
+    "build:pages": "node build-static-pages.mjs",
+    "cms:schema": "node scripts/cms/generate-schema.mjs",
+    "cms:extract": "node scripts/cms/extract-content.mjs"
+  },
+  "dependencies": {
+    "parse5": "^7.3.0",
+    "parse5-htmlparser2-tree-adapter": "^7.1.0"
+  }
+}

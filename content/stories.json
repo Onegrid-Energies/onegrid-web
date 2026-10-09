@@ -1,0 +1,123 @@
+{
+  "seo": {
+    "title": "Stories of Hope | OneGrid Energies",
+    "description": "Meet the people and communities gaining safer, cleaner light through OneGrid Energies and the OnePlastic initiative."
+  },
+  "intro": {
+    "video": "https://res.cloudinary.com/dj2ciluyx/video/upload/v1781117070/Background_video_1_nwdtxu.mp4",
+    "poster": "https://res.cloudinary.com/dj2ciluyx/video/upload/so_0,q_auto:low,w_800,c_limit/v1781117070/Background_video_1_nwdtxu.jpg",
+    "label": "Stories of Hope",
+    "title": "Every light carries a human story.",
+    "subtitle": "This shared intro video opens the Stories of Hope page before you continue into the people and communities behind OneGrid Energies."
+  },
+  "hero": {
+    "tag": "Stories of Hope",
+    "title": "While We Are Here,\nWe Can *Reduce*\nDarkness.",
+    "subtitle": "These are not statistics. These are people. These are the faces behind the numbers — and their stories remind us why none of this work can stop."
+  },
+  "videos": {
+    "tag": "Community Stories",
+    "title": "Watch The Impact",
+    "stories": [
+      {
+        "video": "https://youtu.be/1vZHWSqqW6U",
+        "video_label": "Watch Pastor Joel's story",
+        "style": [],
+        "eyebrow": "Story 01",
+        "title": "Pastor Joel's Story — Omasi Uno",
+        "text": "In a community where darkness once ended activities after sunset, this pastor shares how OnePlastic is helping restore light, hope, and dignity in Omasi Uno. More than a lantern, it has become a symbol of possibility for families and children.",
+        "impact": [
+          {
+            "value": "3x",
+            "label": "Congregation growth"
+          },
+          {
+            "value": "0",
+            "label": "Kerosene fires"
+          },
+          {
+            "value": "Daily",
+            "label": "Evening programmes"
+          }
+        ]
+      },
+      {
+        "video": "https://youtu.be/envziBnA3ig",
+        "video_label": " Watch Charging Station Manager's Story",
+        "style": [
+          "story-video-card__media--yellow"
+        ],
+        "eyebrow": "Story 02",
+        "title": "Charging Station Manager's Story",
+        "text": "Meet one of the women powering change in her community through our OnePlastic solar charging station. From managing clean energy access to earning income and supporting households, her story shows how energy can empower lives.",
+        "impact": [
+          {
+            "value": "2x",
+            "label": "Income increase"
+          },
+          {
+            "value": "2",
+            "label": "Jobs created"
+          },
+          {
+            "value": "60+",
+            "label": "Families served"
+          }
+        ]
+      },
+      {
+        "video": "https://youtu.be/eC_MZBjT4JY",
+        "video_label": "Watch School Outreach Story",
+        "style": [
+          "story-video-card__media--image"
+        ],
+        "eyebrow": "Story 03",
+        "title": "School Outreach Story",
+        "text": "We visited a local school to distribute OnePlastic solar lanterns to students whose education is often interrupted by darkness. This moment captures the smiles, hope, and dreams of children who can now study safely at night.",
+        "impact": [
+          {
+            "value": "80",
+            "label": "Families received lanterns"
+          },
+          {
+            "value": "340",
+            "label": "Pupils impacted"
+          },
+          {
+            "value": "+23%",
+            "label": "Exam improvement"
+          }
+        ]
+      },
+      {
+        "video": "https://youtu.be/yuwl52PtMx0",
+        "video_label": "Watch OneGrid Energies Community Story",
+        "style": [
+          "story-video-card__media--dark"
+        ],
+        "eyebrow": "Story 04",
+        "title": "OneGrid Energies Community Story",
+        "text": "This heartfelt testimonial shares the real-life impact of OnePlastic from the perspective of a community member whose daily life has changed through access to clean, affordable light. A reminder that small innovations can create powerful change.",
+        "impact": [
+          {
+            "value": "2000",
+            "label": "Lanterns delivered"
+          },
+          {
+            "value": "Down",
+            "label": "Maternal risk"
+          },
+          {
+            "value": "24/7",
+            "label": "Healthcare now"
+          }
+        ]
+      }
+    ]
+  },
+  "cta": {
+    "title": "Your Story Starts Here",
+    "text": "Every investment, every partnership, every lantern funded writes a new chapter in someone's story of hope.",
+    "button": "Partner With OneGrid"
+  }
+}

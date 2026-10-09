@@ -1,0 +1,205 @@
+{
+  "seo": {
+    "title": "Recognition, Milestones & Media | OneGrid Energies",
+    "description": "Explore OneGrid Energies’ recognitions, milestones, and media coverage for clean energy, circular innovation, and community impact."
+  },
+  "intro": {
+    "video": "https://res.cloudinary.com/dj2ciluyx/video/upload/v1781117070/Background_video_1_nwdtxu.mp4",
+    "poster": "https://res.cloudinary.com/dj2ciluyx/video/upload/so_0,q_auto:low,w_800,c_limit/v1781117070/Background_video_1_nwdtxu.jpg",
+    "label": "Recognition, Milestones & Media",
+    "title": "A journey built to reduce darkness.",
+    "subtitle": "Explore the recognitions and milestones that reflect OneGrid Energies’ work in clean energy, circular innovation and community impact."
+  },
+  "hero": {
+    "tag": "Recognition, Milestones & Media",
+    "title": "We don't build for awards.\n*We build to reduce darkness.*",
+    "subtitle": "From a small idea in Onitsha to national and international platforms, OneGrid Energies has been recognised by organisations, competitions, institutions and communities for our work in clean energy, circular innovation and community impact.",
+    "button": "Explore the journey"
+  },
+  "timeline": {
+    "tag": "A journey of recognition",
+    "title": "Built in Onitsha.\nRecognised around the world.",
+    "subtitle": "Each milestone represents a growing belief in practical ideas that make clean energy more accessible.",
+    "items": [
+      {
+        "year": "2020",
+        "title": "2nd Prize — Ugwumba Enterprise Challenge",
+        "place": "Abuja, Nigeria",
+        "description": "",
+        "link_url": "https://ugwumbaleaders.org/uec2020-bilkisu-valentine-ruth-and-others-emerge-winners-at-the-2020-ugwumba-enterprise-challenge/",
+        "link_text": "Read the recognition"
+      },
+      {
+        "year": "2022",
+        "title": "Top 30 Innovators in Anambra State",
+        "place": "Anambra, Nigeria",
+        "description": "Recognised among innovative young people contributing to the development of Anambra."
+      },
+      {
+        "year": "2022",
+        "title": "UNDP timbuktoo Manutech Bootcamp",
+        "place": "Addis Ababa, Ethiopia",
+        "link_url": "https://www.undp.org/sites/g/files/zskgke326/files/2026-02/ethiopia_timbuktoo_manutech_hub_bootcamp_2_acceleration_readiness_track_booklet.pdf",
+        "link_text": "View programme booklet"
+      },
+      {
+        "year": "2023",
+        "title": "Winner — Because International Impact Competition",
+        "place": "Idaho, United States",
+        "link_url": "https://becauseinternational.org/pages/entrepreneurs/valentine-nnamani",
+        "link_text": "Read the story"
+      },
+      {
+        "year": "2023",
+        "title": "Top Four Winner — Sustainability Impact Forum (SIF) by SDSN",
+        "place": "Rome, Italy",
+        "description": "OneGrid Energies was selected among the winners of the Sustainability Impact Forum.",
+        "link_url": "https://www.linkedin.com/posts/sustainability-impact-forum_sif23-winners-announcement-activity-7080251275581255680-YOke",
+        "link_text": "View announcement"
+      },
+      {
+        "year": "2023",
+        "title": "Overall Winner — AU-EU ENRICH in Africa Open Innovation Challenge",
+        "place": "Cape Town, South Africa",
+        "link_url": "https://ugwumbaleaders.org/ugwumba-fellow-emerges-overall-winner-at-the-au-eu-innovation-festival/",
+        "link_text": "Read the recognition"
+      },
+      {
+        "year": "2023",
+        "title": "First Prize — Nigeria Energy Forum Challenge (TIEC)",
+        "place": "Lagos, Nigeria",
+        "link_url": "https://www.linkedin.com/feed/update/urn:li:activity:7091668509688029184",
+        "link_text": "View announcement"
+      },
+      {
+        "year": "2023",
+        "title": "First Prize — Africa Energy Innovation Competition (AEIC)",
+        "place": "Lagos, Nigeria",
+        "link_url": "https://thenef.org/ideas-competition-past-present-winners/",
+        "link_text": "View winners"
+      },
+      {
+        "year": "2023",
+        "title": "1st Runner-Up — Innovation Makers Challenge by TTSWG",
+        "place": "Lagos, Nigeria",
+        "link_url": "https://guardian.ng/appointments/winners-emerge-at-groups-innovation-challenge/",
+        "link_text": "Read the news"
+      },
+      {
+        "year": "2023",
+        "title": "Fellow — Yunus & Youth Global Fellow",
+        "place": "Delaware, United States",
+        "link_url": "https://yunusandyouth.com/from-gutter-to-glow-illuminating-the-path-to-change/",
+        "link_text": "Read the story"
+      },
+      {
+        "year": "2024",
+        "title": "Winner — TechCabal Moonshot Battlefield by Quidax",
+        "place": "Lagos, Nigeria",
+        "link_url": "https://insights.techcabal.com/case-study/tc-battlefield-the-global-launchpad-for-african-startups/",
+        "link_text": "Read the case study"
+      },
+      {
+        "year": "2024",
+        "title": "Winner — Innovate by CrossPoint Innovate",
+        "place": "Lagos, Nigeria",
+        "link_url": "https://nairametrics.com/2024/05/04/innovate-awards-3000-to-nigerian-business-owners-at-pitch-and-grant-competition/",
+        "link_text": "Read the news"
+      },
+      {
+        "year": "2024",
+        "title": "Winner — Techstars Startup Weekend by Solution Innovation District",
+        "place": "Anambra, Nigeria",
+        "link_url": "https://www.linkedin.com/posts/solution-innovation-district_techstars-startupweekend-onitsha-activity-7200791420964605952-dCrU",
+        "link_text": "View announcement"
+      },
+      {
+        "year": "2024",
+        "title": "Winner — GIGM Prize for Innovation, by Boma Prize for Africa",
+        "place": "Lagos, Nigeria",
+        "link_url": "https://bomaprize.org/boma-prize-semi-final-a-day-of-innovation-inspiration-and-impact/",
+        "link_text": "Read the news"
+      },
+      {
+        "year": "2024",
+        "title": "Scholar — One Young World Ambassador (bp Net Zero Scholar)",
+        "link_url": "https://www.oneyoungworld.com/project/onegrid-energies",
+        "link_text": "View project"
+      },
+      {
+        "year": "2024",
+        "title": "United Bank for Africa Incubator",
+        "place": "Nsukka, Nigeria"
+      },
+      {
+        "year": "2025",
+        "title": "Winner — Falling Walls Lab Nigeria, Falling Walls Science Summit",
+        "place": "Berlin, Germany",
+        "link_url": "https://falling-walls.com/de/foundation/people/valentine-nnamani",
+        "link_text": "View profile"
+      },
+      {
+        "year": "2025",
+        "title": "RAISEAfrica Bootcamp by RES4Africa Foundation",
+        "place": "Milan, Italy",
+        "link_url": "https://res4africa.org/news/2025/raiseafrica-2025-meet-the-selected-entrepreneurs/",
+        "link_text": "Meet the entrepreneurs"
+      },
+      {
+        "year": "2025",
+        "title": "Best Climate Mitigation / First Runner-Up — UNIDO Global Cleantech Innovation Programme (GCIP)",
+        "place": "Istanbul, Turkey",
+        "link_url": "https://cchub.africa/gcip-nigeria-rounds-up-third-cohort-hosts-national-forum-and-award-ceremony-2025-in-lagos-nigeria/",
+        "link_text": "Read the news"
+      },
+      {
+        "year": "2026",
+        "title": "1st Place — MTN PachiPanda Challenge Nigeria",
+        "place": "Johannesburg, South Africa",
+        "link_url": "https://businessday.ng/life/article/onegrid-energies-to-fly-nigerias-flag-at-africa-pachipanda-challenge/",
+        "link_text": "Read the news"
+      },
+      {
+        "year": "2026",
+        "title": "Anambra Man of the Year Awards (AMTY) — Startup Company of the Year",
+        "place": "Anambra, Nigeria",
+        "link_url": "https://www.thisdaylive.com/2026/06/12/onitsha-based-onegrid-energies-emerges-amty-startup-company-of-the-year/",
+        "link_text": "Read the news"
+      },
+      {
+        "year": "2026",
+        "title": "Overall Best Winner — Inaugural Mustapha Abdullahi Energy Leadership Fellowship (MAELF)",
+        "place": "Abuja, Nigeria",
+        "link_url": "https://thenationonlineng.net/energy-fellowship-awards-n20m-to-young-innovators/",
+        "link_text": "Read the news"
+      }
+    ]
+  },
+  "philosophy": {
+    "tag": "Our philosophy",
+    "title": "We Don't Build for Awards",
+    "closing": "While we are here, we can reduce darkness.",
+    "paragraphs": [
+      {
+        "text": "Every recognition is an honour, but it is not the reason we started."
+      },
+      {
+        "text": "We started because we saw darkness."
+      },
+      {
+        "text": "Darkness in homes without reliable electricity. Darkness created by waste that was treated as worthless. Darkness that limited children's ability to study, families' ability to work, and communities' ability to thrive."
+      },
+      {
+        "text": "The awards are reminders that the work matters. But the real measure of our success is not the number of trophies on our shelf. It is the number of lives that experience more light because we chose to build."
+      }
+    ]
+  },
+  "cta": {
+    "tag": "Keep the work moving",
+    "title": "The Recognition Is Only the Beginning",
+    "text": "We are continuing to build practical clean-energy solutions that expand access to electricity, transform waste into useful products and create opportunities for the people and communities we serve.",
+    "button_1": "Partner With Us",
+    "button_2": "Explore Our Impact",
+    "button_3": "Support OnePlastic"
+  }
+}

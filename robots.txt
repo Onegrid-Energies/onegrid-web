@@ -1,5 +1,9 @@
 User-agent: *
 Allow: /
+# Editing source (src/index.html) — not a public page.
+Disallow: /src/
+# Admin app source — not a public page.
+Disallow: /admin-app/
 
 Sitemap: https://onegridenergies.com/sitemap.xml
 Sitemap: https://onegridenergies.org/sitemap.xml
