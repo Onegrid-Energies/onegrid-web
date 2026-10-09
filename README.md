@@ -2,13 +2,14 @@
 
 A static website with a separate content admin (`admin-app/`, hosted on Render). Staff edit page
 text, photos, lists and contact details in the browser; every save rebuilds the static pages
-automatically. Each public route has its own folder and `index.html`, so the site works on hosts
-such as Namecheap with no server and no rewrites.
+automatically. The published files are plain HTML in folders (each route has its own
+`index.html`), so the website can be hosted anywhere (Render, Netlify, Cloudflare Pages, cPanel…)
+with no server and no rewrites.
 
 ```
 Editor saves in the admin app ──► content/*.json committed to GitHub
                                ──► "Build site" GitHub Action runs npm run build
-                               ──► generated pages committed (and uploaded over FTP if set up)
+                               ──► generated pages committed ──► host deploys them
 ```
 
 - **Website content** lives as JSON files in `content/` in this repository (full history in Git).
@@ -41,9 +42,8 @@ in `admin-app/schema.yml`, which is generated from the template (see below).
 
 - **GitHub Actions** — in the repo: *Settings → Actions → General → Workflow permissions* →
   **Read and write permissions**, so the "Build site" workflow can commit the generated pages.
-- **Deployment** — to upload the rebuilt pages to Namecheap automatically, add the repository
-  secrets `FTP_SERVER`, `FTP_USERNAME`, `FTP_PASSWORD` and optionally `FTP_SERVER_DIR`
-  (e.g. `public_html/`). Without them, deploy the generated files the way you do today.
+- **Website hosting** — connect the repository to a static host that deploys on every push to
+  `master` (see *Hosting* below).
 - **Admin app** — deploy it on Render and connect MongoDB Atlas, GitHub, and optionally Google,
   Brevo and Cloudinary: see [admin-app/README.md](admin-app/README.md).
 
@@ -88,3 +88,15 @@ and commits the result.
 
 To try the admin locally against this checkout (no GitHub or MongoDB needed), see *Local
 development* in [admin-app/README.md](admin-app/README.md).
+
+## Hosting
+
+Deploy the repository root as a static site with **no build command** (the GitHub Action has
+already built it), from the `master` branch, on a host that redeploys on every push — e.g. a
+Render *Static Site* (publish directory `.`), Netlify, or Cloudflare Pages. Files the browser
+needs: `index.html`, the route folders (`home/`, `about/`, `oneplastic/`, `stories-of-hope/`,
+`recognitions/`, `quote/`, `contact/`), `styles.*.css`, `script.*.js`, `robots.txt` and
+`sitemap.xml`. Not needed: `src/`, `content/`, `scripts/`, `admin-app/`, `build-static-pages.mjs`.
+
+For a host that can't pull from GitHub (e.g. FTP upload to cPanel), download the repository after
+the "Build site" action finishes and upload those files.

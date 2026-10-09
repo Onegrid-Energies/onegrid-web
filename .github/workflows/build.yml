@@ -1,19 +1,28 @@
-# Rebuilds the static pages whenever content (usually saved from the admin app) or
-# the template changes, commits the generated files, and optionally uploads
-# the site over FTP when the FTP_* repository secrets are set.
+# Rebuilds the static pages whenever content, design or code changes on master (including every
+# save from the admin app) and commits the result, so the repository always contains a
+# ready-to-serve site. Any static host connected to the repository (Render, Netlify, Cloudflare
+# Pages, cPanel Git…) can deploy it as-is, with no build step on the host.
 name: Build site
 
 on:
   push:
     branches: [master]
-    # The admin app's own code and schema don't affect the pages.
-    paths-ignore:
-      - 'admin-app/**'
+    paths:
+      - 'content/**'
+      - 'src/**'
+      - 'styles.*.css'
+      - 'script.*.js'
+      - 'build-static-pages.mjs'
+      - 'cache_burster.sh'
+      - 'scripts/**'
+      - 'package.json'
+      - 'package-lock.json'
   workflow_dispatch:
 
 permissions:
   contents: write
 
+# Saves made in quick succession build one after another, never in parallel.
 concurrency:
   group: build-site
   cancel-in-progress: false
@@ -21,10 +30,10 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      FTP_SERVER: ${{ secrets.FTP_SERVER }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}   # latest master, including any earlier build commits
 
       - uses: actions/setup-node@v4
         with:
@@ -36,42 +45,19 @@ jobs:
       - name: Build pages
         run: npm run build
 
-      - name: Commit generated files
+      - name: Commit generated pages
         run: |
           if [ -z "$(git status --porcelain)" ]; then
-            echo "Generated files are up to date."
+            echo "Pages already up to date."
             exit 0
           fi
-          git config user.name "github-actions[bot]"
+          git config user.name "onegrid-site-builder"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "Rebuild pages from ${GITHUB_SHA::7}"
+          git commit -m "Build site from ${GITHUB_SHA::7}"
           for attempt in 1 2 3; do
-            git pull --rebase origin master && git push origin HEAD:master && exit 0
+            git pull --rebase origin "${GITHUB_REF_NAME}" && git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0
             sleep 5
           done
           echo "Could not push the built pages." >&2
           exit 1
-
-      - name: Deploy over FTP
-        if: env.FTP_SERVER != ''
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: ${{ secrets.FTP_SERVER_DIR || './' }}
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/node_modules/**
-            .github/**
-            admin-app/**
-            src/**
-            scripts/**
-            content/**
-            package.json
-            package-lock.json
-            build-static-pages.mjs
-            cache_burster.sh
-            README.md
