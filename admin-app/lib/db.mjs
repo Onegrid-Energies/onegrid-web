@@ -32,7 +32,15 @@ async function ttlIndex(collection, field, seconds) {
 // ---------------------------------------------------------------- MongoDB
 
 function mongoDb() {
-  const client = new MongoClient(config.mongodb.uri, { appName: 'onegrid-admin', serverSelectionTimeoutMS: 10_000 });
+  // A small pool is plenty for this admin, and idle connections are closed after a minute, so
+  // bursts of website visits don't hold hundreds of connections open (Atlas M0 allows 500).
+  const client = new MongoClient(config.mongodb.uri, {
+    appName: 'onegrid-admin',
+    serverSelectionTimeoutMS: 10_000,
+    maxPoolSize: 10,
+    minPoolSize: 0,
+    maxIdleTimeMS: 60_000
+  });
   let db;
   const col = name => db.collection(name);
 

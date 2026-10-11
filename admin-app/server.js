@@ -375,7 +375,7 @@ try {
   process.exit(1);
 }
 
-createServer(async (req, res) => {
+const server = createServer(async (req, res) => {
   try {
     await handle(req, res);
   } catch (error) {
@@ -390,7 +390,22 @@ createServer(async (req, res) => {
       }
     }
   }
-}).listen(config.port, () => {
+});
+server.listen(config.port, () => {
   console.log(`OneGrid admin running on ${config.publicUrl} (content: ${store.backend}${store.backend === 'github' ? ` ${config.github.repo}@${config.github.branch}` : ''}; database: ${db.kind}${db.kind === 'mongodb' ? ` ${config.mongodb.dbName}` : ''})`);
   console.log(`Sign-in methods: ${Object.entries(features).filter(([k, v]) => v && k !== 'uploads').map(([k]) => k).join(', ')}; uploads ${features.uploads ? 'on' : 'off'}`);
 });
+
+// Render (and Ctrl+C locally) stops the app with a signal: finish open requests and close the
+// database connections, so they don't linger on the Atlas cluster after each deploy or restart.
+let stopping = false;
+for (const signal of ['SIGTERM', 'SIGINT']) {
+  process.on(signal, async () => {
+    if (stopping) return;
+    stopping = true;
+    server.close();
+    setTimeout(() => process.exit(0), 5000).unref();
+    await db.close().catch(() => {});
+    process.exit(0);
+  });
+}
