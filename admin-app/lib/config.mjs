@@ -66,6 +66,14 @@ export const config = {
     folder: env.CLOUDINARY_FOLDER || 'onegrid'
   },
 
+  // Website analytics (see lib/analytics.mjs). Days and hours are counted in this time zone.
+  analytics: {
+    timezone: env.ANALYTICS_TIMEZONE || 'Africa/Lagos',
+    retentionDays: Math.max(30, Number(env.ANALYTICS_RETENTION_DAYS) || 730),
+    // Sites allowed to send visits, besides SITE_URL (and its www./bare twin).
+    extraOrigins: String(env.ANALYTICS_ORIGINS || '').split(',').map(item => item.trim().replace(/\/+$/, '')).filter(Boolean)
+  },
+
   // The content sections and fields editors see.
   schemaFile: path.join(APP_DIR, 'schema.yml')
 };

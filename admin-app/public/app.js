@@ -70,7 +70,7 @@
       return;
     }
     state.dirty = false;
-    route();
+    if (state.me) route(); // before start-up finishes, start-up does the routing
   });
 
   function route() {
@@ -87,6 +87,7 @@
     if (parts[0] === 'c' && parts[2] === 'e' && parts[3]) return editorView(parts[1], parts[3]);
     if (parts[0] === 'team') return teamView();
     if (parts[0] === 'activity') return activityView();
+    if (parts[0] === 'analytics') return analyticsView(params);
     if (parts[0] === 'account') return accountView(params);
     setView(h('div', { class: 'empty', text: 'Page not found.' }));
   }
@@ -96,6 +97,7 @@
     const nav = $('[data-nav]');
     nav.replaceChildren(
       h('a', { class: 'nav-link', href: '#/', 'data-route': '' }, 'Dashboard'),
+      state.me.role === 'owner' ? h('a', { class: 'nav-link', href: '#/analytics', 'data-route': 'analytics' }, 'Analytics') : null,
       h('div', { class: 'nav-label', text: 'Content' }),
       ...state.schema.collections.map(c => h('a', { class: 'nav-link', href: `#/c/${c.name}`, 'data-route': `c/${c.name}` }, c.label)),
       h('div', { class: 'nav-label', text: 'Admin' }),
@@ -523,7 +525,7 @@
             build();
             card.classList.toggle('collapsed');
             growTextareas(card);
-          } }, h('span', { class: 'num', text: String(index + 1).padStart(2, '0') }), thumb, titleEl, h('span', { class: 'head-actions' }, iconButtons())),
+          } }, h('span', { class: 'num', text: String(index + 1).padStart(2, '0') }), thumb, titleEl, h('span', { class: 'row-actions' }, iconButtons())),
           body);
         if (openIndex === index) { build(); requestAnimationFrame(() => growTextareas(card)); }
         return card;
@@ -684,6 +686,291 @@
               h('td', {}, itemCell(entry)))))))
         : h('div', { class: 'empty', text: 'No activity yet.' })
     );
+  }
+
+  // ---------------------------------------------------------------- analytics (owners)
+  const RANGE_LABELS = { today: 'Today', '7d': '7 days', '30d': '30 days', '90d': '90 days', '12m': '12 months' };
+  const PAGE_LABELS = { home: 'Home', about: 'About', oneplastic: 'OnePlastic', 'stories-of-hope': 'Stories of Hope', recognitions: 'Recognitions', quote: 'Get a quote', contact: 'Contact', other: 'Other', '404': 'Not found' };
+  const ACTIONS = [
+    ['whatsapp', 'WhatsApp taps'], ['enquiry', 'Forms sent'], ['plan_click', 'Solar plans selected'], ['quote_click', 'Clicks to Get a quote'],
+    ['contact_click', 'Clicks to Contact'], ['email', 'Email taps'], ['call', 'Phone taps'], ['media_open', 'Gallery photos opened'],
+    ['video_play', 'Videos played'], ['outbound', 'Links to other sites']
+  ];
+  const num = value => Math.round(value || 0).toLocaleString();
+  const pct = value => `${Math.round((value || 0) * 100)}%`;
+  const dur = seconds => {
+    const s = Math.round(seconds || 0);
+    if (s < 60) return `${s}s`;
+    if (s < 3600) return `${Math.floor(s / 60)}m ${String(s % 60).padStart(2, '0')}s`;
+    return `${Math.floor(s / 3600)}h ${String(Math.floor((s % 3600) / 60)).padStart(2, '0')}m`;
+  };
+  const flag = code => (/^[A-Z]{2}$/.test(code || '') ? String.fromCodePoint(...[...code].map(c => 0x1f1a5 + c.charCodeAt(0))) + ' ' : '');
+  const shortTitle = title => String(title || '').split(/ — | \| /)[0].trim();
+  const ago = date => {
+    const s = Math.max(0, Math.round((Date.now() - new Date(date)) / 1000));
+    if (s < 60) return 'just now';
+    if (s < 3600) return `${Math.floor(s / 60)} min ago`;
+    if (s < 86400) return `${Math.floor(s / 3600)} h ago`;
+    return new Date(date).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
+  };
+
+  function delta(current, previous, { lowerIsBetter = false, asPoints = false } = {}) {
+    if (!previous && !current) return null;
+    if (!previous) return h('span', { class: 'delta up', text: 'new' });
+    const change = asPoints ? (current - previous) * 100 : ((current - previous) / previous) * 100;
+    if (Math.abs(change) < 0.5) return h('span', { class: 'delta', text: '0%' });
+    const good = lowerIsBetter ? change < 0 : change > 0;
+    return h('span', { class: `delta ${good ? 'up' : 'down'}`, title: 'Compared with the previous period' }, `${change > 0 ? '▲' : '▼'} ${Math.abs(Math.round(change))}${asPoints ? ' pts' : '%'}`);
+  }
+
+  // Horizontal bar list: rows of { label, value, sub }.
+  function bars(rows, { empty = 'No data yet.', format = num, max } = {}) {
+    if (!rows.length) return h('div', { class: 'muted small empty-note', text: empty });
+    const top = max || Math.max(...rows.map(row => row.value), 1);
+    return h('div', { class: 'bars' }, rows.map(row => h('div', { class: 'bar-row', title: row.title || row.label },
+      h('div', { class: 'bar-fill', style: `width:${Math.max(2, (row.value / top) * 100)}%` }),
+      h('span', { class: 'bar-label' }, row.prefix || '', row.href ? h('a', { href: row.href, target: '_blank', rel: 'noopener', text: row.label }) : row.label),
+      row.sub ? h('span', { class: 'bar-sub', text: row.sub }) : null,
+      h('b', { class: 'bar-value', text: format(row.value) }))));
+  }
+
+  function table(columns, rows, empty = 'No data yet.') {
+    if (!rows.length) return h('div', { class: 'muted small empty-note', text: empty });
+    return h('div', { class: 'table-scroll' }, h('table', { class: 'table data-table' },
+      h('thead', {}, h('tr', {}, columns.map(column => h('th', { class: column.num ? 'num' : '', text: column.label })))),
+      h('tbody', {}, rows.map(row => h('tr', {}, columns.map(column => h('td', { class: column.num ? 'num' : '', 'data-label': column.label }, column.render(row))))))));
+  }
+
+  // Line chart (SVG) of visitors and page views, with a hover/tap readout.
+  function lineChart(series, unit) {
+    const W = window.innerWidth < 600 ? 420 : 760; const H = window.innerWidth < 600 ? 240 : 220; const P = { l: 34, r: 10, t: 12, b: 26 };
+    const max = Math.max(4, ...series.map(point => Math.max(point.visitors, point.pageviews)));
+    const step = Math.pow(10, Math.floor(Math.log10(max))) * (max / Math.pow(10, Math.floor(Math.log10(max))) > 5 ? 2 : 1);
+    const top = Math.ceil(max / step) * step;
+    const x = i => P.l + (series.length === 1 ? (W - P.l - P.r) / 2 : (i * (W - P.l - P.r)) / (series.length - 1));
+    const y = v => H - P.b - (v / top) * (H - P.t - P.b);
+    const path = key => series.map((point, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)},${y(point[key]).toFixed(1)}`).join('');
+    const label = bucket => {
+      if (unit === 'hour') return `${String(bucket).padStart(2, '0')}:00`;
+      if (unit === 'month') return new Date(`${bucket}-01T12:00:00`).toLocaleDateString(undefined, { month: 'short', year: '2-digit' });
+      return new Date(`${bucket}T12:00:00`).toLocaleDateString(undefined, { day: 'numeric', month: 'short' });
+    };
+    const svgNs = 'http://www.w3.org/2000/svg';
+    const s = (tag, attrs) => { const el = document.createElementNS(svgNs, tag); for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, v); return el; };
+    const svg = s('svg', { viewBox: `0 0 ${W} ${H}`, class: 'chart', role: 'img', 'aria-label': 'Visitors and page views over time' });
+    for (let v = 0; v <= top; v += step) {
+      svg.append(s('line', { x1: P.l, x2: W - P.r, y1: y(v), y2: y(v), class: 'grid' }));
+      const t = s('text', { x: P.l - 6, y: y(v) + 4, class: 'axis', 'text-anchor': 'end' }); t.textContent = num(v); svg.append(t);
+    }
+    const every = Math.ceil(series.length / (W < 600 ? 5 : 8));
+    const last = series.length - 1;
+    series.forEach((point, i) => {
+      // Every few points, plus the last one when it isn't crowded by its neighbour.
+      if (i !== last ? i % every || (last - i < every / 2 && last % every) : 0) return;
+      const t = s('text', { x: x(i), y: H - 6, class: 'axis', 'text-anchor': i === 0 ? 'start' : i === series.length - 1 ? 'end' : 'middle' });
+      t.textContent = label(point.bucket); svg.append(t);
+    });
+    svg.append(s('path', { d: `${path('visitors')}L${x(series.length - 1)},${y(0)}L${x(0)},${y(0)}Z`, class: 'area' }));
+    svg.append(s('path', { d: path('pageviews'), class: 'line line-2' }));
+    svg.append(s('path', { d: path('visitors'), class: 'line' }));
+    const cursor = s('line', { y1: P.t, y2: H - P.b, class: 'cursor', visibility: 'hidden' });
+    const dot = s('circle', { r: 4.5, class: 'dot', visibility: 'hidden' });
+    svg.append(cursor, dot);
+    const readout = h('div', { class: 'chart-readout muted small', text: 'Point at the chart to see each ' + (unit === 'hour' ? 'hour' : unit) + '.' });
+    const show = clientX => {
+      const box = svg.getBoundingClientRect();
+      const px = ((clientX - box.left) / box.width) * W;
+      const i = Math.max(0, Math.min(series.length - 1, Math.round(((px - P.l) / (W - P.l - P.r)) * (series.length - 1))));
+      const point = series[i];
+      cursor.setAttribute('x1', x(i)); cursor.setAttribute('x2', x(i)); cursor.setAttribute('visibility', 'visible');
+      dot.setAttribute('cx', x(i)); dot.setAttribute('cy', y(point.visitors)); dot.setAttribute('visibility', 'visible');
+      readout.replaceChildren(h('b', { text: label(point.bucket) }), ` · ${num(point.visitors)} visitors · ${num(point.pageviews)} page views${point.leads ? ` · ${num(point.leads)} enquiry actions` : ''}`);
+    };
+    svg.addEventListener('pointermove', event => show(event.clientX));
+    svg.addEventListener('pointerdown', event => show(event.clientX));
+    return h('div', {}, h('div', { class: 'legend small' }, h('span', { class: 'key key-1' }, 'Visitors'), h('span', { class: 'key key-2' }, 'Page views')), svg, readout);
+  }
+
+  // Column chart for hours of the day / days of the week.
+  function columns(values, labels, every = 1) {
+    const top = Math.max(1, ...values);
+    return h('div', { class: 'columns' }, values.map((value, i) => h('div', { class: 'column', title: `${labels[i]}: ${num(value)} page views` },
+      h('div', { class: 'column-bar', style: `height:${Math.max(value ? 4 : 1, (value / top) * 100)}%` }),
+      h('span', { class: 'column-label', text: i % every ? '' : labels[i] }))));
+  }
+
+  const panel = (title, ...children) => h('section', { class: 'panel' }, h('h2', { text: title }), ...children);
+  const note = text => h('p', { class: 'small muted panel-note', text });
+
+  let analyticsTimer;
+  async function analyticsView(params) {
+    clearInterval(analyticsTimer);
+    if (state.me.role !== 'owner') return errorView(new Error('Only owners can see the website analytics.'));
+    const range = RANGE_LABELS[params.get('range')] ? params.get('range') : '30d';
+    loading();
+    let data;
+    try { data = await api('GET', `/api/analytics?range=${range}`); } catch (error) { return errorView(error); }
+    const site = state.me.siteUrl;
+    const S = data.summary; const P = data.previous;
+
+    // Header: range picker, export, refresh
+    const rangeTabs = h('div', { class: 'tabs range-tabs', role: 'tablist' }, Object.entries(RANGE_LABELS).map(([key, text]) =>
+      h('a', { href: `#/analytics?range=${key}`, role: 'tab', 'aria-selected': String(key === range), text })));
+    const head = h('div', { class: 'page-head' },
+      h('div', {}, h('h1', { text: 'Analytics' }), h('p', { text: `Visits to ${site.replace(/^https?:\/\//, '')} · ${RANGE_LABELS[range].toLowerCase()} · times shown in ${data.timezone.replace('_', ' ')}` })),
+      h('div', { class: 'row head-actions' },
+        h('a', { class: 'btn btn-ghost btn-small', href: `/api/analytics/export?range=${range}`, download: '' }, 'Export CSV'),
+        h('button', { class: 'btn btn-ghost btn-small', type: 'button', onclick: () => analyticsView(params) }, 'Refresh')));
+
+    // Setup notices
+    const message = h('div');
+    let setup = null;
+    if (!data.tracking.connected) {
+      const connect = h('button', { class: 'btn', type: 'button', onclick: async () => {
+        connect.disabled = true;
+        try {
+          await api('POST', '/api/analytics/connect');
+          message.replaceChildren(h('div', { class: 'notice notice-ok', text: 'Connected. The website is being rebuilt — visits will start appearing here within a few minutes.' }));
+          setup.remove();
+        } catch (error) { connect.disabled = false; message.replaceChildren(h('div', { class: 'notice notice-error', text: error.message })); }
+      } }, 'Connect the website');
+      setup = h('div', { class: 'panel setup' },
+        h('h2', { text: data.tracking.url ? 'The website reports to a different address' : 'Turn on visit tracking' }),
+        h('p', { class: 'muted', text: data.tracking.url
+          ? `The website currently sends visits to ${data.tracking.url}, but this admin is at ${data.tracking.expected}. Connect it to this admin to see its visits here.`
+          : 'The website isn’t sending visits yet. Connecting saves this admin’s address in the site settings; the site rebuilds automatically and starts counting anonymous visits (no cookies, no personal data).' }),
+        connect);
+    } else if (!data.total) {
+      setup = h('div', { class: 'notice notice-warn', text: 'Tracking is connected. Waiting for the first visit — open the website in another tab to test it (it can take a few minutes after connecting for the site to rebuild).' });
+    }
+
+    // Live
+    const live = h('div', { class: 'live' },
+      h('span', { class: `live-dot${data.live.visitors ? ' on' : ''}` }),
+      h('b', { text: `${num(data.live.visitors)} ${data.live.visitors === 1 ? 'person' : 'people'} on the site now` }),
+      data.live.pages.length ? h('span', { class: 'muted small', text: ' · ' + data.live.pages.map(row => row.label).slice(0, 4).join(', ') }) : null);
+
+    // Headline numbers
+    const kpi = (label, value, change, hint) => h('div', { class: 'kpi', title: hint || '' }, h('span', { class: 'kpi-label', text: label }), h('b', { class: 'kpi-value', text: value }), change || h('span', { class: 'delta' }));
+    const kpis = h('div', { class: 'kpis' },
+      kpi('Visitors', num(S.visitors), delta(S.visitors, P.visitors), 'Different people (counted per day, without cookies).'),
+      kpi('Visits', num(S.visits), delta(S.visits, P.visits), 'A visit ends after 30 minutes without activity.'),
+      kpi('Page views', num(S.pageviews), delta(S.pageviews, P.pageviews)),
+      kpi('Pages per visit', (S.viewsPerVisit || 0).toFixed(1), delta(S.viewsPerVisit, P.viewsPerVisit)),
+      kpi('Avg. visit length', dur(S.visitDuration), delta(S.visitDuration, P.visitDuration), 'Time the site was actually on screen.'),
+      kpi('Bounce rate', pct(S.bounceRate), delta(S.bounceRate, P.bounceRate, { lowerIsBetter: true, asPoints: true }), 'Visits that saw one page for under 30 seconds and did nothing else.'),
+      kpi('Enquiry actions', num(S.leads), delta(S.leads, P.leads), 'WhatsApp, phone and email taps plus enquiry forms sent.'),
+      kpi('Visits with an enquiry', pct(S.conversionRate), delta(S.conversionRate, P.conversionRate, { asPoints: true }), 'Share of visits that included an enquiry action.'));
+
+    // Actions
+    const A = data.actions;
+    const actionTiles = h('div', { class: 'action-tiles' }, ACTIONS.map(([key, label]) =>
+      h('div', { class: 'action-tile' }, h('b', { text: num(A.current[key]) }), h('span', { text: label }), delta(A.current[key], A.previous[key]))));
+
+    const pageRow = row => h('div', {}, h('a', { href: site + row.path, target: '_blank', rel: 'noopener', text: shortTitle(row.title) || row.path }), h('div', { class: 'small muted', text: row.path }));
+    const timeAndScroll = [
+      { label: 'Avg. time', num: true, render: row => dur(row.time) },
+      { label: 'Read', num: true, render: row => (row.scroll ? `${Math.round(row.scroll)}%` : '—') }
+    ];
+
+    const S2 = data.sources;
+    const AU = data.audience;
+    const hourLabels = Array.from({ length: 24 }, (_, i) => `${String(i).padStart(2, '0')}h`);
+
+    // Campaign link builder
+    const builder = (() => {
+      const out = h('input', { type: 'text', readOnly: true, placeholder: 'Your tracked link appears here' });
+      const fields = { path: h('input', { type: 'text', value: '/', placeholder: '/' }), source: h('input', { type: 'text', placeholder: 'e.g. facebook, flyer, linkedin' }), campaign: h('input', { type: 'text', placeholder: 'e.g. solar-promo' }) };
+      const update = () => {
+        const url = new URL(fields.path.value.trim() || '/', site);
+        if (fields.source.value.trim()) url.searchParams.set('utm_source', fields.source.value.trim().toLowerCase());
+        if (fields.campaign.value.trim()) url.searchParams.set('utm_campaign', fields.campaign.value.trim().toLowerCase());
+        out.value = fields.source.value.trim() ? url.href : '';
+      };
+      Object.values(fields).forEach(input => input.addEventListener('input', update));
+      const copy = h('button', { class: 'btn btn-ghost btn-small', type: 'button', onclick: async () => { if (!out.value) return; try { await navigator.clipboard.writeText(out.value); toast('Link copied.'); } catch { out.select(); } } }, 'Copy');
+      return h('div', { class: 'builder' },
+        h('div', { class: 'form-grid builder-grid' },
+          h('div', {}, h('label', { class: 'small muted', text: 'Page' }), fields.path),
+          h('div', {}, h('label', { class: 'small muted', text: 'Where you’ll share it' }), fields.source),
+          h('div', {}, h('label', { class: 'small muted', text: 'Campaign (optional)' }), fields.campaign)),
+        h('div', { class: 'media-row' }, out, copy));
+    })();
+
+    setView(
+      head, message, setup, rangeTabs, live, kpis,
+      panel('Visitors over time', lineChart(data.series, data.unit)),
+      h('div', { class: 'grid-2' },
+        panel('Enquiries & actions', actionTiles,
+          h('h3', { text: 'WhatsApp taps — from which page' }), bars(A.whatsappFrom.map(row => ({ label: row.label, value: row.count }))),
+          h('h3', { text: 'What enquiries are about' }), bars(A.enquiryTopics.map(row => ({ label: row.label, value: row.count })), { empty: 'No enquiry forms sent yet.' }),
+          h('h3', { text: 'Buttons that led to the Contact page' }), bars(A.contactFrom.map(row => ({ label: row.label, value: row.count })), { empty: 'None yet.' }),
+          h('h3', { text: 'Buttons that led to Get a quote' }), bars(A.quoteFrom.map(row => ({ label: row.label, value: row.count })), { empty: 'None yet.' })),
+        panel('How people find the site',
+          bars(S2.channels.map(row => ({ label: row.label, value: row.visits, sub: `${num(row.visitors)} people` }))),
+          h('h3', { text: 'Websites & apps that sent visitors' }), bars(S2.referrers.map(row => ({ label: row.label, value: row.visits })), { empty: 'No referring websites yet.' }),
+          h('h3', { text: 'Campaign links' }), bars(S2.campaigns.map(row => ({ label: row.label, value: row.visits })), { empty: 'No tracked campaign links used yet — create one below.' }),
+          note('Counts are visits. Search = Google, Bing, etc.; Social = Facebook, LinkedIn, WhatsApp, X, Instagram…; AI assistants = ChatGPT, Perplexity, Gemini…'))),
+      panel('Pages', table([{ label: 'Page', render: pageRow }, { label: 'Views', num: true, render: row => num(row.views) }, { label: 'Visitors', num: true, render: row => num(row.visitors) }, ...timeAndScroll], data.pages),
+        note('Avg. time = time the page was on screen. Read = how far down people scrolled, on average.')),
+      h('div', { class: 'grid-2' },
+        panel('Sections of the site', bars(data.sections.map(row => ({ label: PAGE_LABELS[row.page] || row.page, value: row.views, sub: `${num(row.visitors)} people · ${dur(row.time)}` })))),
+        panel('First and last pages',
+          h('h3', { text: 'Where visits start' }), bars(data.entryPages.map(row => ({ label: row.label, value: row.views }))),
+          h('h3', { text: 'Where visits end' }), bars(data.exitPages.map(row => ({ label: row.label, value: row.views }))))),
+      panel('Solar plans',
+        table([{ label: 'Plan', render: row => row.label }, { label: 'Seen', num: true, render: row => num(row.seen) }, { label: 'People', num: true, render: row => num(row.people) }, { label: 'Selected', num: true, render: row => num(row.clicks) }], data.plans, 'No plan views yet.'),
+        note('Seen = the plan was on screen for at least a second on the Quote page. Selected = its “Select” (WhatsApp) button was tapped.')),
+      h('div', { class: 'grid-2' },
+        panel('Gallery & videos',
+          bars(data.media.map(row => ({ label: row.label, value: row.count, sub: `${num(row.people)} people` })), { empty: 'No photos opened or videos played yet.' }),
+          A.filters.length ? h('h3', { text: 'Gallery filters used' }) : null,
+          A.filters.length ? bars(A.filters.map(row => ({ label: row.label, value: row.count }))) : null),
+        panel('Programmes',
+          table([{ label: 'Programme', render: row => row.label }, { label: 'Seen', num: true, render: row => num(row.seen) }, { label: 'People', num: true, render: row => num(row.people) }], data.programmes, 'No programme views yet.'),
+          note('How often each programme card on the home page (OnePlastic, OneHealth, OneBox…) was on screen for at least a second.'))),
+      h('div', { class: 'grid-2' },
+        panel('Countries', bars(AU.countries.map(row => ({ prefix: flag(row.key), label: row.label, value: row.visitors }))),
+          note('Approximate, from the visitor’s time zone (or Cloudflare when available). Counts are people.')),
+        panel('Devices',
+          bars(AU.devices.map(row => ({ label: row.label, value: row.visitors }))),
+          h('h3', { text: 'New or returning' }), bars(AU.newVsReturning.map(row => ({ label: row.label, value: row.visitors })), { empty: 'Not known yet.' }))),
+      h('div', { class: 'grid-3' },
+        panel('Browsers', bars(AU.browsers.map(row => ({ label: row.label, value: row.visitors })))),
+        panel('Operating systems', bars(AU.os.map(row => ({ label: row.label, value: row.visitors })))),
+        panel('Languages', bars(AU.languages.map(row => ({ label: row.label, value: row.visitors }))))),
+      panel('When people visit',
+        h('h3', { text: 'Time of day' }), columns(data.hours, hourLabels, 3),
+        h('h3', { text: 'Day of the week' }), columns(Object.values(data.weekdays), Object.keys(data.weekdays))),
+      panel('Recent visits', table([
+          { label: 'When', render: row => h('span', { class: 'small nowrap', text: ago(row.at) }) },
+          { label: 'Page', render: row => h('span', { text: row.path }) },
+          { label: 'From', render: row => h('span', { class: 'small' }, flag(row.country), row.countryName, row.source ? h('div', { class: 'muted', text: `via ${row.source}` }) : null) },
+          { label: 'Device', render: row => h('span', { class: 'small', text: `${row.device} · ${row.browser}` }) }
+        ], data.recent, 'No visits yet.')),
+      h('div', { class: 'grid-2' },
+        panel('Links to other websites', bars(A.outbound.map(row => ({ label: row.label, value: row.count })), { empty: 'No outgoing clicks yet.' })),
+        panel('Broken links (page not found)',
+          bars(data.notFound.map(row => ({ label: row.path, value: row.views, sub: row.from ? `from ${row.from}` : '' })), { empty: 'No broken links visited. 🎉' }),
+          note('Addresses people tried that don’t exist — fix the link where it came from, if you can.'))),
+      panel('Track a campaign link',
+        h('p', { class: 'small muted panel-note', text: 'Sharing the website on a flyer, in a WhatsApp status or a social post? Make a tracked link, and visits from it show up under “Campaign links”.' }),
+        builder),
+      h('p', { class: 'small muted', style: 'margin-top:8px' },
+        'Visits are anonymous: no cookies and no IP addresses are stored. Your own visits count too — to stop that on a device, open ',
+        h('a', { href: `${site}/?analytics=off`, target: '_blank', rel: 'noopener', text: 'the website with ?analytics=off' }),
+        ' once in each browser you use. Data is kept for two years.')
+    );
+
+    // Keep “on the site now” fresh while this page stays open.
+    analyticsTimer = setInterval(async () => {
+      if (!location.hash.startsWith('#/analytics') || !live.isConnected) return clearInterval(analyticsTimer);
+      try {
+        const fresh = await api('GET', `/api/analytics?range=today`);
+        live.querySelector('.live-dot').classList.toggle('on', fresh.live.visitors > 0);
+        live.querySelector('b').textContent = `${num(fresh.live.visitors)} ${fresh.live.visitors === 1 ? 'person' : 'people'} on the site now`;
+      } catch { /* try again next time */ }
+    }, 60_000);
   }
 
   // ---------------------------------------------------------------- my account

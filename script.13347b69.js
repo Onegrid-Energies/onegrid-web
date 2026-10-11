@@ -981,6 +981,161 @@ function initQuotePage() {
 }
 
 // ══════════════════════════════════════
+// VISIT STATISTICS (anonymous, no cookies)
+// ══════════════════════════════════════
+// Sent to the OneGrid admin when its address is set (Admin → Analytics → Connect the website):
+// page views, time on page, scroll depth and key actions (WhatsApp taps, solar plans selected,
+// forms sent, clicks to Get a quote / Contact, gallery photos and videos). Nothing personal is
+// sent. Open any page with ?analytics=off to stop counting your own visits in this browser
+// (?analytics=on to undo).
+function initVisitStats() {
+  const endpoint = (document.querySelector('meta[name="onegrid-analytics"]')?.content || '').replace(/\/+$/, '');
+  const storage = (key, value) => {
+    try {
+      if (value === undefined) return localStorage.getItem(key);
+      if (value === null) localStorage.removeItem(key); else localStorage.setItem(key, value);
+    } catch (error) { return undefined; }
+    return value;
+  };
+  const setting = new URLSearchParams(location.search).get('analytics');
+  if (setting === 'off') storage('onegrid-analytics-off', '1');
+  if (setting === 'on') storage('onegrid-analytics-off', null);
+  if (!endpoint || storage('onegrid-analytics-off') === '1' || navigator.webdriver) return;
+
+  const newId = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+  const send = data => {
+    const body = JSON.stringify(data);
+    try { if (navigator.sendBeacon && navigator.sendBeacon(`${endpoint}/e`, new Blob([body], { type: 'text/plain' }))) return; } catch (error) { /* use fetch */ }
+    fetch(`${endpoint}/e`, { method: 'POST', body, keepalive: true, credentials: 'omit', headers: { 'Content-Type': 'text/plain' } }).catch(() => {});
+  };
+
+  // A visit ends after 30 minutes without activity.
+  let visit = null;
+  try { visit = JSON.parse(storage('onegrid-visit') || 'null'); } catch (error) { visit = null; }
+  const firstPage = !visit || !visit.id || Date.now() - visit.last > 30 * 60 * 1000;
+  if (firstPage) visit = { id: newId(), last: Date.now() };
+  const keepVisit = () => { visit.last = Date.now(); storage('onegrid-visit', JSON.stringify(visit)); };
+  keepVisit();
+  const seenBefore = storage('onegrid-seen');
+  storage('onegrid-seen', '1');
+
+  const view = newId();
+  const query = new URLSearchParams(location.search);
+  send({
+    t: 'v', id: view, s: visit.id, en: firstPage ? 1 : 0,
+    n: seenBefore === '1' ? 0 : seenBefore === null ? 1 : -1,
+    p: location.pathname, ti: document.title, r: document.referrer,
+    u: { source: query.get('utm_source') || '', medium: query.get('utm_medium') || '', campaign: query.get('utm_campaign') || '' },
+    w: window.screen?.width || 0, tc: navigator.maxTouchPoints > 0 ? 1 : 0, l: navigator.language || '',
+    z: (() => { try { return Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (error) { return ''; } })(),
+    nf: 0
+  });
+
+  // Time actually spent looking at the page, and how far down it was read.
+  let visibleSince = document.visibilityState === 'visible' ? Date.now() : 0;
+  let visibleMs = 0;
+  let deepest = 0;
+  let lastSent = '';
+  const seconds = () => Math.round((visibleMs + (visibleSince ? Date.now() - visibleSince : 0)) / 1000);
+  const measureScroll = () => {
+    const room = document.documentElement.scrollHeight - window.innerHeight;
+    deepest = Math.max(deepest, room > 0 ? Math.min(100, Math.round((window.scrollY / room) * 100)) : 100);
+  };
+  window.addEventListener('scroll', measureScroll, { passive: true });
+  measureScroll();
+  const report = () => {
+    const state = `${seconds()}:${deepest}`;
+    if (state === lastSent) return;
+    lastSent = state;
+    send({ t: 'p', id: view, d: seconds(), sc: deepest });
+    keepVisit();
+  };
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') {
+      if (visibleSince) visibleMs += Date.now() - visibleSince;
+      visibleSince = 0;
+      report();
+    } else visibleSince = Date.now();
+  });
+  window.addEventListener('pagehide', report);
+  const heartbeat = setInterval(() => {
+    if (document.visibilityState === 'visible') report();
+    if (seconds() > 1800) clearInterval(heartbeat);
+  }, 45000);
+
+  const action = (name, label = '', target = '') => send({ t: 'e', id: view, n: name, l: String(label).replace(/\s+/g, ' ').trim().slice(0, 120), x: String(target).slice(0, 200) });
+  const textOf = element => (element.getAttribute('aria-label') || element.textContent || '').replace(/\s+/g, ' ').trim();
+  const area = element => element.closest('footer') ? 'Footer'
+    : element.closest('#nav, #mobile-nav') ? 'Menu'
+    : element.closest('.whatsapp-float') ? 'Floating button'
+    : element.closest('.quote-package, .quote-cctv') ? 'Solar plan'
+    : element.closest('.social-links') ? 'Social links'
+    : 'Page';
+  const currentPage = getPageFromPath();
+
+  document.addEventListener('click', event => {
+    const target = event.target instanceof Element ? event.target : null;
+    if (!target) return;
+
+    // Buttons that switch page, e.g. onclick="navigateTo('quote')"
+    const nav = target.closest('[onclick*="navigateTo("]');
+    const page = nav?.getAttribute('onclick').match(/navigateTo\('(\w+)'\)/)?.[1];
+    if (page === 'contact' && currentPage !== 'contact') action('contact_click', `${textOf(nav)} (${area(nav)})`);
+    if (page === 'quote' && currentPage !== 'quote') action('quote_click', `${textOf(nav)} (${area(nav)})`);
+
+    const plan = target.closest('[data-quote-plan]');
+    if (plan) action('plan_click', plan.dataset.quotePlan);
+
+    const link = target.closest('a[href]');
+    if (link && !page) {
+      let url;
+      try { url = new URL(link.href, location.href); } catch (error) { return; }
+      if (/(^|\.)wa\.me$|whatsapp\.com$/.test(url.hostname)) action('whatsapp', area(link));
+      else if (url.protocol === 'tel:') action('call', area(link));
+      else if (url.protocol === 'mailto:') action('email', area(link));
+      else if (/^https?:$/.test(url.protocol) && url.origin !== location.origin) action('outbound', url.hostname.replace(/^www\./, ''), url.href);
+      return;
+    }
+
+    const photo = target.closest('.gallery-item');
+    if (photo) action('media_open', photo.querySelector('.gallery-overlay span')?.textContent.trim() || photo.dataset.cat || 'Gallery photo');
+    const video = target.closest('[data-service-video]');
+    if (video) action('video_play', textOf(video).replace(/^Watch\s+/i, ''));
+    const filter = target.closest('.filter-btn');
+    if (filter) action('gallery_filter', filter.textContent);
+  }, true);
+
+  // Forms (Formspree). Only the chosen topic is sent — never what people typed.
+  document.addEventListener('submit', event => {
+    const form = event.target;
+    if (!(form instanceof HTMLFormElement)) return;
+    const data = new FormData(form);
+    const topic = data.get('preferred_plan') || data.get('interest') || data.get('property_type') || '';
+    const kind = form.classList.contains('quote-form') ? 'Quote request' : currentPage === 'contact' ? 'Contact page' : 'Message';
+    action('enquiry', topic ? `${kind} · ${topic}` : kind);
+  }, true);
+
+  // Solar plans and home-page programmes count as "seen" after a second at least half in view.
+  if ('IntersectionObserver' in window) {
+    const timers = new Map();
+    const watcher = new IntersectionObserver(entries => entries.forEach(entry => {
+      const element = entry.target;
+      const inView = entry.intersectionRatio >= 0.5 || entry.intersectionRect.height >= window.innerHeight * 0.5;
+      clearTimeout(timers.get(element));
+      if (!inView) return;
+      timers.set(element, setTimeout(() => {
+        watcher.unobserve(element);
+        const plan = element.querySelector('[data-quote-plan]');
+        if (plan) action('plan_view', plan.dataset.quotePlan);
+        else action('programme_view', element.querySelector('.service-tagline')?.textContent.trim() || '');
+      }, 1000));
+    }), { threshold: [0, 0.25, 0.5, 0.75, 1] });
+    document.querySelectorAll('.page.active .quote-package, .page.active .quote-cctv__grid, .page.active .service-panel, .page.active .service-card')
+      .forEach(element => watcher.observe(element));
+  }
+}
+
+// ══════════════════════════════════════
 // INIT
 // ══════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
@@ -996,6 +1151,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initIntroVideo();
   initServiceVideos();
   initQuotePage();
+  initVisitStats();
 
   const hero = document.querySelector('.hero');
   if (hero) {

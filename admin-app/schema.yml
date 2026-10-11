@@ -2303,3 +2303,8 @@ collections:
                 label: Copyright
                 widget: string
                 required: false
+          - name: analytics_url
+            label: "Analytics address (advanced)"
+            widget: string
+            hint: "Where the website sends anonymous visit statistics: the admin app's address. Set automatically by Analytics → Connect the website. Empty = no analytics."
+            required: false

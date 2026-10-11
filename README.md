@@ -24,6 +24,7 @@ link or your password.
 | ------------------- | ------------------------------------------------------------------------------- |
 | **Pages**           | Text, photos and lists on Home, About, OnePlastic, Stories of Hope, Recognitions, Quote and Contact, plus each page's search title/description and intro video |
 | **Site settings**   | Phone, email, address, WhatsApp link, map, social links and the footer (shown on every page) |
+| **Analytics**       | (owners) anonymous website visits: pages, sources, countries, devices, WhatsApp taps, plans selected, forms sent — switch on with **Connect the website** |
 | **Team / Activity** | (owners) who can sign in, and a log of recent changes                           |
 
 - **Highlighted words:** in headings that have them, wrap words in `*asterisks*` to show them in

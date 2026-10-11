@@ -79,7 +79,8 @@ const config = {
         name: 'site',
         label: 'Contact details, social links & footer',
         file: 'content/site.json',
-        fields: finalize(scopes.site ?? [])
+        // Advanced settings last.
+        fields: finalize([...(scopes.site ?? [])].sort((a, b) => (a.name === 'analytics_url') - (b.name === 'analytics_url')))
       }]
     }
   ]

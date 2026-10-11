@@ -11,6 +11,7 @@ import {
   rateLimit, sendSignInLink, sessionCookie, useSignInLink
 } from './lib/auth.mjs';
 import { entryPath, fillTemplate, getCollection, loadSchema, slugFor } from './lib/schema.mjs';
+import { allowedOrigin, collect, exportCsv, report } from './lib/analytics.mjs';
 import { db } from './lib/db.mjs';
 import { ConflictError, NotFoundError, store } from './lib/store.mjs';
 import { listUsers, normaliseEmail, removeUser, setPassword, upsertUser } from './lib/users.mjs';
@@ -69,9 +70,19 @@ async function serveFile(res, file, extraHeaders = {}) {
   }
 }
 
-const clientIp = req => String(req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').split(',')[0].trim();
+const clientIp = req => String(req.headers['cf-connecting-ip'] || req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').split(',')[0].trim();
 const commitMessage = (action, label, user) => `${action} ${label} - ${user.author.name} <${user.email}> via OneGrid WebAdmin`;
 const json = data => JSON.stringify(data, null, 2) + '\n';
+const SETTINGS_FILE = 'content/site.json';
+// Is the website sending visits to this admin?
+async function trackingStatus() {
+  try {
+    const url = JSON.parse((await store.read(SETTINGS_FILE)).content).analytics_url || '';
+    return { url, expected: config.publicUrl, connected: url.replace(/\/+$/, '') === config.publicUrl };
+  } catch {
+    return { url: '', expected: config.publicUrl, connected: false };
+  }
+}
 // Same content, ignoring formatting and the order of keys.
 const canonical = value => Array.isArray(value) ? value.map(canonical)
   : value && typeof value === 'object' ? Object.fromEntries(Object.keys(value).sort().map(key => [key, canonical(value[key])])) : value;
@@ -80,12 +91,48 @@ const sameData = (a, b) => JSON.stringify(canonical(a)) === JSON.stringify(canon
 const logActivity = (user, action, summary, extra = {}) =>
   db.activity.log({ email: user.email, name: user.name || '', action, summary, ...extra }).catch(error => console.error('Activity log failed:', error.message));
 
+// Website visits: a quick in-memory limit per address (no database round trip for every hit).
+const hits = new Map();
+function hitAllowed(ip) {
+  const minute = Math.floor(Date.now() / 60_000);
+  const key = `${ip}@${minute}`;
+  if (hits.size > 50_000) hits.clear();
+  hits.set(key, (hits.get(key) || 0) + 1);
+  if (hits.size % 500 === 0) for (const old of hits.keys()) if (!old.endsWith(`@${minute}`)) hits.delete(old);
+  return hits.get(key) <= 120;
+}
+async function readText(req, limit) {
+  let size = 0;
+  const chunks = [];
+  for await (const chunk of req) {
+    size += chunk.length;
+    if (size > limit) return '';
+    chunks.push(chunk);
+  }
+  return Buffer.concat(chunks).toString('utf8');
+}
+
 // ---------------------------------------------------------------- routes
 
 async function handle(req, res) {
   const url = new URL(req.url, config.publicUrl);
   const { pathname } = url;
   const method = req.method;
+
+  // Website analytics: the site's script sends visits here (no sign-in; anonymous; see lib/analytics.mjs).
+  if (pathname === '/e' && (method === 'POST' || method === 'OPTIONS')) {
+    const origin = allowedOrigin(req.headers.origin);
+    const cors = origin ? { 'Access-Control-Allow-Origin': origin, 'Access-Control-Allow-Methods': 'POST', 'Access-Control-Allow-Headers': 'Content-Type', 'Access-Control-Max-Age': '86400', Vary: 'Origin' } : {};
+    if (method === 'OPTIONS') return send(res, 204, '', cors);
+    const ip = clientIp(req);
+    const raw = await readText(req, 8 * 1024);
+    if (origin && hitAllowed(ip)) {
+      let body = null;
+      try { body = JSON.parse(raw); } catch { /* ignored */ }
+      await collect(req, body, ip).catch(error => console.error('Analytics:', error.message));
+    }
+    return send(res, 204, '', cors);
+  }
 
   // Static assets and pages
   if (method === 'GET' && pathname.startsWith('/static/')) return serveFile(res, pathname.slice('/static/'.length));
@@ -155,7 +202,7 @@ async function handle(req, res) {
   if (method !== 'GET' && req.headers['x-onegrid-admin'] !== '1') return send(res, 403, { error: 'Forbidden.' });
   const user = await currentUser(req);
   if (!user) return send(res, 401, { error: 'Please sign in again.' });
-  const ownerOnly = () => { if (user.role !== 'owner') throw Object.assign(new Error('Only owners can manage the team.'), { status: 403 }); };
+  const ownerOnly = () => { if (user.role !== 'owner') throw Object.assign(new Error('Only owners can do this.'), { status: 403 }); };
 
   if (pathname === '/api/me' && method === 'GET') {
     return send(res, 200, {
@@ -251,6 +298,29 @@ async function handle(req, res) {
   }
   if (pathname === '/api/team' && method === 'GET') { ownerOnly(); return send(res, 200, { users: await listUsers() }); }
   if (pathname === '/api/activity' && method === 'GET') { ownerOnly(); return send(res, 200, { activity: await db.activity.recent(150) }); }
+
+  // ------------------------------------------------ website analytics (owners)
+  if (pathname === '/api/analytics' && method === 'GET') {
+    ownerOnly();
+    const [data, tracking] = await Promise.all([report(url.searchParams.get('range')), trackingStatus()]);
+    return send(res, 200, { ...data, tracking });
+  }
+  if (pathname === '/api/analytics/export' && method === 'GET') {
+    ownerOnly();
+    const { filename, csv } = await exportCsv(url.searchParams.get('range'));
+    return send(res, 200, csv, { 'Content-Type': 'text/csv; charset=utf-8', 'Content-Disposition': `attachment; filename="${filename}"` });
+  }
+  // Points the website's tracker at this admin (sets analytics_url in content/site.json).
+  if (pathname === '/api/analytics/connect' && method === 'POST') {
+    ownerOnly();
+    const { content, sha } = await store.read(SETTINGS_FILE);
+    const settings = JSON.parse(content);
+    if (settings.analytics_url === config.publicUrl) return send(res, 200, { ok: true, unchanged: true });
+    settings.analytics_url = config.publicUrl;
+    await store.write(SETTINGS_FILE, json(settings), { sha, message: commitMessage('Connect', 'website analytics', user), author: user.author });
+    await logActivity(user, 'update', 'Connected website analytics', { collection: 'settings', entry: 'settings' });
+    return send(res, 200, { ok: true });
+  }
   if (pathname === '/api/team' && method === 'POST') {
     ownerOnly();
     const { email, name, role } = await readJson(req);

@@ -398,6 +398,7 @@ function schemaElement(html, el, ctx) {
       if (/^aria-/.test(attr)) field.required = false;
       const ownsHint = !has(el, 'data-cms') && !has(el, 'data-cms-text') && !has(el, 'data-cms-list');
       if (ownsHint && a['data-cms-hint'] && !/^(aria-|alt$)/.test(attr)) field.hint = a['data-cms-hint'];
+      if (ownsHint && a['data-cms-label'] && !/^(aria-|alt$)/.test(attr)) field.label = a['data-cms-label'];
       addField(ctx, key, field);
     }
   }
