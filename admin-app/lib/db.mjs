@@ -6,6 +6,7 @@
 //   analytics_views  — website page views (one per page opened; anonymous, see lib/analytics.mjs)
 //   analytics_events — website actions: WhatsApp/phone/email taps, enquiries, gallery opens, …
 //   analytics_salts  — the daily random value used to count unique visitors without cookies
+//   settings     — admin settings changed from the app (e.g. which websites may send visits)
 // Expired link/limit records, year-old activity and analytics older than ANALYTICS_RETENTION_DAYS
 // are removed automatically (TTL indexes).
 // Website content is NOT stored here — it stays as files in GitHub (see store.mjs).
@@ -106,6 +107,11 @@ function mongoDb() {
       return false;
     },
 
+    settings: {
+      get: async key => (await col('settings').findOne({ _id: key }))?.value ?? null,
+      set: (key, value, by) => col('settings').updateOne({ _id: key }, { $set: { value, updatedAt: new Date(), updatedBy: by } }, { upsert: true })
+    },
+
     activity: {
       log: entry => col('activity').insertOne({ at: new Date(), ...entry }),
       recent: async (limit = 100) => (await col('activity').find().sort({ at: -1 }).limit(limit).toArray())
@@ -130,7 +136,7 @@ function mongoDb() {
       async touchView(id, { duration, scroll }) {
         await col('analytics_views').updateOne({ _id: id }, { $max: { duration: Math.min(duration, MAX_DURATION), scroll }, $set: { lastSeen: new Date() } });
       },
-      async viewInfo(id) { return col('analytics_views').findOne({ _id: id }, { projection: { path: 1, page: 1, item: 1, session: 1, visitor: 1, country: 1, device: 1 } }); },
+      async viewInfo(id) { return col('analytics_views').findOne({ _id: id }, { projection: { site: 1, path: 1, page: 1, item: 1, session: 1, visitor: 1, country: 1, device: 1 } }); },
       addEvent: event => col('analytics_events').insertOne(event),
       views: (from, to, withTitles = false) => col('analytics_views').find({ at: { $gte: from, $lt: to } }, { projection: withTitles ? {} : VIEW_FIELDS }).toArray(),
       events: (from, to) => col('analytics_events').find({ at: { $gte: from, $lt: to } }).toArray(),
@@ -146,7 +152,7 @@ const fromDoc = ({ _id, ...user }) => ({ email: _id, ...user });
 
 function memoryDb() {
   const users = new Map(); const links = new Map(); const limits = new Map(); const activity = [];
-  const salts = new Map(); const views = new Map(); const events = [];
+  const salts = new Map(); const views = new Map(); const events = []; const settings = new Map();
   const inRange = (from, to) => item => item.at >= from && item.at < to;
   const withoutTitle = ({ title, ...view }) => view;
   return {
@@ -174,6 +180,10 @@ function memoryDb() {
       const id = `${key}@${windowStart}`;
       limits.set(id, (limits.get(id) || 0) + 1);
       return limits.get(id) <= limit;
+    },
+    settings: {
+      get: async key => (settings.has(key) ? structuredClone(settings.get(key)) : null),
+      set: async (key, value) => { settings.set(key, structuredClone(value)); }
     },
     activity: {
       log: async entry => { activity.unshift({ id: String(activity.length + 1), at: new Date(), ...entry }); activity.length = Math.min(activity.length, 1000); },

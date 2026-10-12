@@ -28,6 +28,7 @@ the live site updates within a few minutes. The admin's own data is stored in **
 | Sign-in attempt limits | MongoDB `rate_limits` (auto-deleted) |
 | Activity log | MongoDB `activity` (auto-deleted after a year) |
 | Website analytics (anonymous visits and actions) | MongoDB `analytics_views`, `analytics_events`, `analytics_salts` (auto-deleted after `ANALYTICS_RETENTION_DAYS`, default 2 years) |
+| Settings changed in the app (which websites may send visits) | MongoDB `settings` |
 
 ## MongoDB Atlas
 
@@ -78,7 +79,7 @@ up to a minute. A paid instance stays awake.
 | `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_FOLDER` | optional | Default `dj2ciluyx` / `onegrid`. |
 | `ANALYTICS_TIMEZONE` | optional | Time zone for days and hours in Analytics. Default `Africa/Lagos`. |
 | `ANALYTICS_RETENTION_DAYS` | optional | How long visit data is kept. Default `730` (two years). |
-| `ANALYTICS_ORIGINS` | optional | Extra website addresses allowed to send visits (comma-separated), besides `SITE_URL`. |
+| `ANALYTICS_ORIGINS` | optional | Starting point for which websites may send visits, until an owner saves it on the Analytics page: empty = any website, or comma-separated addresses (plus `SITE_URL`). |
 
 Sign-in methods appear automatically when their variables are set; password sign-in is always on.
 
@@ -115,8 +116,15 @@ A CSV export is included.
 To switch it on, open **Analytics → Connect the website** once. That saves this admin's address
 (`PUBLIC_URL`) as `analytics_url` in `content/site.json`; the site rebuilds and its script starts
 sending visits to `<PUBLIC_URL>/e`. Visits are anonymous: no cookies, no IP addresses stored; a
-visitor is counted with a hash that changes daily. Visits are accepted only from `SITE_URL` (and
-its `www.` twin, plus `ANALYTICS_ORIGINS`), so set `SITE_URL` correctly. Country comes from
+visitor is counted with a hash that changes daily.
+
+Every copy of the website reports — e.g. `onegridenergies.com`, `onegridenergies.org` and a GitHub
+Pages copy (sites served from a folder such as `/onegrid-web/` are understood) — and each visit
+records which domain it was on. The Analytics page lists them under **Websites** and has a
+**Website** picker to see one at a time (the CSV export follows it). Under **Which websites may
+send visits**, owners choose *Any website* or *Only the websites listed* (`SITE_URL` is always
+allowed); the choice is saved in MongoDB (`settings` collection) and applies straight away.
+Websites turned away are listed under *Recently refused* with an **Allow** button. Country comes from
 Cloudflare's `CF-IPCountry` header if the admin is behind Cloudflare, otherwise from the visitor's
 time zone.
 

@@ -15,22 +15,107 @@ const TZ = config.analytics.timezone;
 
 // ---------------------------------------------------------------- where visits may come from
 
+// The website may be published in several places (its own domain, a second domain, GitHub
+// Pages…). Each visit records which website ("site") it was on. Owners choose on the Analytics
+// page whether any website may send visits or only listed ones (saved in MongoDB, see `access`);
+// ANALYTICS_ORIGINS is only the starting point until that is saved. SITE_URL is always allowed.
 const siteOrigin = new URL(config.siteUrl).origin;
-const twin = (() => {
-  const url = new URL(config.siteUrl);
-  url.hostname = url.hostname.startsWith('www.') ? url.hostname.slice(4) : `www.${url.hostname}`;
-  return url.origin;
-})();
-const ORIGINS = new Set([siteOrigin, twin, ...config.analytics.extraOrigins.map(origin => new URL(origin).origin)]);
-const SITE_HOSTS = new Set([...ORIGINS].map(origin => new URL(origin).hostname));
+const bareHost = host => String(host || '').toLowerCase().replace(/^www\./, '');
+export const MAIN_SITE = bareHost(new URL(config.siteUrl).hostname);
+const ADMIN_ORIGIN = new URL(config.publicUrl).origin;
+
+// "https://www.example.org/path", "example.org" or "x.github.io/site/" → "example.org" (or null).
+export function hostOfInput(value) {
+  const text = String(value || '').trim();
+  if (!text) return null;
+  try {
+    const url = new URL(/^[a-z][a-z0-9+.-]*:\/\//i.test(text) ? text : `https://${text}`);
+    if (!/^https?:$/.test(url.protocol)) return null;
+    const host = bareHost(url.hostname);
+    return /^[a-z0-9-]+(\.[a-z0-9-]+)+$/.test(host) ? host : null;
+  } catch {
+    return null;
+  }
+}
+
+const ACCESS_KEY = 'analytics_access';
+const envHosts = [...new Set(config.analytics.extraOrigins.map(hostOfInput).filter(host => host && host !== MAIN_SITE))];
+const ENV_ACCESS = { mode: envHosts.length ? 'list' : 'any', hosts: envHosts };
+let access = { ...ENV_ACCESS, saved: false };
+let accessHosts = new Set(access.hosts);
+const useAccess = (value, saved) => {
+  access = { mode: value.mode === 'list' ? 'list' : 'any', hosts: [...(value.hosts || [])], saved, updatedAt: value.updatedAt || null, updatedBy: value.updatedBy || '' };
+  accessHosts = new Set(access.hosts);
+};
+
+// Domains turned away recently (kept in memory), so owners can see and allow a new copy of the site.
+const refused = new Map();
+function noteRefused(host) {
+  const entry = refused.get(host) || { host, count: 0 };
+  entry.count += 1;
+  entry.lastAt = new Date();
+  refused.set(host, entry);
+  if (refused.size > 50) refused.delete([...refused.values()].sort((a, b) => a.lastAt - b.lastAt)[0].host);
+}
+
+// Read the saved setting (at start-up, and every minute in case it changed in another instance).
+export async function loadAccess() {
+  try {
+    const saved = await db.settings.get(ACCESS_KEY);
+    if (saved) useAccess(saved, true);
+  } catch (error) {
+    console.error('Could not read analytics settings:', error.message);
+  }
+}
+export function startAccessRefresh() {
+  setInterval(loadAccess, 60_000).unref();
+}
+
+export async function saveAccess({ mode, hosts } = {}, user) {
+  if (!['any', 'list'].includes(mode)) throw Object.assign(new Error('Choose who may send visits.'), { status: 400 });
+  const list = Array.isArray(hosts) ? hosts : [];
+  const invalid = list.filter(item => String(item || '').trim() && !hostOfInput(item));
+  if (invalid.length) throw Object.assign(new Error(`These don’t look like website addresses: ${invalid.join(', ')}`), { status: 400 });
+  const clean = [...new Set(list.map(hostOfInput).filter(host => host && host !== MAIN_SITE))].sort();
+  const value = { mode, hosts: clean, updatedAt: new Date(), updatedBy: user?.email || '' };
+  await db.settings.set(ACCESS_KEY, value, user?.email || '');
+  useAccess(value, true);
+  for (const host of clean) refused.delete(host);
+  if (mode === 'any') refused.clear();
+  return accessInfo();
+}
+
+export function accessInfo() {
+  return {
+    mode: access.mode,
+    hosts: access.hosts,
+    saved: access.saved,
+    fromEnv: !access.saved && ENV_ACCESS.mode === 'list',
+    updatedAt: access.updatedAt || null,
+    updatedBy: access.updatedBy || '',
+    mainSite: MAIN_SITE,
+    refused: [...refused.values()].sort((a, b) => b.lastAt - a.lastAt).slice(0, 20)
+  };
+}
 const isLocal = origin => /^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])(:\d+)?$/.test(origin);
 
+// The website a request came from (from the browser's Origin header), or null if not accepted.
 export function allowedOrigin(origin) {
-  if (!origin) return null;
-  if (ORIGINS.has(origin)) return origin;
-  if (config.backend === 'local' && isLocal(origin)) return origin; // local testing
-  return null;
+  if (!origin || origin === 'null') return null;
+  let url;
+  try { url = new URL(origin); } catch { return null; }
+  if (!/^https?:$/.test(url.protocol) || url.origin !== origin || origin === ADMIN_ORIGIN) return null;
+  if (isLocal(origin)) return config.backend === 'local' ? origin : null; // local testing only
+  const host = bareHost(url.hostname);
+  if (access.mode === 'list' && host !== MAIN_SITE && !accessHosts.has(host)) {
+    noteRefused(host);
+    return null;
+  }
+  return origin;
 }
+const siteOf = origin => { try { return bareHost(new URL(origin).hostname); } catch { return MAIN_SITE; } };
+// Visits stored before websites were recorded all came from SITE_URL.
+const siteKey = item => item.site || MAIN_SITE;
 
 // ---------------------------------------------------------------- reading the request
 
@@ -85,7 +170,7 @@ function channelOf(host, utm) {
   return 'Other websites';
 }
 
-function referrerOf(value) {
+function referrerOf(value, site) {
   const text = String(value || '').slice(0, 500);
   if (!text) return { host: '', url: '' };
   // Android apps: android-app://com.google.android.gm/
@@ -93,8 +178,8 @@ function referrerOf(value) {
   if (app) return { host: app[1], url: '' };
   try {
     const url = new URL(text);
-    const host = url.hostname.replace(/^www\./, '').toLowerCase();
-    if (SITE_HOSTS.has(url.hostname) || SITE_HOSTS.has(host) || SITE_HOSTS.has(`www.${host}`)) return { host: '', url: '', internal: true };
+    const host = bareHost(url.hostname);
+    if (host === site) return { host: '', url: '', internal: true }; // another page of the same website
     return { host, url: `${url.origin}${url.pathname}`.slice(0, 300) };
   } catch {
     return { host: '', url: '' };
@@ -105,7 +190,9 @@ function referrerOf(value) {
 const PAGES = ['about', 'oneplastic', 'stories-of-hope', 'recognitions', 'quote', 'contact'];
 export function pageOf(path, notFound) {
   if (notFound) return { page: '404', item: '' };
-  const parts = path.split('/').filter(Boolean);
+  let parts = path.split('/').filter(Boolean);
+  // GitHub Pages and similar serve the site under a folder, e.g. /onegrid-web/about/.
+  if (parts.length && !PAGES.includes(parts[0]) && parts[0] !== 'home' && (parts.length === 1 || PAGES.includes(parts[1]) || parts[1] === 'home')) parts = parts.slice(1);
   if (!parts.length || (parts[0] === 'home' && parts.length === 1)) return { page: 'home', item: '' };
   if (PAGES.includes(parts[0]) && parts.length === 1) return { page: parts[0], item: '' };
   return { page: 'other', item: '' };
@@ -158,7 +245,7 @@ const EVENTS = new Set([
 ]);
 
 // One message from the website: a page view ("v"), time-on-page update ("p") or action ("e").
-export async function collect(req, body, ip) {
+export async function collect(req, body, ip, origin) {
   if (!body || typeof body !== 'object') return;
   const id = String(body.id || '');
   if (!ID.test(id)) return;
@@ -170,11 +257,12 @@ export async function collect(req, body, ip) {
     const path = cleanPath(body.p);
     const { page, item } = pageOf(path, Boolean(body.nf));
     const utm = Object.fromEntries(['source', 'medium', 'campaign'].map(key => [key, text(body.u?.[key], 80).toLowerCase()]).filter(([, value]) => value));
-    const ref = referrerOf(body.r);
+    const site = siteOf(origin);
+    const ref = referrerOf(body.r, site);
     const timezone = text(body.z, 60);
     const now = new Date();
     await db.analytics.addView({
-      id, at: now, lastSeen: now,
+      id, at: now, lastSeen: now, site,
       path, page, item, title: text(body.ti, 140),
       session: ID.test(String(body.s)) ? String(body.s) : id,
       visitor: await visitorId(ip, ua),
@@ -200,7 +288,7 @@ export async function collect(req, body, ip) {
     if (!view) return; // actions only count for page views we know about
     await db.analytics.addEvent({
       at: new Date(), name: body.n, label: text(body.l), target: text(body.x, 200),
-      view: id, session: view.session, visitor: view.visitor, path: view.path, page: view.page, item: view.item,
+      view: id, session: view.session, visitor: view.visitor, site: siteKey(view), path: view.path, page: view.page, item: view.item,
       country: view.country, device: view.device
     });
   }
@@ -273,15 +361,26 @@ function summarise(views, events) {
   };
 }
 
-export async function report(range) {
+export async function report(range, site = '') {
   const p = period(range);
-  const [allViews, allEvents, live, recent] = await Promise.all([
+  const [everyView, everyEvent, everyLive, everyRecent] = await Promise.all([
     db.analytics.views(p.previousFrom, p.to, true),
     db.analytics.events(p.previousFrom, p.to),
     db.analytics.activeSince(new Date(Date.now() - 5 * 60_000)),
-    db.analytics.recent(30)
+    db.analytics.recent(site ? 300 : 30)
   ]);
   const current = item => item.at >= p.from;
+
+  // Websites the site was visited on this period (always across all of them, for the picker).
+  const sites = [...groupBy(everyView.filter(current), siteKey)].map(([key, items]) => ({
+    site: key, visits: new Set(items.map(view => view.session)).size, visitors: uniq(items, 'visitor'), views: items.length
+  })).sort((a, b) => b.visits - a.visits || b.views - a.views);
+  // Everything below is for one website when one is picked.
+  const onSite = item => !site || siteKey(item) === site;
+  const allViews = everyView.filter(onSite);
+  const allEvents = everyEvent.filter(onSite);
+  const live = everyLive.filter(onSite);
+  const recent = everyRecent.filter(onSite).slice(0, 30);
   const viewsAll = allViews.filter(current);
   const views = viewsAll.filter(view => view.page !== '404');
   const events = allEvents.filter(current);
@@ -379,13 +478,14 @@ export async function report(range) {
     .sort((a, b) => b.views - a.views).slice(0, 20);
 
   const describe = view => ({
-    at: view.at, path: view.path, page: view.page, item: view.item, country: view.country, countryName: countryName(view.country),
+    at: view.at, site: siteKey(view), path: view.path, page: view.page, item: view.item, country: view.country, countryName: countryName(view.country),
     device: view.device, browser: view.browser, os: view.os, source: view.entry ? (view.ref || view.channel || 'Direct') : '', duration: view.duration
   });
   const liveVisitors = groupBy(live, view => view.visitor);
 
   return {
     range: p.range, unit: p.unit, timezone: TZ, from: p.from, to: p.to,
+    site, sites, mainSite: MAIN_SITE,
     summary: summarise(views, events), previous: summarise(previousViews, previousEvents),
     series, sections, pages: pages.slice(0, 50), media, plans, programmes,
     sources: { channels, referrers, campaigns }, entryPages, exitPages,
@@ -397,14 +497,14 @@ export async function report(range) {
 }
 
 // All page views in a range as CSV (for spreadsheets).
-export async function exportCsv(range) {
+export async function exportCsv(range, site = '') {
   const p = period(range);
-  const views = await db.analytics.views(p.from, p.to, true);
-  const columns = ['time', 'path', 'page', 'title', 'visit', 'visitor', 'first_page_of_visit', 'new_visitor', 'source', 'channel', 'utm_source', 'utm_medium', 'utm_campaign', 'country', 'device', 'browser', 'os', 'language', 'seconds_on_page', 'scroll_percent'];
+  const views = (await db.analytics.views(p.from, p.to, true)).filter(view => !site || siteKey(view) === site);
+  const columns = ['time', 'website', 'path', 'page', 'title', 'visit', 'visitor', 'first_page_of_visit', 'new_visitor', 'source', 'channel', 'utm_source', 'utm_medium', 'utm_campaign', 'country', 'device', 'browser', 'os', 'language', 'seconds_on_page', 'scroll_percent'];
   const cell = value => { const s = String(value ?? ''); return /[",\n]/.test(s) || /^[=+\-@]/.test(s) ? `"${s.replace(/^([=+\-@])/, "'$1").replace(/"/g, '""')}"` : s; };
   const rows = views.sort((a, b) => a.at - b.at).map(view => [
-    view.at.toISOString(), view.path, view.page, view.title, view.session, view.visitor, view.entry ? 'yes' : '', view.isNew === null ? '' : view.isNew ? 'yes' : 'no',
+    view.at.toISOString(), siteKey(view), view.path, view.page, view.title, view.session, view.visitor, view.entry ? 'yes' : '', view.isNew === null ? '' : view.isNew ? 'yes' : 'no',
     view.ref, view.channel, view.utm?.source, view.utm?.medium, view.utm?.campaign, countryName(view.country), view.device, view.browser, view.os, view.lang, view.duration, view.scroll
   ].map(cell).join(','));
-  return { filename: `onegrid-analytics-${p.range}-${zoned(new Date()).day}.csv`, csv: [columns.join(','), ...rows].join('\n') + '\n' };
+  return { filename: `onegrid-analytics-${site ? site.replace(/[^a-z0-9.-]/g, '-') + '-' : ''}${p.range}-${zoned(new Date()).day}.csv`, csv: [columns.join(','), ...rows].join('\n') + '\n' };
 }

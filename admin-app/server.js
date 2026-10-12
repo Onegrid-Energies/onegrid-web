@@ -11,7 +11,7 @@ import {
   rateLimit, sendSignInLink, sessionCookie, useSignInLink
 } from './lib/auth.mjs';
 import { entryPath, fillTemplate, getCollection, loadSchema, slugFor } from './lib/schema.mjs';
-import { allowedOrigin, collect, exportCsv, report } from './lib/analytics.mjs';
+import { accessInfo, allowedOrigin, collect, exportCsv, loadAccess, report, saveAccess, startAccessRefresh } from './lib/analytics.mjs';
 import { db } from './lib/db.mjs';
 import { ConflictError, NotFoundError, store } from './lib/store.mjs';
 import { listUsers, normaliseEmail, removeUser, setPassword, upsertUser } from './lib/users.mjs';
@@ -129,7 +129,7 @@ async function handle(req, res) {
     if (origin && hitAllowed(ip)) {
       let body = null;
       try { body = JSON.parse(raw); } catch { /* ignored */ }
-      await collect(req, body, ip).catch(error => console.error('Analytics:', error.message));
+      await collect(req, body, ip, origin).catch(error => console.error('Analytics:', error.message));
     }
     return send(res, 204, '', cors);
   }
@@ -302,13 +302,24 @@ async function handle(req, res) {
   // ------------------------------------------------ website analytics (owners)
   if (pathname === '/api/analytics' && method === 'GET') {
     ownerOnly();
-    const [data, tracking] = await Promise.all([report(url.searchParams.get('range')), trackingStatus()]);
-    return send(res, 200, { ...data, tracking });
+    const [data, tracking] = await Promise.all([report(url.searchParams.get('range'), String(url.searchParams.get('site') || '').toLowerCase()), trackingStatus()]);
+    return send(res, 200, { ...data, tracking, access: accessInfo() });
   }
   if (pathname === '/api/analytics/export' && method === 'GET') {
     ownerOnly();
-    const { filename, csv } = await exportCsv(url.searchParams.get('range'));
+    const { filename, csv } = await exportCsv(url.searchParams.get('range'), String(url.searchParams.get('site') || '').toLowerCase());
     return send(res, 200, csv, { 'Content-Type': 'text/csv; charset=utf-8', 'Content-Disposition': `attachment; filename="${filename}"` });
+  }
+  // Which websites may send visits: any, or only a list (SITE_URL is always allowed).
+  if (pathname === '/api/analytics/access' && method === 'PUT') {
+    ownerOnly();
+    const body = await readJson(req);
+    const saved = await saveAccess(body, user);
+    const summary = saved.mode === 'any'
+      ? 'Analytics: accept visits from any website'
+      : `Analytics: accept visits only from ${[saved.mainSite, ...saved.hosts].join(', ')}`;
+    await logActivity(user, 'update', summary, { collection: 'settings', entry: 'analytics' });
+    return send(res, 200, saved);
   }
   // Points the website's tracker at this admin (sets analytics_url in content/site.json).
   if (pathname === '/api/analytics/connect' && method === 'POST') {
@@ -369,6 +380,8 @@ async function handle(req, res) {
 
 try {
   await db.init();
+  await loadAccess();
+  startAccessRefresh();
 } catch (error) {
   console.error(`Could not connect to MongoDB: ${error.message}`);
   console.error('Check MONGODB_URI, the database user/password, and that Atlas Network Access allows this server.');

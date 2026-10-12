@@ -387,3 +387,34 @@ html[data-theme="light"] .btn-google { border-color: var(--line-2); }
   .data-table { min-width: 520px; }
   .columns { gap: 2px; }
 }
+
+/* Analytics: date range and website picker */
+.analytics-filters { display: flex; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
+.site-picker { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+.site-picker select { width: auto; min-width: 220px; min-height: 38px; }
+@media (max-width: 860px) {
+  .analytics-filters { display: block; }
+  .site-picker { width: 100%; }
+  .site-picker select { flex: 1; min-width: 0; }
+}
+
+/* Analytics: which websites may send visits */
+.access-options { display: grid; gap: 10px; }
+.access-option { display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--bg-2); cursor: pointer; }
+.access-option input { margin-top: 3px; accent-color: var(--check); width: 18px; height: 18px; flex: none; }
+.access-option > span { display: grid; gap: 2px; }
+.access-option:has(input:checked) { border-color: var(--check); background: var(--tint); }
+.host-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+.host-chip { display: inline-flex; align-items: center; gap: 8px; min-height: 34px; padding: 0 6px 0 12px; border-radius: 999px; border: 1px solid var(--line-2); background: var(--surface-2); color: var(--ink); font: 600 13px var(--font); }
+.host-chip button { width: 24px; height: 24px; border-radius: 50%; border: 0; background: transparent; color: var(--ink-3); cursor: pointer; }
+.host-chip button:hover { background: var(--surface-3); color: var(--ink); }
+.host-chip.locked { padding-right: 12px; }
+.host-chip small { color: var(--ink-3); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; }
+.host-chip.suggest { padding: 0 12px; cursor: pointer; border-style: dashed; }
+.access-save { margin-top: 14px; align-items: center; gap: 12px; flex-wrap: wrap; }
+.bar-row .btn-small { position: relative; min-height: 30px; }
+@media (max-width: 860px) {
+  .access-save .btn { width: 100%; }
+  .host-chip { min-height: 40px; font-size: 14px; }
+  .host-chip button { width: 30px; height: 30px; }
+}

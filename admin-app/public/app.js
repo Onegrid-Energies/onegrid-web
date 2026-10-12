@@ -800,6 +800,90 @@
   }
 
   const panel = (title, ...children) => h('section', { class: 'panel' }, h('h2', { text: title }), ...children);
+
+  // Which websites may send visits: any copy of the site, or only the ones listed (owners).
+  function accessPanel(data) {
+    const saved = data.access;
+    const draft = { mode: saved.mode, hosts: [...saved.hosts] };
+    const hostOf = value => {
+      const text = String(value || '').trim();
+      if (!text) return null;
+      try {
+        const host = new URL(/^[a-z][a-z0-9+.-]*:\/\//i.test(text) ? text : `https://${text}`).hostname.toLowerCase().replace(/^www\./, '');
+        return /^[a-z0-9-]+(\.[a-z0-9-]+)+$/.test(host) ? host : null;
+      } catch { return null; }
+    };
+    const message = h('div');
+    const saveButton = h('button', { class: 'btn', type: 'button', disabled: true }, 'Save');
+    const changed = () => {
+      const same = draft.mode === saved.mode && [...draft.hosts].sort().join() === [...saved.hosts].sort().join();
+      saveButton.disabled = same;
+      message.replaceChildren();
+    };
+    const add = value => {
+      const host = hostOf(value);
+      if (!host) { message.replaceChildren(h('div', { class: 'notice notice-error', text: `“${value}” doesn’t look like a website address.` })); return false; }
+      if (host !== saved.mainSite && !draft.hosts.includes(host)) draft.hosts.push(host);
+      draw(); changed();
+      return true;
+    };
+
+    const radio = (mode, label, hint) => {
+      const input = h('input', { type: 'radio', name: 'analytics-access', value: mode });
+      input.checked = draft.mode === mode;
+      input.addEventListener('change', () => { draft.mode = mode; draw(); changed(); });
+      return h('label', { class: 'access-option' }, input, h('span', {}, h('b', { text: label }), h('span', { class: 'small muted', text: hint })));
+    };
+    const options = h('div', { class: 'access-options' },
+      radio('any', 'Any website', 'Every copy of the site is counted — your domains, GitHub Pages, new hosts — each under its own name.'),
+      radio('list', 'Only the websites listed below', 'Visits from anywhere else are turned away and shown under “Recently refused”.'));
+
+    const input = h('input', { type: 'text', placeholder: 'e.g. onegridenergies.org or yourname.github.io' });
+    input.addEventListener('keydown', event => { if (event.key === 'Enter') { event.preventDefault(); if (add(input.value)) input.value = ''; } });
+    const addRow = h('div', { class: 'media-row' }, input, h('button', { class: 'btn btn-ghost', type: 'button', onclick: () => { if (add(input.value)) input.value = ''; } }, 'Add'));
+    const listBox = h('div');
+
+    function draw() {
+      const chips = h('div', { class: 'host-chips' },
+        h('span', { class: 'host-chip locked', title: 'SITE_URL on the server — always allowed' }, saved.mainSite, h('small', { text: 'always' })),
+        draft.hosts.map(host => h('span', { class: 'host-chip' }, host,
+          h('button', { type: 'button', 'aria-label': `Remove ${host}`, onclick: () => { draft.hosts = draft.hosts.filter(item => item !== host); draw(); changed(); } }, '✕'))));
+      const seen = data.sites.map(row => row.site).filter(host => host !== saved.mainSite && !draft.hosts.includes(host));
+      const refused = saved.refused.filter(row => !draft.hosts.includes(row.host));
+      listBox.replaceChildren(...[
+        draft.mode === 'list' ? h('div', {}, h('h3', { text: 'Allowed websites' }), chips, addRow) : null,
+        draft.mode === 'list' && seen.length ? h('div', {}, h('h3', { text: 'Seen in this period' }),
+          h('div', { class: 'host-chips' }, seen.map(host => h('button', { class: 'host-chip suggest', type: 'button', onclick: () => add(host) }, `+ ${host}`)))) : null,
+        refused.length ? h('div', {}, h('h3', { text: 'Recently refused' }),
+          h('div', { class: 'bars' }, refused.map(row => h('div', { class: 'bar-row' },
+            h('span', { class: 'bar-label', text: row.host }),
+            h('span', { class: 'bar-sub', text: `${num(row.count)} × · ${ago(row.lastAt)}` }),
+            h('button', { class: 'btn btn-ghost btn-small', type: 'button', onclick: () => add(row.host) }, 'Allow')))),
+          note('Websites that tried to send visits while only listed websites are allowed (since the admin last restarted).')) : null
+      ].filter(Boolean));
+    }
+    draw();
+
+    saveButton.addEventListener('click', async () => {
+      saveButton.disabled = true;
+      try {
+        const result = await api('PUT', '/api/analytics/access', { mode: draft.mode, hosts: draft.hosts });
+        Object.assign(saved, result);
+        draft.hosts = [...result.hosts];
+        draw();
+        message.replaceChildren(h('div', { class: 'notice notice-ok', text: 'Saved. It applies to new visits straight away.' }));
+      } catch (error) {
+        saveButton.disabled = false;
+        message.replaceChildren(h('div', { class: 'notice notice-error', text: error.message }));
+      }
+    });
+
+    const status = saved.saved
+      ? `Last changed ${ago(saved.updatedAt)}${saved.updatedBy ? ` by ${saved.updatedBy}` : ''}.`
+      : saved.fromEnv ? 'Currently set by ANALYTICS_ORIGINS on the server; saving here takes over from it.' : '';
+    return panel('Which websites may send visits', options, listBox, message,
+      h('div', { class: 'row access-save' }, saveButton, status ? h('span', { class: 'small muted', text: status }) : null));
+  }
   const note = text => h('p', { class: 'small muted panel-note', text });
 
   let analyticsTimer;
@@ -807,19 +891,33 @@
     clearInterval(analyticsTimer);
     if (state.me.role !== 'owner') return errorView(new Error('Only owners can see the website analytics.'));
     const range = RANGE_LABELS[params.get('range')] ? params.get('range') : '30d';
+    const siteParam = String(params.get('site') || '').toLowerCase();
+    const query = (r, siteName = siteParam) => `range=${r}${siteName ? `&site=${encodeURIComponent(siteName)}` : ''}`;
     loading();
     let data;
-    try { data = await api('GET', `/api/analytics?range=${range}`); } catch (error) { return errorView(error); }
+    try { data = await api('GET', `/api/analytics?${query(range)}`); } catch (error) { return errorView(error); }
     const site = state.me.siteUrl;
     const S = data.summary; const P = data.previous;
 
     // Header: range picker, export, refresh
     const rangeTabs = h('div', { class: 'tabs range-tabs', role: 'tablist' }, Object.entries(RANGE_LABELS).map(([key, text]) =>
-      h('a', { href: `#/analytics?range=${key}`, role: 'tab', 'aria-selected': String(key === range), text })));
+      h('a', { href: `#/analytics?${query(key)}`, role: 'tab', 'aria-selected': String(key === range), text })));
+    // The website may be published on several domains; each visit records which one it was on.
+    const siteNames = data.sites.map(row => row.site);
+    if (siteParam && !siteNames.includes(siteParam)) siteNames.push(siteParam);
+    const sitePicker = siteNames.length > 1 || siteParam
+      ? h('label', { class: 'site-picker' }, h('span', { class: 'small muted', text: 'Website' }),
+        (() => {
+          const select = h('select', {}, h('option', { value: '', text: 'All websites' }), siteNames.map(name => h('option', { value: name, text: name })));
+          select.value = siteParam;
+          select.addEventListener('change', () => { location.hash = `#/analytics?${query(range, select.value)}`; });
+          return select;
+        })())
+      : null;
     const head = h('div', { class: 'page-head' },
-      h('div', {}, h('h1', { text: 'Analytics' }), h('p', { text: `Visits to ${site.replace(/^https?:\/\//, '')} · ${RANGE_LABELS[range].toLowerCase()} · times shown in ${data.timezone.replace('_', ' ')}` })),
+      h('div', {}, h('h1', { text: 'Analytics' }), h('p', { text: `Visits to ${siteParam || (siteNames.length > 1 ? 'all your websites' : site.replace(/^https?:\/\//, ''))} · ${RANGE_LABELS[range].toLowerCase()} · times shown in ${data.timezone.replace('_', ' ')}` })),
       h('div', { class: 'row head-actions' },
-        h('a', { class: 'btn btn-ghost btn-small', href: `/api/analytics/export?range=${range}`, download: '' }, 'Export CSV'),
+        h('a', { class: 'btn btn-ghost btn-small', href: `/api/analytics/export?${query(range)}`, download: '' }, 'Export CSV'),
         h('button', { class: 'btn btn-ghost btn-small', type: 'button', onclick: () => analyticsView(params) }, 'Refresh')));
 
     // Setup notices
@@ -898,8 +996,12 @@
     })();
 
     setView(
-      head, message, setup, rangeTabs, live, kpis,
+      head, message, setup, h('div', { class: 'analytics-filters' }, rangeTabs, sitePicker), live, kpis,
       panel('Visitors over time', lineChart(data.series, data.unit)),
+      panel('Websites',
+          bars(data.sites.map(row => ({ label: row.site, value: row.visits, sub: `${num(row.visitors)} people · ${num(row.views)} views` })), { empty: 'No visits yet.' }),
+          note('Every place the website is published (its own domains, GitHub Pages…). Counts are visits; pick one above to see only its numbers.')),
+      accessPanel(data),
       h('div', { class: 'grid-2' },
         panel('Enquiries & actions', actionTiles,
           h('h3', { text: 'WhatsApp taps — from which page' }), bars(A.whatsappFrom.map(row => ({ label: row.label, value: row.count }))),
@@ -944,7 +1046,7 @@
         h('h3', { text: 'Day of the week' }), columns(Object.values(data.weekdays), Object.keys(data.weekdays))),
       panel('Recent visits', table([
           { label: 'When', render: row => h('span', { class: 'small nowrap', text: ago(row.at) }) },
-          { label: 'Page', render: row => h('span', { text: row.path }) },
+          { label: 'Page', render: row => h('div', {}, h('span', { text: row.path }), h('div', { class: 'small muted', text: row.site })) },
           { label: 'From', render: row => h('span', { class: 'small' }, flag(row.country), row.countryName, row.source ? h('div', { class: 'muted', text: `via ${row.source}` }) : null) },
           { label: 'Device', render: row => h('span', { class: 'small', text: `${row.device} · ${row.browser}` }) }
         ], data.recent, 'No visits yet.')),
