@@ -72,6 +72,7 @@ const PAGE_ROUTES = {
   home: '/',
   about: '/about/',
   oneplastic: '/oneplastic/',
+  shop: '/shop/',
   stories: '/stories-of-hope/',
   recognitions: '/recognitions/',
   quote: '/quote/',
@@ -131,12 +132,16 @@ const CMS_PAGES = (() => {
 const withoutEmpty = values => Object.fromEntries(Object.entries(values || {}).filter(([, value]) => value));
 
 Object.entries(CMS_PAGES).forEach(([page, { seo }]) => {
+  // Pages added later (e.g. the shop) only have their metadata in the CMS data.
+  if (!PAGE_METADATA[page] && PAGE_ROUTES[page] && seo?.title) PAGE_METADATA[page] = { path: PAGE_ROUTES[page] };
   if (PAGE_METADATA[page]) Object.assign(PAGE_METADATA[page], withoutEmpty(seo));
 });
 
 function getPageFromPath(pathname = window.location.pathname) {
   const path = pathname.replace(/\/+$/, '') || '/';
   if (path === '/') return 'home';
+  // Product pages: /shop/<product>/ (each has its own title and description from the build).
+  if (/^\/shop\/[^/]+$/.test(path)) return 'product';
   const route = Object.entries(PAGE_ROUTES).find(([, value]) => value.replace(/\/+$/, '') === path);
   // Keep this short alias working for links shared before the canonical route existed.
   if (path === '/stories') return 'stories';
@@ -153,10 +158,10 @@ function updateDocumentMetadata(page) {
   document.querySelector('meta[property="og:title"]').content = metadata.title;
   document.querySelector('meta[property="og:description"]').content = metadata.description;
   document.querySelector('meta[property="og:url"]').content = canonicalUrl;
-  document.querySelector('meta[property="og:image"]').content = DEFAULT_SOCIAL_IMAGE;
+  document.querySelector('meta[property="og:image"]').content = metadata.image || DEFAULT_SOCIAL_IMAGE;
   document.querySelector('meta[name="twitter:title"]').content = metadata.title;
   document.querySelector('meta[name="twitter:description"]').content = metadata.description;
-  document.querySelector('meta[name="twitter:image"]').content = DEFAULT_SOCIAL_IMAGE;
+  document.querySelector('meta[name="twitter:image"]').content = metadata.image || DEFAULT_SOCIAL_IMAGE;
 }
 
 function navigateTo(page) {
@@ -184,12 +189,14 @@ function initRouting() {
 
   const activePage = getPageFromPath();
   activateCurrentPage(activePage);
-  const navLink = document.querySelector('[onclick*="navigateTo(\'' + activePage + '\')"]');
+  const navPage = activePage === 'product' ? 'shop' : activePage;
+  const navLink = document.querySelector('[onclick*="navigateTo(\'' + navPage + '\')"]');
   if (navLink?.classList.contains('nav-link')) navLink.classList.add('active');
 
   document.getElementById('nav')?.classList.add('dark-mode');
   updateBackgroundVideo(activePage);
-  updateDocumentMetadata(activePage);
+  // Product pages already carry their own title, description and image from the build.
+  if (activePage !== 'product') updateDocumentMetadata(activePage);
 }
 
 // ══════════════════════════════════════
@@ -550,6 +557,7 @@ const BACKGROUND_VIDEOS = {
 };
 
 Object.entries(CMS_PAGES).forEach(([page, { intro }]) => {
+  if (!BACKGROUND_VIDEOS[page] && intro?.video) BACKGROUND_VIDEOS[page] = { target: `#page-${page}` };
   if (!BACKGROUND_VIDEOS[page] || !intro) return;
   const { video, ...text } = intro;
   Object.assign(BACKGROUND_VIDEOS[page], withoutEmpty({ src: video, ...text }));
@@ -981,6 +989,30 @@ function initQuotePage() {
 }
 
 // ══════════════════════════════════════
+// SHOP CATEGORY FILTERS
+// ══════════════════════════════════════
+// Chips are rendered from content/shop.json; they only show once there are two or more categories.
+function initShopFilters() {
+  const bar = document.querySelector('.page.active [data-shop-filters]');
+  if (!bar) return;
+  const chips = Array.from(bar.querySelectorAll('[data-shop-filter]'));
+  const categories = Array.from(document.querySelectorAll('.page.active [data-shop-category]'));
+  if (categories.length < 2) return;
+  bar.hidden = false;
+  chips.forEach(chip => chip.addEventListener('click', () => {
+    const filter = chip.dataset.shopFilter;
+    chips.forEach(other => {
+      const selected = other === chip;
+      other.classList.toggle('active', selected);
+      other.setAttribute('aria-pressed', String(selected));
+    });
+    categories.forEach(category => {
+      category.hidden = filter !== 'all' && category.dataset.shopCategory !== filter;
+    });
+  }));
+}
+
+// ══════════════════════════════════════
 // VISIT STATISTICS (anonymous, no cookies)
 // ══════════════════════════════════════
 // Sent to the OneGrid admin when its address is set (Admin → Analytics → Connect the website):
@@ -1151,6 +1183,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initIntroVideo();
   initServiceVideos();
   initQuotePage();
+  initShopFilters();
   initVisitStats();
 
   const hero = document.querySelector('.hero');

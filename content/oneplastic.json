@@ -215,5 +215,18 @@
         "heading": "Quality Control:"
       }
     ]
+  },
+  "shop_teaser": {
+    "image": {
+      "url": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1794009873/Smiling_Boy_with_a_Glowing_Lantern_dtt2k4.png",
+      "width": 1453,
+      "height": 1082,
+      "alt": "A smiling boy carries the lit OnePlastic Lantern by its strap along a path at night"
+    },
+    "tag": "Now available",
+    "title": "The OnePlastic Lantern",
+    "text": "A durable rechargeable lantern built from waste plastic bottles, made to be used, repaired, and passed on.",
+    "link": "/shop/oneplastic-lantern/",
+    "button": "See the lantern"
   }
 }

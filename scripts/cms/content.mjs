@@ -5,6 +5,7 @@ export const PAGES = [
   { name: 'home', label: 'Home', directory: 'home', path: '/' },
   { name: 'about', label: 'About', directory: 'about', path: '/about/' },
   { name: 'oneplastic', label: 'OnePlastic', directory: 'oneplastic', path: '/oneplastic/' },
+  { name: 'shop', label: 'Shop', directory: 'shop', path: '/shop/' },
   { name: 'stories', label: 'Stories of Hope', directory: 'stories-of-hope', path: '/stories-of-hope/' },
   { name: 'recognitions', label: 'Recognitions', directory: 'recognitions', path: '/recognitions/' },
   { name: 'quote', label: 'Quote', directory: 'quote', path: '/quote/' },

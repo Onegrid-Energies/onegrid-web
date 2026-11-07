@@ -852,6 +852,57 @@ collections:
                 label: "Image description (alt text)"
                 widget: string
                 required: false
+          - name: shop_teaser
+            label: "Shop teaser"
+            widget: object
+            collapsed: true
+            fields:
+              - name: image
+                label: "Teaser photo"
+                widget: object
+                collapsed: true
+                required: false
+                fields:
+                  - name: url
+                    label: Image
+                    widget: image
+                    required: false
+                    hint: "Upload a photo or paste a Cloudinary link. The site serves resized copies automatically."
+                  - name: alt
+                    label: "Image description (alt text)"
+                    widget: string
+                    required: false
+                  - name: width
+                    label: "Original width (px)"
+                    widget: number
+                    value_type: int
+                    required: false
+                    hint: "Used to keep the layout steady while the image loads."
+                  - name: height
+                    label: "Original height (px)"
+                    widget: number
+                    value_type: int
+                    required: false
+              - name: tag
+                label: Tag
+                widget: string
+                required: false
+              - name: title
+                label: Title
+                widget: string
+                required: false
+              - name: text
+                label: Text
+                widget: text
+                required: false
+              - name: link
+                label: Link
+                widget: string
+                required: false
+              - name: button
+                label: Button
+                widget: string
+                required: false
           - name: community
             label: Community
             widget: object
@@ -1187,6 +1238,769 @@ collections:
                     widget: string
                     required: false
                 summary: "{{fields.heading}}"
+      - name: shop
+        label: Shop
+        file: content/shop.json
+        fields:
+          - name: seo
+            label: "Search & sharing"
+            widget: object
+            collapsed: true
+            fields:
+              - name: title
+                label: "Browser tab / search title"
+                widget: string
+                required: false
+              - name: description
+                label: "Search description"
+                widget: text
+                hint: "About 150 characters, shown in search results and link previews."
+                required: false
+          - name: intro
+            label: "Intro video"
+            widget: object
+            collapsed: true
+            fields:
+              - name: video
+                label: "Video (MP4)"
+                widget: file
+                hint: "Upload a video, or paste a Cloudinary .mp4 link."
+                required: false
+              - name: poster
+                label: "Poster image"
+                widget: image
+                hint: "Shown while the video loads."
+                required: false
+              - name: label
+                label: Label
+                widget: string
+                required: false
+              - name: title
+                label: Title
+                widget: string
+                required: false
+              - name: subtitle
+                label: Subtitle
+                widget: text
+                required: false
+          - name: hero
+            label: Hero
+            widget: object
+            collapsed: true
+            fields:
+              - name: tag
+                label: Tag
+                widget: string
+                required: false
+              - name: title
+                label: Title
+                widget: string
+                hint: "Wrap words in *asterisks* to highlight them. Press Enter for a new line."
+                required: false
+              - name: subtitle
+                label: Subtitle
+                widget: string
+                required: false
+          - name: filters_label
+            label: "“All” filter label"
+            widget: string
+            required: false
+          - name: categories
+            label: Categories
+            widget: list
+            collapsed: true
+            fields:
+              - name: name
+                label: "Category name"
+                widget: string
+                required: false
+              - name: slug
+                label: "Short name for filters"
+                widget: string
+                required: false
+                hint: "Lowercase, e.g. lanterns. Leave empty to make it from the name."
+              - name: description
+                label: Description
+                widget: string
+                hint: "Optional one-line introduction to the category."
+                required: false
+              - name: products
+                label: Products
+                widget: list
+                collapsed: true
+                fields:
+                  - name: name
+                    label: "Product name"
+                    widget: string
+                    required: false
+                  - name: slug
+                    label: "Web address"
+                    widget: string
+                    hint: "The product page is at /shop/<this>/, e.g. oneplastic-lantern. Lowercase letters, numbers and dashes. Changing it changes the page address."
+                    required: false
+                  - name: price
+                    label: "Price (₦)"
+                    widget: number
+                    value_type: int
+                    required: false
+                    hint: "Numbers only, e.g. 25000. Leave empty to show “Price coming soon” and an “Ask about availability” button."
+                  - name: compare_at_price
+                    label: "Old price (₦), crossed out"
+                    widget: number
+                    value_type: int
+                    required: false
+                    hint: "Optional. Only shown when it is higher than the price."
+                  - name: price_pending_label
+                    label: "Label while there is no price"
+                    widget: string
+                    required: false
+                  - name: availability_message
+                    label: "WhatsApp message while there is no price"
+                    widget: text
+                    required: false
+                    hint: "Pre-filled when someone taps “Ask about availability”. {name} becomes the product name."
+                  - name: order_message
+                    label: "WhatsApp message with a price"
+                    widget: text
+                    required: false
+                    hint: "Pre-filled when someone taps “Order on WhatsApp”. {name} and {price} are filled in."
+                  - name: seo
+                    label: "Search & sharing"
+                    widget: object
+                    collapsed: true
+                    fields:
+                      - name: title
+                        label: "Browser tab / search title"
+                        widget: string
+                        required: false
+                      - name: description
+                        label: "Search description"
+                        widget: text
+                        required: false
+                        hint: "About 150 characters, shown in search results and link previews."
+                  - name: image
+                    label: "Product photo (card and page hero)"
+                    widget: object
+                    collapsed: true
+                    required: false
+                    fields:
+                      - name: url
+                        label: Image
+                        widget: image
+                        required: false
+                        hint: "Upload a photo or paste a Cloudinary link. The site serves resized copies automatically."
+                      - name: alt
+                        label: "Image description (alt text)"
+                        widget: string
+                        required: false
+                      - name: width
+                        label: "Original width (px)"
+                        widget: number
+                        value_type: int
+                        required: false
+                        hint: "Used to keep the layout steady while the image loads."
+                      - name: height
+                        label: "Original height (px)"
+                        widget: number
+                        value_type: int
+                        required: false
+                  - name: summary
+                    label: Summary
+                    widget: string
+                    hint: "One line shown on the shop card."
+                    required: false
+                  - name: hero
+                    label: Hero
+                    widget: object
+                    collapsed: true
+                    fields:
+                      - name: tag
+                        label: Tag
+                        widget: string
+                        required: false
+                      - name: title
+                        label: Title
+                        widget: string
+                        required: false
+                      - name: intro
+                        label: Intro
+                        widget: string
+                        required: false
+                      - name: secondary_button
+                        label: "Secondary button"
+                        widget: string
+                        required: false
+                  - name: statement
+                    label: Statement
+                    widget: string
+                    required: false
+                  - name: story
+                    label: Story
+                    widget: object
+                    collapsed: true
+                    fields:
+                      - name: tag
+                        label: Tag
+                        widget: string
+                        required: false
+                      - name: title
+                        label: Title
+                        widget: string
+                        required: false
+                      - name: question
+                        label: Question
+                        widget: string
+                        required: false
+                      - name: text
+                        label: Text
+                        widget: string
+                        required: false
+                      - name: image
+                        label: Image
+                        widget: object
+                        collapsed: true
+                        required: false
+                        fields:
+                          - name: url
+                            label: Image
+                            widget: image
+                            required: false
+                            hint: "Upload a photo or paste a Cloudinary link. The site serves resized copies automatically."
+                          - name: alt
+                            label: "Image description (alt text)"
+                            widget: string
+                            required: false
+                          - name: width
+                            label: "Original width (px)"
+                            widget: number
+                            value_type: int
+                            required: false
+                            hint: "Used to keep the layout steady while the image loads."
+                          - name: height
+                            label: "Original height (px)"
+                            widget: number
+                            value_type: int
+                            required: false
+                  - name: uses
+                    label: Uses
+                    widget: object
+                    collapsed: true
+                    fields:
+                      - name: tag
+                        label: Tag
+                        widget: string
+                        required: false
+                      - name: title
+                        label: Title
+                        widget: string
+                        required: false
+                      - name: intro
+                        label: Intro
+                        widget: string
+                        required: false
+                      - name: items
+                        label: "Ways to use it"
+                        widget: list
+                        collapsed: true
+                        fields:
+                          - name: icon
+                            label: "Icon (SVG code)"
+                            widget: text
+                            hint: "Copy an existing icon to reuse it."
+                            required: false
+                          - name: text
+                            label: Text
+                            widget: string
+                            required: false
+                        summary: "{{fields.text}}"
+                      - name: closing
+                        label: Closing
+                        widget: string
+                        required: false
+                      - name: photos
+                        label: Photos
+                        widget: list
+                        collapsed: true
+                        fields:
+                          - name: image
+                            label: Image
+                            widget: object
+                            collapsed: true
+                            required: false
+                            fields:
+                              - name: url
+                                label: Image
+                                widget: image
+                                required: false
+                                hint: "Upload a photo or paste a Cloudinary link. The site serves resized copies automatically."
+                              - name: alt
+                                label: "Image description (alt text)"
+                                widget: string
+                                required: false
+                              - name: width
+                                label: "Original width (px)"
+                                widget: number
+                                value_type: int
+                                required: false
+                                hint: "Used to keep the layout steady while the image loads."
+                              - name: height
+                                label: "Original height (px)"
+                                widget: number
+                                value_type: int
+                                required: false
+                          - name: caption
+                            label: Caption
+                            widget: string
+                            required: false
+                        summary: "{{fields.caption}}"
+                  - name: modes
+                    label: Modes
+                    widget: object
+                    collapsed: true
+                    fields:
+                      - name: tag
+                        label: Tag
+                        widget: string
+                        required: false
+                      - name: title
+                        label: Title
+                        widget: string
+                        required: false
+                      - name: intro
+                        label: Intro
+                        widget: string
+                        required: false
+                      - name: items
+                        label: Modes
+                        widget: list
+                        collapsed: true
+                        fields:
+                          - name: tone
+                            label: "Light colour"
+                            widget: select
+                            multiple: true
+                            required: false
+                            options:
+                              - label: Warm
+                                value: product-mode--warm
+                              - label: White
+                                value: product-mode--white
+                              - label: Both
+                                value: product-mode--both
+                          - name: name
+                            label: Name
+                            widget: string
+                            required: false
+                          - name: text
+                            label: Text
+                            widget: string
+                            required: false
+                        summary: "{{fields.name}}"
+                      - name: dimming_title
+                        label: "Dimming title"
+                        widget: string
+                        required: false
+                      - name: dimming_text
+                        label: "Dimming text"
+                        widget: string
+                        required: false
+                      - name: dimming_note
+                        label: "Dimming note"
+                        widget: string
+                        required: false
+                  - name: battery
+                    label: Battery
+                    widget: object
+                    collapsed: true
+                    fields:
+                      - name: tag
+                        label: Tag
+                        widget: string
+                        required: false
+                      - name: title
+                        label: Title
+                        widget: string
+                        required: false
+                      - name: intro
+                        label: Intro
+                        widget: string
+                        required: false
+                      - name: fade_note
+                        label: "Fade note"
+                        widget: string
+                        required: false
+                      - name: runtime
+                        label: Runtime
+                        widget: list
+                        collapsed: true
+                        fields:
+                          - name: label
+                            label: Label
+                            widget: string
+                            required: false
+                          - name: value
+                            label: Value
+                            widget: string
+                            required: false
+                          - name: bar
+                            label: Bar
+                            widget: string
+                            hint: "Bar length compared with the longest runtime, e.g. 26%"
+                            required: false
+                        summary: "{{fields.label}}"
+                      - name: note
+                        label: Note
+                        widget: string
+                        required: false
+                  - name: charging
+                    label: Charging
+                    widget: object
+                    collapsed: true
+                    fields:
+                      - name: tag
+                        label: Tag
+                        widget: string
+                        required: false
+                      - name: title
+                        label: Title
+                        widget: string
+                        required: false
+                      - name: intro
+                        label: Intro
+                        widget: string
+                        required: false
+                      - name: options
+                        label: "Charging options"
+                        widget: list
+                        collapsed: true
+                        fields:
+                          - name: text
+                            label: Text
+                            widget: string
+                            required: false
+                        summary: "{{fields.text}}"
+                      - name: solar_note
+                        label: "Solar note"
+                        widget: string
+                        required: false
+                      - name: indicator
+                        label: Indicator
+                        widget: string
+                        required: false
+                  - name: repair
+                    label: Repair
+                    widget: object
+                    collapsed: true
+                    fields:
+                      - name: image
+                        label: Image
+                        widget: object
+                        collapsed: true
+                        required: false
+                        fields:
+                          - name: url
+                            label: Image
+                            widget: image
+                            required: false
+                            hint: "Upload a photo or paste a Cloudinary link. The site serves resized copies automatically."
+                          - name: alt
+                            label: "Image description (alt text)"
+                            widget: string
+                            required: false
+                          - name: width
+                            label: "Original width (px)"
+                            widget: number
+                            value_type: int
+                            required: false
+                            hint: "Used to keep the layout steady while the image loads."
+                          - name: height
+                            label: "Original height (px)"
+                            widget: number
+                            value_type: int
+                            required: false
+                      - name: tag
+                        label: Tag
+                        widget: string
+                        required: false
+                      - name: title
+                        label: Title
+                        widget: string
+                        required: false
+                      - name: lead
+                        label: Lead
+                        widget: string
+                        required: false
+                      - name: paragraphs
+                        label: Paragraphs
+                        widget: list
+                        collapsed: true
+                        fields:
+                          - name: text
+                            label: Text
+                            widget: string
+                            required: false
+                        summary: "{{fields.text}}"
+                      - name: quote
+                        label: Quote
+                        widget: string
+                        required: false
+                  - name: local
+                    label: Local
+                    widget: object
+                    collapsed: true
+                    fields:
+                      - name: image
+                        label: Image
+                        widget: object
+                        collapsed: true
+                        required: false
+                        fields:
+                          - name: url
+                            label: Image
+                            widget: image
+                            required: false
+                            hint: "Upload a photo or paste a Cloudinary link. The site serves resized copies automatically."
+                          - name: alt
+                            label: "Image description (alt text)"
+                            widget: string
+                            required: false
+                          - name: width
+                            label: "Original width (px)"
+                            widget: number
+                            value_type: int
+                            required: false
+                            hint: "Used to keep the layout steady while the image loads."
+                          - name: height
+                            label: "Original height (px)"
+                            widget: number
+                            value_type: int
+                            required: false
+                      - name: tag
+                        label: Tag
+                        widget: string
+                        required: false
+                      - name: title
+                        label: Title
+                        widget: string
+                        required: false
+                      - name: paragraphs
+                        label: Paragraphs
+                        widget: list
+                        collapsed: true
+                        fields:
+                          - name: text
+                            label: Text
+                            widget: string
+                            required: false
+                        summary: "{{fields.text}}"
+                  - name: tough
+                    label: Tough
+                    widget: object
+                    collapsed: true
+                    fields:
+                      - name: tag
+                        label: Tag
+                        widget: string
+                        required: false
+                      - name: title
+                        label: Title
+                        widget: string
+                        required: false
+                      - name: text
+                        label: Text
+                        widget: string
+                        required: false
+                      - name: water
+                        label: Water
+                        widget: string
+                        required: false
+                      - name: note
+                        label: Note
+                        widget: string
+                        required: false
+                  - name: keep
+                    label: Keep
+                    widget: object
+                    collapsed: true
+                    fields:
+                      - name: tag
+                        label: Tag
+                        widget: string
+                        required: false
+                      - name: title
+                        label: Title
+                        widget: string
+                        required: false
+                      - name: paragraphs
+                        label: Paragraphs
+                        widget: list
+                        collapsed: true
+                        fields:
+                          - name: text
+                            label: Text
+                            widget: string
+                            required: false
+                        summary: "{{fields.text}}"
+                      - name: closing
+                        label: Closing
+                        widget: string
+                        required: false
+                      - name: image
+                        label: Image
+                        widget: object
+                        collapsed: true
+                        required: false
+                        fields:
+                          - name: url
+                            label: Image
+                            widget: image
+                            required: false
+                            hint: "Upload a photo or paste a Cloudinary link. The site serves resized copies automatically."
+                          - name: alt
+                            label: "Image description (alt text)"
+                            widget: string
+                            required: false
+                          - name: width
+                            label: "Original width (px)"
+                            widget: number
+                            value_type: int
+                            required: false
+                            hint: "Used to keep the layout steady while the image loads."
+                          - name: height
+                            label: "Original height (px)"
+                            widget: number
+                            value_type: int
+                            required: false
+                  - name: specs
+                    label: Specs
+                    widget: object
+                    collapsed: true
+                    fields:
+                      - name: tag
+                        label: Tag
+                        widget: string
+                        required: false
+                      - name: title
+                        label: Title
+                        widget: string
+                        required: false
+                      - name: items
+                        label: Specifications
+                        widget: list
+                        collapsed: true
+                        fields:
+                          - name: label
+                            label: Label
+                            widget: string
+                            required: false
+                          - name: value
+                            label: Value
+                            widget: string
+                            required: false
+                        summary: "{{fields.label}}"
+                      - name: runtime_title
+                        label: "Runtime title"
+                        widget: string
+                        required: false
+                      - name: runtime_note
+                        label: "Runtime note"
+                        widget: string
+                        required: false
+                  - name: faq
+                    label: Faq
+                    widget: object
+                    collapsed: true
+                    fields:
+                      - name: tag
+                        label: Tag
+                        widget: string
+                        required: false
+                      - name: title
+                        label: Title
+                        widget: string
+                        required: false
+                      - name: items
+                        label: Questions
+                        widget: list
+                        collapsed: true
+                        fields:
+                          - name: question
+                            label: Question
+                            widget: string
+                            required: false
+                          - name: answer
+                            label: Answer
+                            widget: string
+                            required: false
+                        summary: "{{fields.question}}"
+                  - name: initiative
+                    label: Initiative
+                    widget: object
+                    collapsed: true
+                    fields:
+                      - name: tag
+                        label: Tag
+                        widget: string
+                        required: false
+                      - name: title
+                        label: Title
+                        widget: string
+                        required: false
+                      - name: text
+                        label: Text
+                        widget: string
+                        required: false
+                      - name: button
+                        label: Button
+                        widget: string
+                        required: false
+                  - name: protected
+                    label: Protected
+                    widget: object
+                    collapsed: true
+                    fields:
+                      - name: title
+                        label: Title
+                        widget: string
+                        required: false
+                      - name: text
+                        label: Text
+                        widget: string
+                        required: false
+                  - name: cta
+                    label: Cta
+                    widget: object
+                    collapsed: true
+                    fields:
+                      - name: title
+                        label: Title
+                        widget: string
+                        required: false
+                      - name: text
+                        label: Text
+                        widget: string
+                        required: false
+                summary: "{{fields.name}}"
+                label_singular: Product
+            summary: "{{fields.name}}"
+            label_singular: Category
+          - name: coming_soon
+            label: "Coming soon"
+            widget: string
+            required: false
+          - name: mission
+            label: Mission
+            widget: object
+            collapsed: true
+            fields:
+              - name: text
+                label: Text
+                widget: string
+                required: false
+              - name: button
+                label: Button
+                widget: string
+                required: false
       - name: stories
         label: "Stories of Hope"
         file: content/stories.json

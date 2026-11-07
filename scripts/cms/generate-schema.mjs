@@ -5,7 +5,7 @@
 //   npm run cms:schema
 
 import { readFile, writeFile } from 'node:fs/promises';
-import { schema } from './template.mjs';
+import { mergeFields, schema } from './template.mjs';
 import { PAGES } from './content.mjs';
 
 const SITE_URL = 'https://onegridenergies.com';
@@ -49,6 +49,37 @@ function finalize(fields) {
     else if (!('required' in result)) result.required = false;
     return result;
   });
+}
+
+// Shop products: the product page template (scope "product") is filled from each product in
+// content/shop.json, so its fields belong to the products list, after the fields only the
+// build uses (address, price, WhatsApp messages, search title).
+const productBasics = [
+  { name: 'name', label: 'Product name', widget: 'string' },
+  { name: 'slug', label: 'Web address', widget: 'string', hint: 'The product page is at /shop/<this>/, e.g. oneplastic-lantern. Lowercase letters, numbers and dashes. Changing it changes the page address.' },
+  { name: 'price', label: 'Price (₦)', widget: 'number', value_type: 'int', required: false, hint: 'Numbers only, e.g. 25000. Leave empty to show “Price coming soon” and an “Ask about availability” button.' },
+  { name: 'compare_at_price', label: 'Old price (₦), crossed out', widget: 'number', value_type: 'int', required: false, hint: 'Optional. Only shown when it is higher than the price.' },
+  { name: 'price_pending_label', label: 'Label while there is no price', widget: 'string', required: false },
+  { name: 'availability_message', label: 'WhatsApp message while there is no price', widget: 'text', required: false, hint: 'Pre-filled when someone taps “Ask about availability”. {name} becomes the product name.' },
+  { name: 'order_message', label: 'WhatsApp message with a price', widget: 'text', required: false, hint: 'Pre-filled when someone taps “Order on WhatsApp”. {name} and {price} are filled in.' },
+  { name: 'seo', label: 'Search & sharing', widget: 'object', collapsed: true, fields: [
+    { name: 'title', label: 'Browser tab / search title', widget: 'string', required: false },
+    { name: 'description', label: 'Search description', widget: 'text', required: false, hint: 'About 150 characters, shown in search results and link previews.' }
+  ] }
+];
+const categories = (scopes.shop ?? []).find(field => field.name === 'categories');
+const productsField = categories?.fields.find(field => field.name === 'products');
+if (productsField) {
+  const fromPage = (scopes.product ?? []).filter(field => !productBasics.some(basic => basic.name === field.name));
+  const fromCard = productsField.fields.filter(field => !productBasics.some(basic => basic.name === field.name));
+  productsField.fields = mergeFields([...productBasics, ...fromCard], fromPage);
+  productsField.label_singular = 'Product';
+  categories.label_singular = 'Category';
+  categories.fields = [
+    { name: 'name', label: 'Category name', widget: 'string' },
+    { name: 'slug', label: 'Short name for filters', widget: 'string', required: false, hint: 'Lowercase, e.g. lanterns. Leave empty to make it from the name.' },
+    ...categories.fields.filter(field => !['name', 'slug'].includes(field.name))
+  ];
 }
 
 function pageFields(name) {

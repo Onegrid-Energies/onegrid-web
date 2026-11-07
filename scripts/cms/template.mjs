@@ -18,13 +18,18 @@
 //     data-cms-duplicate             render the items twice, the copy hidden (marquee loops)
 //   data-cms-highlight               with data-cms: *words* in content become the template's
 //                                    first <span …>words</span> (e.g. the yellow word in a heading)
+//   data-cms-img="hero_image"        an <img> from { url, width, height, alt }: optimised Cloudinary
+//                                    src/srcset (widths in data-cms-img-widths, default 400,800,1200),
+//                                    width/height to prevent layout shift, and alt text
 //   data-cms-optional[="key"]        drop the element when the value (or key) is empty
 //   data-cms-label / -hint / -widget / -options
 //                                    admin field label, help text, widget and select options
 //
 // Keys are dotted paths relative to the current content object (the scope root,
 // or the list item). Prefix with "site:" to read from another file, e.g.
-// data-cms="site:contact.phone".
+// data-cms="site:contact.phone". Keys whose last part starts with "_" (e.g. "_price_text")
+// are worked out by the build (see build-static-pages.mjs): they are never seeded into
+// content/*.json or shown in the admin.
 
 import { parse } from 'parse5';
 import { adapter } from 'parse5-htmlparser2-tree-adapter';
@@ -74,12 +79,15 @@ function locate(ctx, key) {
   return { base: ctx.data, path: key };
 }
 
+const isComputed = key => /(^|[.:])_[^.:]*$/.test(key);
+
 function lookup(ctx, key) {
   const { base, path } = locate(ctx, key);
   return path.split('.').reduce((value, part) => (value == null ? undefined : value[part]), base);
 }
 
 function assign(ctx, key, value) {
+  if (isComputed(key)) return;
   const { base, path } = locate(ctx, key);
   const parts = path.split('.');
   const last = parts.pop();
@@ -161,6 +169,36 @@ function writeAttr(tag, el, attr, value) {
   return setAttr(tag, attr, value);
 }
 
+// Cloudinary delivery URL with a transformation, e.g. f_auto,q_auto,w_800,c_limit.
+const CLOUDINARY = /^(https:\/\/res\.cloudinary\.com\/[^/]+\/image\/upload\/)(.*)$/;
+export function cloudinaryImage(url, width, extra = '') {
+  const match = String(url || '').match(CLOUDINARY);
+  if (!match) return url || '';
+  const rest = match[2].replace(/^(?:[a-z]{1,3}_[^/]*\/)+(?=v\d+\/)/, ''); // drop transformations already there
+  return `${match[1]}f_auto,q_auto,w_${width},c_limit${extra ? `,${extra}` : ''}/${rest}`;
+}
+
+function removeAttr(tag, name) {
+  return tag.replace(new RegExp(`\\s${escapeRegExp(name)}(\\s*=\\s*("[^"]*"|'[^']*'|[^\\s>]+))?`), '');
+}
+
+function writeImage(tag, el, image) {
+  const widths = String(el.attribs['data-cms-img-widths'] || '400,800,1200').split(',').map(Number).filter(Boolean);
+  const url = image?.url || '';
+  const natural = Number(image?.width) || 0;
+  const usable = natural ? widths.filter(w => w < natural).concat(natural <= widths.at(-1) ? [natural] : []) : widths;
+  const srcWidths = usable.length ? usable : widths;
+  const isCloudinary = CLOUDINARY.test(url);
+  tag = setAttr(tag, 'src', isCloudinary ? cloudinaryImage(url, Math.min(srcWidths.at(-1), Number(el.attribs['data-cms-img-src-width']) || Infinity)) : url);
+  tag = isCloudinary && srcWidths.length > 1
+    ? setAttr(tag, 'srcset', srcWidths.map(w => `${cloudinaryImage(url, w)} ${w}w`).join(', '))
+    : removeAttr(tag, 'srcset');
+  for (const attr of ['width', 'height']) {
+    tag = Number(image?.[attr]) ? setAttr(tag, attr, String(Math.round(Number(image[attr])))) : removeAttr(tag, attr);
+  }
+  return setAttr(tag, 'alt', image?.alt || '');
+}
+
 function directText(el) {
   return el.children.filter(node => node.type === 'text').map(node => node.data).join(' ');
 }
@@ -209,6 +247,7 @@ function renderElement(html, el, ctx, item) {
   if (a['data-cms-attr']) {
     for (const { attr, key } of parseAttrSpec(a['data-cms-attr'])) tag = writeAttr(tag, el, attr, lookup(ctx, key));
   }
+  if (a['data-cms-img']) tag = writeImage(tag, el, lookup(ctx, a['data-cms-img']));
   if (a['data-cms-mod'] || item?.stagger) {
     let classes = (a.class || '').split(/\s+/).filter(Boolean);
     if (a['data-cms-mod']) {
@@ -298,6 +337,11 @@ function extractElement(html, el, ctx) {
     const present = (a.class || '').split(/\s+/);
     assign(ctx, key, classes.filter(cls => present.includes(cls)));
   }
+  if (a['data-cms-img']) {
+    assign(ctx, a['data-cms-img'], {
+      url: a.src || '', width: Number(a.width) || null, height: Number(a.height) || null, alt: a.alt || ''
+    });
+  }
   if (has(el, 'data-cms')) {
     const { inner } = ranges(html, el);
     const raw = html.slice(inner[0], inner[1]);
@@ -355,6 +399,7 @@ function addField(ctx, key, field) {
     path = key.slice(colon + 1);
   }
   if (!fields) throw new Error(`Annotation "${key}" is outside any data-cms-scope`);
+  if (isComputed(key)) return;
   const parts = path.split('.');
   const name = parts.pop();
   for (const part of parts) {
@@ -365,8 +410,23 @@ function addField(ctx, key, field) {
     }
     fields = group.fields;
   }
-  if (fields.some(f => f.name === name)) return; // same value shown in several places
+  const existing = fields.find(f => f.name === name);
+  if (existing) {
+    // Same value shown in several places; for lists/objects shown twice (e.g. category chips and
+    // category sections), offer the fields of both.
+    if (existing.fields && field.fields) mergeFields(existing.fields, field.fields);
+    return;
+  }
   fields.push({ name, label: humanize(name), ...field });
+}
+
+export function mergeFields(target, extra) {
+  for (const field of extra) {
+    const existing = target.find(f => f.name === field.name);
+    if (!existing) target.push(field);
+    else if (existing.fields && field.fields) mergeFields(existing.fields, field.fields);
+  }
+  return target;
 }
 
 function fieldOptions(el, field) {
@@ -401,6 +461,17 @@ function schemaElement(html, el, ctx) {
       if (ownsHint && a['data-cms-label'] && !/^(aria-|alt$)/.test(attr)) field.label = a['data-cms-label'];
       addField(ctx, key, field);
     }
+  }
+  if (a['data-cms-img']) {
+    addField(ctx, a['data-cms-img'], {
+      label: a['data-cms-label'] || humanize(a['data-cms-img']), widget: 'object', collapsed: true, required: false,
+      fields: [
+        { name: 'url', label: 'Image', widget: 'image', required: false, hint: 'Upload a photo or paste a Cloudinary link. The site serves resized copies automatically.' },
+        { name: 'alt', label: 'Image description (alt text)', widget: 'string', required: false },
+        { name: 'width', label: 'Original width (px)', widget: 'number', value_type: 'int', required: false, hint: 'Used to keep the layout steady while the image loads.' },
+        { name: 'height', label: 'Original height (px)', widget: 'number', value_type: 'int', required: false }
+      ]
+    });
   }
   if (a['data-cms-mod']) {
     const { key, classes } = parseModSpec(a['data-cms-mod']);

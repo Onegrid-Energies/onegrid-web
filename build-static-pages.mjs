@@ -1,18 +1,22 @@
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { render } from './scripts/cms/template.mjs';
 import { PAGES, readContent } from './scripts/cms/content.mjs';
+import { prepareShop, productJsonLd, socialImage } from './scripts/cms/shop.mjs';
 
 // src/index.html is the annotated template; content/*.json holds the text and
 // images edited in the admin app (admin-app/). Together they produce index.html and one
-// static document per route.
+// static document per route, plus one page per shop product (/shop/<slug>/).
+const SITE_ORIGINS = ['https://onegridenergies.com', 'https://onegridenergies.org'];
 const content = await readContent();
 const template = await readFile('src/index.html', 'utf8');
+const products = prepareShop(content);
 
 // Per-page data the browser script needs when switching pages (SEO and intro video).
 const pageData = Object.fromEntries(PAGES.map(({ name }) => [name, {
   seo: content[name]?.seo ?? {},
   intro: content[name]?.intro ?? {}
 }]));
+if (products[0]?.image?.url) pageData.shop.seo = { ...pageData.shop.seo, image: socialImage(products[0].image.url) };
 const pageDataJson = JSON.stringify({ pages: pageData }).replace(/</g, '\\u003c');
 const cmsDataTag = '<script type="application/json" id="cms-data">{}</script>';
 
@@ -20,30 +24,37 @@ if (!template.includes(cmsDataTag)) {
   throw new Error('Could not locate the cms-data script tag in src/index.html.');
 }
 
-const source = render(template, content).replace(cmsDataTag, cmsDataTag.replace('{}', pageDataJson));
+// The product page template is filled with one product at a time (index.html shows the first).
+const renderWith = product => render(template, { ...content, product: product ?? {} })
+  .replace(cmsDataTag, cmsDataTag.replace('{}', pageDataJson));
+const source = renderWith(products[0]);
 await writeFile('index.html', source);
 
-const firstPage = source.indexOf('<div class="page active" id="page-home">');
-const footer = source.indexOf('    <!-- ════════════════ FOOTER ══════════════════════════ -->');
-
-if (firstPage === -1 || footer === -1) {
-  throw new Error('Could not locate the shared layout or page sections in index.html.');
+function layout(document) {
+  const firstPage = document.indexOf('<div class="page active" id="page-home">');
+  const footer = document.indexOf('    <!-- ════════════════ FOOTER ══════════════════════════ -->');
+  if (firstPage === -1 || footer === -1) {
+    throw new Error('Could not locate the shared layout or page sections in index.html.');
+  }
+  return { header: document.slice(0, firstPage), footer: document.slice(footer) };
 }
 
-const sharedHeader = source.slice(0, firstPage);
-const sharedFooter = source.slice(footer);
-
-function pageMarkup(page) {
-  const pageStart = source.indexOf(`<div class="page${page === 'home' ? ' active' : ''}" id="page-${page}">`);
+function pageMarkup(document, page) {
+  const pageStart = document.indexOf(`<div class="page${page === 'home' ? ' active' : ''}" id="page-${page}">`);
   const pageEndMarker = `    <!-- /page-${page} -->`;
-  const pageEnd = source.indexOf(pageEndMarker, pageStart);
+  const pageEnd = document.indexOf(pageEndMarker, pageStart);
 
   if (pageStart === -1 || pageEnd === -1) {
     throw new Error(`Could not locate the ${page} page section.`);
   }
 
-  return source.slice(pageStart, pageEnd).replace(`class="page${page === 'home' ? ' active' : ''}"`, 'class="page active"');
+  return document.slice(pageStart, pageEnd).replace(`class="page${page === 'home' ? ' active' : ''}"`, 'class="page active"');
 }
+
+// Pages without an intro video (the shop and products, unless one is set in the admin) start
+// with the shared intro banner hidden: no flash of it, and its heading isn't a second <h1>.
+const INTRO = '<section class="intro-video">';
+const withoutIntro = document => document.replace(INTRO, '<section class="intro-video" hidden>');
 
 const escapeAttribute = value => String(value).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
 const escapeText = value => String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;');
@@ -52,7 +63,7 @@ function setPageMetadata(document, route, seo) {
   const url = `https://onegridenergies.com${route.path}`;
   const title = escapeAttribute(seo.title);
   const description = escapeAttribute(seo.description);
-  return document
+  let result = document
     .replace(/<title>[^<]*<\/title>/, () => `<title>${escapeText(seo.title)}</title>`)
     .replace(/(<meta\s+name="description"\s+content=")[^"]*("\s*\/>)/, (_, a, b) => `${a}${description}${b}`)
     .replace(/(<link\s+rel="canonical"\s+href=")[^"]*("\s*\/>)/, (_, a, b) => `${a}${url}${b}`)
@@ -61,12 +72,61 @@ function setPageMetadata(document, route, seo) {
     .replace(/(<meta\s+property="og:url"\s+content=")[^"]*("\s*\/>)/, (_, a, b) => `${a}${url}${b}`)
     .replace(/(<meta\s+name="twitter:title"\s+content=")[^"]*("\s*\/>)/, (_, a, b) => `${a}${title}${b}`)
     .replace(/(<meta\s+name="twitter:description"\s+content=")[^"]*("\s*\/>)/, (_, a, b) => `${a}${description}${b}`);
+  if (seo.image) {
+    const image = escapeAttribute(seo.image);
+    const alt = escapeAttribute(seo.imageAlt || seo.title);
+    result = result
+      .replace(/(<meta\s+property="og:image"\s+content=")[^"]*("\s*\/>)/, (_, a, b) => `${a}${image}${b}`)
+      .replace(/(<meta\s+property="og:image:alt"\s+content=")[^"]*("\s*\/>)/, (_, a, b) => `${a}${alt}${b}`)
+      .replace(/(<meta\s+name="twitter:image"\s+content=")[^"]*("\s*\/>)/, (_, a, b) => `${a}${image}${b}`);
+  }
+  if (seo.jsonLd) {
+    const json = JSON.stringify(seo.jsonLd, null, 2).replace(/</g, '\\u003c').replace(/^/gm, '      ').trim();
+    result = result.replace('</head>', () => `    <script type="application/ld+json">\n      ${json}\n    </script>\n  </head>`);
+  }
+  return result;
 }
 
+// Fixed pages (Home, About, …, Shop)
+const site = layout(source);
 await Promise.all(PAGES.map(async route => {
-  const document = setPageMetadata(`${sharedHeader}${pageMarkup(route.name)}${sharedFooter}`, route, pageData[route.name].seo);
+  const seo = { ...pageData[route.name].seo };
+  if (route.name === 'shop' && products[0]?.image) seo.imageAlt = products[0].image.alt;
+  let document = setPageMetadata(`${site.header}${pageMarkup(source, route.name)}${site.footer}`, route, seo);
+  if (route.name === 'shop' && !pageData.shop.intro?.video) document = withoutIntro(document);
   await mkdir(route.directory, { recursive: true });
   await writeFile(`${route.directory}/index.html`, document);
 }));
 
-console.log(`Generated index.html and ${PAGES.length} static route documents.`);
+// One page per product, and pages of removed products deleted.
+await mkdir('shop', { recursive: true });
+for (const product of products) {
+  const route = { directory: `shop/${product.slug}`, path: product._url };
+  const document = renderWith(product);
+  const own = layout(document);
+  const seo = {
+    title: product.seo?.title || `${product.name} | OneGrid Energies`,
+    description: product.seo?.description || product.summary || '',
+    image: product.image?.url ? socialImage(product.image.url) : '',
+    imageAlt: product.image?.alt,
+    jsonLd: productJsonLd(product, `https://onegridenergies.com${product._url}`)
+  };
+  await mkdir(route.directory, { recursive: true });
+  await writeFile(`${route.directory}/index.html`, withoutIntro(setPageMetadata(`${own.header}${pageMarkup(document, 'product')}${own.footer}`, route, seo)));
+}
+const slugs = new Set(products.map(product => product.slug));
+for (const entry of await readdir('shop', { withFileTypes: true })) {
+  if (entry.isDirectory() && !slugs.has(entry.name)) await rm(`shop/${entry.name}`, { recursive: true });
+}
+
+// Sitemap: every page and product, on each domain the site is published on.
+const paths = [...PAGES.map(route => route.path), ...products.map(product => product._url)];
+const urls = SITE_ORIGINS.flatMap(origin => paths.map(path => `${origin}${path}`))
+  .sort((a, b) => paths.indexOf(new URL(a).pathname) - paths.indexOf(new URL(b).pathname));
+await writeFile('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls.map(url => `  <url>\n    <loc>${url}</loc>\n  </url>`).join('\n')}
+</urlset>
+`);
+
+console.log(`Generated index.html, ${PAGES.length} static route documents and ${products.length} product page${products.length === 1 ? '' : 's'}.`);

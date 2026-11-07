@@ -690,7 +690,7 @@
 
   // ---------------------------------------------------------------- analytics (owners)
   const RANGE_LABELS = { today: 'Today', '7d': '7 days', '30d': '30 days', '90d': '90 days', '12m': '12 months' };
-  const PAGE_LABELS = { home: 'Home', about: 'About', oneplastic: 'OnePlastic', 'stories-of-hope': 'Stories of Hope', recognitions: 'Recognitions', quote: 'Get a quote', contact: 'Contact', other: 'Other', '404': 'Not found' };
+  const PAGE_LABELS = { home: 'Home', about: 'About', oneplastic: 'OnePlastic', shop: 'Shop', product: 'Product pages', 'stories-of-hope': 'Stories of Hope', recognitions: 'Recognitions', quote: 'Get a quote', contact: 'Contact', other: 'Other', '404': 'Not found' };
   const ACTIONS = [
     ['whatsapp', 'WhatsApp taps'], ['enquiry', 'Forms sent'], ['plan_click', 'Solar plans selected'], ['quote_click', 'Clicks to Get a quote'],
     ['contact_click', 'Clicks to Contact'], ['email', 'Email taps'], ['call', 'Phone taps'], ['media_open', 'Gallery photos opened'],

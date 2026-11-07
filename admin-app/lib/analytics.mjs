@@ -187,13 +187,14 @@ function referrerOf(value, site) {
 }
 
 // /stories-of-hope/ → { page: 'stories-of-hope', item: '' }
-const PAGES = ['about', 'oneplastic', 'stories-of-hope', 'recognitions', 'quote', 'contact'];
+const PAGES = ['about', 'oneplastic', 'shop', 'stories-of-hope', 'recognitions', 'quote', 'contact'];
 export function pageOf(path, notFound) {
   if (notFound) return { page: '404', item: '' };
   let parts = path.split('/').filter(Boolean);
   // GitHub Pages and similar serve the site under a folder, e.g. /onegrid-web/about/.
   if (parts.length && !PAGES.includes(parts[0]) && parts[0] !== 'home' && (parts.length === 1 || PAGES.includes(parts[1]) || parts[1] === 'home')) parts = parts.slice(1);
   if (!parts.length || (parts[0] === 'home' && parts.length === 1)) return { page: 'home', item: '' };
+  if (parts[0] === 'shop' && parts[1]) return { page: 'product', item: parts[1] }; // /shop/<product>/
   if (PAGES.includes(parts[0]) && parts.length === 1) return { page: parts[0], item: '' };
   return { page: 'other', item: '' };
 }

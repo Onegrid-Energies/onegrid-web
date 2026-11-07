@@ -64,7 +64,7 @@
     />
     <link rel="preconnect" href="https://img.youtube.com" crossorigin />
     <link rel="dns-prefetch" href="https://img.youtube.com" />
-    <link rel="stylesheet" href="/styles.d4771570.css" />
+    <link rel="stylesheet" href="/styles.ab9cbd7a.css" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -221,6 +221,14 @@
             <a
               class="nav-link"
               href="#"
+              onclick="navigateTo('shop'); return false;"
+              >Shop</a
+            >
+          </li>
+          <li>
+            <a
+              class="nav-link"
+              href="#"
               onclick="navigateTo('stories'); return false;"
               >Stories of Hope</a
             >
@@ -356,6 +364,11 @@
         href="#"
         onclick="navigateTo('oneplastic'); toggleMobileNav(); return false;"
         >OnePlastic</a
+      >
+      <a
+        href="#"
+        onclick="navigateTo('shop'); toggleMobileNav(); return false;"
+        >Shop</a
       >
       <a
         href="#"
@@ -2441,6 +2454,23 @@
                 decoding="async"
               />
             </figure>
+          </div>
+        </div>
+      </section>
+
+      <!-- SHOP TEASER -->
+      <section class="section oneplastic-shop" data-cms-optional="shop_teaser.title">
+        <div class="container">
+          <div class="oneplastic-shop__card reveal">
+            <figure class="oneplastic-shop__media">
+              <img data-cms-img="shop_teaser.image" data-cms-label="Teaser photo" src="https://res.cloudinary.com/dj2ciluyx/image/upload/v1794009873/Smiling_Boy_with_a_Glowing_Lantern_dtt2k4.png" width="1453" height="1082" alt="A smiling boy carries the lit OnePlastic Lantern by its strap along a path at night" sizes="(max-width: 900px) 92vw, 40vw" loading="lazy" decoding="async" />
+            </figure>
+            <div class="oneplastic-shop__copy">
+              <span class="tag tag-yellow" data-cms="shop_teaser.tag">Now available</span>
+              <h2 class="display-md" data-cms="shop_teaser.title">The OnePlastic Lantern</h2>
+              <p data-cms="shop_teaser.text">A durable rechargeable lantern built from waste plastic bottles, made to be used, repaired, and passed on.</p>
+              <a class="btn btn-primary" data-cms-attr="href:shop_teaser.link" href="/shop/oneplastic-lantern/" data-cms-text="shop_teaser.button">See the lantern <span aria-hidden="true">→</span></a>
+            </div>
           </div>
         </div>
       </section>
@@ -4734,6 +4764,352 @@
     <!-- /page-quote -->
 
     <!-- ═══════════════════════════════════════════════════ -->
+    <!-- ═════════════════ SHOP PAGE ═══════════════════════ -->
+    <!-- ═══════════════════════════════════════════════════ -->
+    <!-- Categories and products come from content/shop.json; adding one needs no markup. -->
+    <div data-cms-scope="shop" class="page" id="page-shop">
+      <section class="page-hero shop-hero">
+        <div class="page-hero-bg">
+          <div class="page-hero-pattern"></div>
+          <div class="page-hero-glow"></div>
+        </div>
+        <div class="container shop-hero__content">
+          <span class="tag tag-yellow" data-cms="hero.tag">Shop</span>
+          <h1 class="display-xl" data-cms="hero.title" data-cms-highlight data-cms-hint="Wrap words in *asterisks* to highlight them. Press Enter for a new line.">Light you can <span>keep</span></h1>
+          <p data-cms="hero.subtitle">Products designed, assembled, and repaired in Nigeria.</p>
+        </div>
+      </section>
+
+      <section class="section shop-catalogue">
+        <div class="container">
+          <div class="shop-filters" role="group" aria-label="Filter products by category" data-shop-filters data-cms-list="categories" hidden>
+            <button type="button" class="filter-btn active" aria-pressed="true" data-shop-filter="all" data-cms-static data-cms="filters_label" data-cms-label="“All” filter label">All</button>
+            <button type="button" class="filter-btn" aria-pressed="false" data-cms-attr="data-shop-filter:slug" data-cms="name">Lanterns</button>
+          </div>
+
+          <div class="shop-categories" data-cms-list="categories" data-cms-label="Categories">
+            <section class="shop-category" data-cms-attr="data-shop-category:slug" data-shop-category="lanterns">
+              <div class="shop-category__head">
+                <h2 class="display-md" data-cms="name">Lanterns</h2>
+                <p data-cms="description" data-cms-optional data-cms-hint="Optional one-line introduction to the category.">Rechargeable lanterns.</p>
+              </div>
+              <div class="shop-grid" data-cms-list="products" data-cms-label="Products">
+                <article class="shop-card reveal">
+                  <a class="shop-card__media" data-cms-attr="href:_url" href="/shop/oneplastic-lantern/" tabindex="-1" aria-hidden="true">
+                    <img data-cms-img="image" data-cms-label="Product photo (card and page hero)" data-cms-img-src-width="800" src="" alt="" sizes="(max-width: 640px) 92vw, (max-width: 1100px) 45vw, 400px" loading="lazy" decoding="async" />
+                  </a>
+                  <div class="shop-card__body">
+                    <h3 class="shop-card__title"><a data-cms-attr="href:_url" data-cms="name" href="/shop/oneplastic-lantern/">OnePlastic Lantern</a></h3>
+                    <p class="shop-card__summary" data-cms="summary" data-cms-hint="One line shown on the shop card.">A durable rechargeable lantern.</p>
+                    <div class="shop-price">
+                      <span class="shop-price__badge" data-cms="_price_pending" data-cms-optional>Price coming soon</span>
+                      <p class="shop-price__amount" data-cms-optional="_price_text"><span data-cms="_price_text">₦0</span> <del data-cms="_compare_text" data-cms-optional>₦0</del></p>
+                    </div>
+                    <a class="btn btn-primary shop-card__cta" data-cms-attr="href:_url; aria-label:_details_label" href="/shop/oneplastic-lantern/">View details <span aria-hidden="true">→</span></a>
+                  </div>
+                </article>
+              </div>
+            </section>
+          </div>
+
+          <p class="shop-more" data-cms="coming_soon">More OneGrid products coming soon.</p>
+        </div>
+      </section>
+
+      <section class="quote-oneplastic shop-mission">
+        <div class="container">
+          <p data-cms="mission.text">Every purchase supports the OnePlastic initiative.</p>
+          <a class="btn btn-primary" href="/oneplastic" onclick="navigateTo('oneplastic'); return false;" data-cms-text="mission.button">About OnePlastic <span aria-hidden="true">→</span></a>
+        </div>
+      </section>
+    </div>
+    <!-- /page-shop -->
+
+    <!-- ═══════════════════════════════════════════════════ -->
+    <!-- ════════════════ PRODUCT PAGE ═════════════════════ -->
+    <!-- ═══════════════════════════════════════════════════ -->
+    <!-- One page per product in content/shop.json, at /shop/<slug>/ (see build-static-pages.mjs).
+         Sections without content are left out. -->
+    <div data-cms-scope="product" class="page" id="page-product">
+      <section class="page-hero product-hero">
+        <div class="page-hero-bg">
+          <div class="page-hero-pattern"></div>
+          <div class="page-hero-glow"></div>
+        </div>
+        <div class="container product-hero__grid">
+          <div class="product-hero__copy">
+            <nav class="product-crumbs" aria-label="Breadcrumb">
+              <a href="/shop/" onclick="navigateTo('shop'); return false;">Shop</a>
+              <span aria-hidden="true">/</span>
+              <span aria-current="page" data-cms="name">OnePlastic Lantern</span>
+            </nav>
+            <span class="tag tag-yellow" data-cms="hero.tag">OnePlastic Lantern</span>
+            <h1 class="display-lg" data-cms="hero.title" data-cms-highlight>A lantern you can use, repair, maintain, and <span>pass on</span>.</h1>
+            <p class="product-hero__intro" data-cms="hero.intro">Meet the OnePlastic Lantern.</p>
+            <div class="shop-price shop-price--hero">
+              <span class="shop-price__badge" data-cms="_price_pending" data-cms-optional>Price coming soon</span>
+              <p class="shop-price__amount" data-cms-optional="_price_text"><span data-cms="_price_text">₦0</span> <del data-cms="_compare_text" data-cms-optional>₦0</del></p>
+            </div>
+            <div class="product-hero__actions">
+              <a class="btn btn-primary" data-cms-attr="href:_order_link" href="https://wa.me/2347015613314" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.26-.47-2.39-1.48-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.18.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.07 2.88 1.21 3.07.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.7.63.71.22 1.36.2 1.87.12.57-.09 1.76-.72 2-1.41.25-.7.25-1.29.18-1.41-.08-.13-.27-.2-.57-.35M12.05 21.79h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 0 1-1.51-5.26 9.89 9.89 0 0 1 16.88-6.99 9.83 9.83 0 0 1 2.89 7c0 5.45-4.44 9.88-9.88 9.88M20.46 3.49A11.82 11.82 0 0 0 12.05 0C5.5 0 .16 5.34.16 11.89c0 2.1.55 4.14 1.59 5.95L.06 24l6.3-1.65a11.88 11.88 0 0 0 5.69 1.45h.01c6.55 0 11.89-5.34 11.89-11.89a11.82 11.82 0 0 0-3.48-8.42z" /></svg>
+                <span data-cms="_order_label">Ask about availability</span>
+              </a>
+              <a class="btn btn-outline-white" href="/oneplastic" onclick="navigateTo('oneplastic'); return false;" data-cms="hero.secondary_button">Discover the story</a>
+            </div>
+          </div>
+          <figure class="product-hero__media">
+            <img data-cms-img="image" src="" alt="" sizes="(max-width: 900px) 92vw, 44vw" fetchpriority="high" decoding="async" />
+          </figure>
+        </div>
+      </section>
+
+      <section class="section product-statement" data-cms-optional="statement">
+        <div class="container container-sm">
+          <p class="product-statement__text reveal" data-cms="statement" data-cms-label="Statement">We didn't build OnePlastic to be another disposable lantern.</p>
+        </div>
+      </section>
+
+      <section class="section product-section" data-cms-optional="story.title">
+        <div class="container">
+          <div class="oneplastic-split">
+            <div class="reveal">
+              <span class="tag tag-outline" data-cms="story.tag">The story</span>
+              <h2 class="display-lg" data-cms="story.title">From Waste Plastic to Light</h2>
+              <p class="product-lead" data-cms="story.question" data-cms-optional>What if something we throw away could become something that helps us see?</p>
+              <p class="oneplastic-copy" data-cms="story.text">Every OnePlastic Lantern gives discarded plastic bottles a second life.</p>
+            </div>
+            <figure class="oneplastic-image product-image reveal reveal-delay-2">
+              <img data-cms-img="story.image" src="" alt="" sizes="(max-width: 900px) 92vw, 45vw" loading="lazy" decoding="async" />
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section class="section product-section product-section--alt" data-cms-optional="uses.title">
+        <div class="container">
+          <div class="quote-section-heading quote-section-heading--center reveal">
+            <span class="tag tag-yellow" data-cms="uses.tag">Everyday use</span>
+            <h2 class="display-md" data-cms="uses.title">One Lantern. Multiple Ways to Use It.</h2>
+            <p data-cms="uses.intro">OnePlastic is designed to fit into everyday life. Use it:</p>
+          </div>
+          <ul class="product-uses" data-cms-list="uses.items" data-cms-label="Ways to use it" data-cms-stagger="4">
+            <li class="product-use reveal">
+              <span class="product-use__icon" aria-hidden="true" data-cms="icon" data-cms-widget="text" data-cms-label="Icon (SVG code)" data-cms-hint="Copy an existing icon to reuse it."><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /></svg></span>
+              <span data-cms="text">On a desk while studying or reading</span>
+            </li>
+          </ul>
+          <p class="product-uses__closing reveal" data-cms="uses.closing" data-cms-optional>Its compact design makes it easy to carry.</p>
+          <div class="product-photos" data-cms-list="uses.photos" data-cms-label="Photos" data-cms-stagger="4">
+            <figure class="product-photo reveal">
+              <img data-cms-img="image" src="" alt="" sizes="(max-width: 640px) 92vw, (max-width: 1100px) 46vw, 30vw" loading="lazy" decoding="async" />
+              <figcaption data-cms="caption" data-cms-optional>Studying at night</figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section class="section product-section" data-cms-optional="modes.title">
+        <div class="container">
+          <div class="quote-section-heading quote-section-heading--center reveal">
+            <span class="tag tag-outline" data-cms="modes.tag">Lighting modes</span>
+            <h2 class="display-md" data-cms="modes.title">Light Your Way, Your Way</h2>
+            <p data-cms="modes.intro">OnePlastic gives you control over your lighting experience.</p>
+          </div>
+          <div class="product-modes" data-cms-list="modes.items" data-cms-label="Modes" data-cms-stagger="4">
+            <article class="product-mode product-mode--warm reveal" data-cms-mod="tone:product-mode--warm product-mode--white product-mode--both" data-cms-label="Light colour">
+              <span class="product-mode__glow" aria-hidden="true"></span>
+              <h3 data-cms="name">Warm Light</h3>
+              <p data-cms="text">Comfortable, softer illumination.</p>
+            </article>
+          </div>
+          <div class="product-dimming reveal" data-cms-optional="modes.dimming_title">
+            <span class="product-dimming__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 11V5a2 2 0 0 1 4 0v6M13 10V8a2 2 0 0 1 4 0v3M9 11V9a2 2 0 0 0-4 0v4a8 8 0 0 0 8 8h1a6 6 0 0 0 6-6v-4a2 2 0 0 0-3-1.7" /></svg></span>
+            <div>
+              <h3 data-cms="modes.dimming_title">Touch-and-hold dimming</h3>
+              <p data-cms="modes.dimming_text">Touch and hold the control to adjust the brightness.</p>
+              <p class="product-dimming__note" data-cms="modes.dimming_note" data-cms-optional>Choose the level of light you need.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section product-section product-section--alt" data-cms-optional="battery.title">
+        <div class="container">
+          <div class="product-battery">
+            <div class="reveal">
+              <span class="tag tag-yellow" data-cms="battery.tag">Battery &amp; runtime</span>
+              <h2 class="display-md" data-cms="battery.title">Designed for Long-Lasting Light</h2>
+              <p class="oneplastic-copy" data-cms="battery.intro">OnePlastic uses a 2,000 mAh, 3.7 V lithium-ion battery.</p>
+              <p class="oneplastic-copy" data-cms="battery.fade_note" data-cms-optional>As the battery approaches the end of its available charge, brightness gradually decreases.</p>
+            </div>
+            <div class="product-runtime reveal reveal-delay-2">
+              <ul class="product-runtime__list" data-cms-list="battery.runtime" data-cms-label="Runtime">
+                <li class="product-runtime__row">
+                  <div class="product-runtime__top"><span data-cms="label">Warm or white light, full brightness</span><b data-cms="value">Up to 13 hours</b></div>
+                  <div class="product-runtime__track" aria-hidden="true"><div class="product-runtime__bar" style="width: 26%" data-cms-attr="css.width:bar" data-cms-hint="Bar length compared with the longest runtime, e.g. 26%"></div></div>
+                </li>
+              </ul>
+              <p class="product-note" data-cms="battery.note" data-cms-optional>Actual runtime can vary.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section product-section" data-cms-optional="charging.title">
+        <div class="container">
+          <div class="quote-section-heading quote-section-heading--center reveal">
+            <span class="tag tag-outline" data-cms="charging.tag">Charging</span>
+            <h2 class="display-md" data-cms="charging.title">Rechargeable Wherever You Need It</h2>
+            <p data-cms="charging.intro">OnePlastic is designed with a 5 V charging input at up to 2 A.</p>
+          </div>
+          <ul class="product-charging" data-cms-list="charging.options" data-cms-label="Charging options" data-cms-stagger="4">
+            <li class="reveal"><span aria-hidden="true">ϟ</span><span data-cms="text">USB power adapters</span></li>
+          </ul>
+          <div class="product-charging__notes reveal">
+            <p data-cms="charging.solar_note" data-cms-optional>A solar panel can also be used.</p>
+            <p class="product-charging__indicator" data-cms-optional="charging.indicator"><span class="product-charging__led" aria-hidden="true"></span><span data-cms="charging.indicator">A red charging indicator illuminates when charging.</span></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section product-repair" data-cms-optional="repair.title">
+        <div class="container">
+          <div class="oneplastic-split">
+            <figure class="oneplastic-image oneplastic-image--dark product-image reveal">
+              <img data-cms-img="repair.image" src="" alt="" sizes="(max-width: 900px) 92vw, 45vw" loading="lazy" decoding="async" />
+            </figure>
+            <div class="reveal reveal-delay-2">
+              <span class="tag product-repair__tag" data-cms="repair.tag">Repairable by design</span>
+              <h2 class="display-lg" data-cms="repair.title">Built to Be Repaired, Not Thrown Away</h2>
+              <p class="product-lead" data-cms="repair.lead" data-cms-optional>This is one of the things that makes OnePlastic different.</p>
+              <div class="cms-flow" style="display: contents" data-cms-list="repair.paragraphs" data-cms-label="Paragraphs">
+                <p class="oneplastic-copy oneplastic-copy--dark" data-cms="text">When many inexpensive lanterns develop a fault, they are simply abandoned.</p>
+              </div>
+              <blockquote class="product-repair__quote" data-cms="repair.quote" data-cms-optional>A fault shouldn't automatically mean the end of the lantern.</blockquote>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section product-section" data-cms-optional="local.title">
+        <div class="container">
+          <div class="oneplastic-split oneplastic-split--reverse">
+            <figure class="oneplastic-image product-image reveal">
+              <img data-cms-img="local.image" src="" alt="" sizes="(max-width: 900px) 92vw, 45vw" loading="lazy" decoding="async" />
+            </figure>
+            <div class="reveal reveal-delay-2">
+              <span class="tag tag-yellow" data-cms="local.tag">Made in Nigeria</span>
+              <h2 class="display-md" data-cms="local.title">Made Locally. Designed for Real Problems.</h2>
+              <div class="cms-flow" style="display: contents" data-cms-list="local.paragraphs" data-cms-label="Paragraphs">
+                <p class="oneplastic-copy" data-cms="text">Local problems deserve practical local solutions.</p>
+              </div>
+            </div>
+          </div>
+          <div class="product-tough reveal" data-cms-optional="tough.title">
+            <div>
+              <span class="tag tag-outline" data-cms="tough.tag">Durability</span>
+              <h2 class="display-md" data-cms="tough.title">Built Tough</h2>
+              <p class="oneplastic-copy" data-cms="tough.text">The OnePlastic body is made from solid wood.</p>
+            </div>
+            <div class="product-tough__rating">
+              <span class="product-tough__badge" aria-hidden="true">IP64</span>
+              <p data-cms="tough.water" data-cms-optional>Water resistant to IP64.</p>
+              <p class="product-note" data-cms="tough.note" data-cms-optional>IP64 does not mean the lantern is waterproof.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section product-keep" data-cms-optional="keep.title">
+        <div class="container">
+          <div class="oneplastic-split">
+            <div class="reveal">
+              <span class="tag tag-outline" data-cms="keep.tag">Made to last</span>
+              <h2 class="display-lg" data-cms="keep.title">A Lantern You Can Keep</h2>
+              <div class="cms-flow" style="display: contents" data-cms-list="keep.paragraphs" data-cms-label="Paragraphs">
+                <p class="oneplastic-copy" data-cms="text">We want to create products that stay useful.</p>
+              </div>
+              <p class="product-keep__closing" data-cms="keep.closing" data-cms-optional>Buy one. Use it. Maintain it. Repair it. And when the time comes, pass it on.</p>
+            </div>
+            <figure class="oneplastic-image product-image reveal reveal-delay-2">
+              <img data-cms-img="keep.image" src="" alt="" sizes="(max-width: 900px) 92vw, 45vw" loading="lazy" decoding="async" />
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section class="section product-section product-section--alt" data-cms-optional="specs.title">
+        <div class="container">
+          <div class="quote-section-heading reveal">
+            <span class="tag tag-yellow" data-cms="specs.tag">Specifications</span>
+            <h2 class="display-md" data-cms="specs.title">Key Specifications</h2>
+          </div>
+          <div class="product-specs">
+            <dl class="product-specs__list reveal" data-cms-list="specs.items" data-cms-label="Specifications">
+              <div class="product-specs__row"><dt data-cms="label">Product</dt><dd data-cms="value">OnePlastic Rechargeable Lantern</dd></div>
+            </dl>
+            <aside class="product-specs__runtime reveal reveal-delay-2" data-cms-optional="specs.runtime_title">
+              <h3 data-cms="specs.runtime_title">Approximate runtime</h3>
+              <ul class="product-runtime__list" data-cms-list="battery.runtime">
+                <li class="product-runtime__row">
+                  <div class="product-runtime__top"><span data-cms="label">Warm or white light, full brightness</span><b data-cms="value">Up to 13 hours</b></div>
+                  <div class="product-runtime__track" aria-hidden="true"><div class="product-runtime__bar" style="width: 26%" data-cms-attr="css.width:bar"></div></div>
+                </li>
+              </ul>
+              <p class="product-note" data-cms="specs.runtime_note" data-cms-optional>Runtime varies.</p>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section class="quote-faq section product-faq" data-cms-optional="faq.title">
+        <div class="container container-sm">
+          <div class="quote-section-heading quote-section-heading--center">
+            <span class="tag tag-outline" data-cms="faq.tag">FAQ</span>
+            <h2 class="display-md" data-cms="faq.title">Questions, answered.</h2>
+          </div>
+          <div class="quote-faq__list" data-cms-list="faq.items" data-cms-label="Questions">
+            <details>
+              <summary data-cms="question">How do I charge the OnePlastic Lantern?</summary>
+              <p data-cms="answer">Through its USB charging input.</p>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <section class="section product-initiative" data-cms-optional="initiative.title">
+        <div class="container">
+          <div class="product-initiative__card reveal">
+            <div>
+              <span class="tag tag-yellow" data-cms="initiative.tag">Part of the OnePlastic initiative</span>
+              <h2 class="display-md" data-cms="initiative.title">Every purchase supports OnePlastic.</h2>
+              <p data-cms="initiative.text">Every purchase supports the initiative.</p>
+            </div>
+            <a class="btn btn-outline-white" href="/oneplastic" onclick="navigateTo('oneplastic'); return false;" data-cms-text="initiative.button">Discover the OnePlastic story <span aria-hidden="true">→</span></a>
+          </div>
+          <div class="product-protected reveal" data-cms-optional="protected.title">
+            <h3 data-cms="protected.title">Protected design</h3>
+            <p data-cms="protected.text">OnePlastic's design and brand are protected.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="product-cta">
+        <div class="container">
+          <h2 class="display-md" data-cms="cta.title" data-cms-highlight>A lantern you can <span>keep</span>.</h2>
+          <p data-cms="cta.text" data-cms-optional>OnePlastic by OneGrid Energies. Local problems. Local solutions. Longer-lasting products.</p>
+          <div class="shop-price shop-price--cta">
+            <span class="shop-price__badge" data-cms="_price_pending" data-cms-optional>Price coming soon</span>
+            <p class="shop-price__amount" data-cms-optional="_price_text"><span data-cms="_price_text">₦0</span> <del data-cms="_compare_text" data-cms-optional>₦0</del></p>
+          </div>
+          <a class="btn product-cta__button" data-cms-attr="href:_order_link" href="https://wa.me/2347015613314" target="_blank" rel="noopener"><span data-cms="_order_label">Ask about availability</span> <span aria-hidden="true">→</span></a>
+        </div>
+      </section>
+    </div>
+    <!-- /page-product -->
+
+    <!-- ═══════════════════════════════════════════════════ -->
     <!-- ════════════════ CONTACT PAGE ════════════════════ -->
     <!-- ═══════════════════════════════════════════════════ -->
     <div data-cms-scope="contact" class="page" id="page-contact">
@@ -5276,6 +5652,9 @@
                 >
               </li>
               <li>
+                <a href="#" onclick="navigateTo('shop'); return false;">Shop</a>
+              </li>
+              <li>
                 <a href="#" onclick="navigateTo('stories'); return false;"
                   >Stories of Hope</a
                 >
@@ -5446,6 +5825,6 @@
       </div>
     </div>
 
-    <script src="/script.13347b69.js" defer></script>
+    <script src="/script.739d0992.js" defer></script>
   </body>
 </html>
