@@ -1410,6 +1410,11 @@ collections:
                     label: "Label while there is no price"
                     widget: string
                     required: false
+                  - name: button_label
+                    label: "Order button text"
+                    widget: string
+                    required: false
+                    hint: "e.g. Shop OnePlastic. Empty = “Ask about availability” without a price, “Order on WhatsApp” with one. The button always opens WhatsApp."
                   - name: availability_message
                     label: "WhatsApp message while there is no price"
                     widget: text

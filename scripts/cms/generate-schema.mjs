@@ -63,6 +63,7 @@ const productBasics = [
   { name: 'price', label: 'Price (₦)', widget: 'number', value_type: 'int', required: false, hint: 'Numbers only, e.g. 25000. Leave empty to show “Price coming soon” and an “Ask about availability” button.' },
   { name: 'compare_at_price', label: 'Old price (₦), crossed out', widget: 'number', value_type: 'int', required: false, hint: 'Optional. Only shown when it is higher than the price.' },
   { name: 'price_pending_label', label: 'Label while there is no price', widget: 'string', required: false },
+  { name: 'button_label', label: 'Order button text', widget: 'string', required: false, hint: 'e.g. Shop OnePlastic. Empty = “Ask about availability” without a price, “Order on WhatsApp” with one. The button always opens WhatsApp.' },
   { name: 'availability_message', label: 'WhatsApp message while there is no price', widget: 'text', required: false, hint: 'Pre-filled when someone taps “Ask about availability”. {name} becomes the product name.' },
   { name: 'order_message', label: 'WhatsApp message with a price', widget: 'text', required: false, hint: 'Pre-filled when someone taps “Order on WhatsApp”. {name} and {price} are filled in.' },
   { name: 'seo', label: 'Search & sharing', widget: 'object', collapsed: true, fields: [

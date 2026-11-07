@@ -5,6 +5,7 @@
 // Prices: "price": null shows "Price coming soon" and an "Ask about availability" button.
 // Setting a number (e.g. "price": 25000) shows ₦25,000 (and "compare_at_price", if set, struck
 // through) with an "Order on WhatsApp" button whose message includes the name and price.
+// "button_label" (e.g. "Shop OnePlastic") replaces both button texts; the message still follows the price.
 
 import { cloudinaryImage } from './template.mjs';
 
@@ -59,7 +60,7 @@ export function prepareShop(content) {
         _price_text: priceText,
         _compare_text: compare && compare > price ? formatNaira(compare) : '',
         _price_pending: price ? '' : (product.price_pending_label || 'Price coming soon'),
-        _order_label: price ? 'Order on WhatsApp' : 'Ask about availability',
+        _order_label: product.button_label || (price ? 'Order on WhatsApp' : 'Ask about availability'),
         _order_link: `${whatsapp}?text=${encodeMessage(message)}`
       });
       products.push({ ...product, category: category.name });

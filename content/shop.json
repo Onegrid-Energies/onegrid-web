@@ -30,6 +30,7 @@
           "price": null,
           "compare_at_price": null,
           "price_pending_label": "Price coming soon",
+          "button_label": "Shop OnePlastic",
           "availability_message": "Hello OneGrid Energies, I am interested in the OnePlastic Lantern. Please let me know when it is available and the price.",
           "order_message": "Hello OneGrid Energies, I am interested in the {name} priced at {price}. Please share the next steps.",
           "image": {
@@ -45,15 +46,15 @@
           "hero": {
             "tag": "OnePlastic Lantern",
             "title": "A lantern you can use, repair, maintain, and *pass on*.",
-            "intro": "Meet the OnePlastic Lantern by OneGrid Energies, a durable, locally assembled rechargeable lantern built from waste plastic bottles, designed to provide dependable light for homes, children studying at night, outdoor activities, emergencies, businesses, and everyday use.",
+            "intro": "Meet the OnePlastic Lantern by OneGrid Energies — a durable, locally assembled rechargeable lantern built from waste plastic bottles, designed to provide dependable light for homes, children studying at night, outdoor activities, emergencies, businesses, and everyday use.",
             "secondary_button": "Discover the story"
           },
-          "statement": "We didn't build OnePlastic to be another disposable lantern. We built it to be a lantern you can use, repair, maintain, and pass on. With a strong locally crafted wooden body, a leather handle, recycled-plastic waste components, replaceable internal parts, and a rechargeable lithium-ion battery, OnePlastic brings together durability, practical design, affordability, and sustainability.",
+          "statement": "We didn't build OnePlastic to be another disposable lantern.\nWe built it to be a lantern you can use, repair, maintain, and pass on.\nWith a strong locally crafted wooden body, a leather handle, recycled-plastic waste components, replaceable internal parts, and a rechargeable lithium-ion battery, OnePlastic brings together durability, practical design, affordability, and sustainability.",
           "story": {
             "tag": "The story",
             "title": "From Waste Plastic to Light",
             "question": "What if something we throw away could become something that helps us see?",
-            "text": "Every OnePlastic Lantern gives discarded plastic bottles a second life. The waste plastic is transformed into the lantern's distinctive light diffuser, turning a material that could have become environmental waste into part of a product designed for years of use.",
+            "text": "Every OnePlastic Lantern gives discarded plastic bottles a second life.\nThe waste plastic is transformed into the lantern's distinctive light diffuser — turning a material that could have become environmental waste into part of a product designed for years of use.",
             "image": {
               "url": "https://res.cloudinary.com/dj2ciluyx/image/upload/v1794009876/Textured_Portable_LED_Lantern_on_Garden_Log_gb74rg.png",
               "alt": "Close view of the OnePlastic Lantern's clear diffuser, shaped from the base of a recycled plastic bottle, set in the black body with its carry strap",
@@ -151,7 +152,7 @@
           "modes": {
             "tag": "Lighting modes",
             "title": "Light Your Way, Your Way",
-            "intro": "OnePlastic gives you control over your lighting experience. Three lighting modes:",
+            "intro": "OnePlastic gives you control over your lighting experience. It features three lighting modes:",
             "items": [
               {
                 "tone": [
@@ -177,7 +178,7 @@
             ],
             "dimming_title": "Touch-and-hold dimming",
             "dimming_text": "The lantern also features continuous brightness adjustment. Simply touch and hold the control to adjust the brightness. Release your finger and touch-hold again to change the brightness in the opposite direction.",
-            "dimming_note": "You can choose the level of light you need instead of being limited to only “on” or “off.”"
+            "dimming_note": "You can choose the level of light you need instead of being limited to only \"on\" or \"off.\""
           },
           "battery": {
             "tag": "Battery & runtime",
@@ -185,17 +186,17 @@
             "intro": "OnePlastic uses a 2,000 mAh, 3.7 V lithium-ion battery. Depending on the brightness and lighting mode, it provides approximately:",
             "runtime": [
               {
-                "label": "Warm or white light, full brightness",
+                "label": "Warm or White — full brightness",
                 "value": "Up to 13 hours",
                 "bar": "26%"
               },
               {
-                "label": "Warm + white light, full brightness",
+                "label": "Warm + White — full brightness",
                 "value": "Up to 6 hours",
                 "bar": "12%"
               },
               {
-                "label": "Low-light settings",
+                "label": "Low brightness",
                 "value": "50+ hours",
                 "bar": "100%"
               }
@@ -229,14 +230,20 @@
           },
           "repair": {
             "tag": "Repairable by design",
-            "title": "Built to Be Repaired, Not Thrown Away",
+            "title": "Built to Be Repaired — Not Thrown Away",
             "lead": "This is one of the things that makes OnePlastic different.",
             "paragraphs": [
               {
-                "text": "When many inexpensive lanterns develop a fault, they are simply abandoned, thrown away, or left unused in a corner. We believe products should have a longer life."
+                "text": "When many inexpensive lanterns develop a fault, they are simply abandoned, thrown away, or left unused in a corner."
               },
               {
-                "text": "OnePlastic is designed so that key components can be replaced rather than forcing you to throw away the entire lantern. If the battery reaches the end of its service life, the battery can be removed from its battery compartment and replaced with a suitable replacement battery."
+                "text": "We believe products should have a longer life."
+              },
+              {
+                "text": "OnePlastic is designed so that key components can be replaced rather than forcing you to throw away the entire lantern."
+              },
+              {
+                "text": "If the battery reaches the end of its service life, the battery can be removed from its battery compartment and replaced with a suitable replacement battery."
               },
               {
                 "text": "Other replaceable components are also available through OneGrid Energies, subject to availability."
@@ -255,13 +262,16 @@
             "title": "Made Locally. Designed for Real Problems.",
             "paragraphs": [
               {
-                "text": "OnePlastic is a product born from a simple idea: local problems deserve practical local solutions."
+                "text": "OnePlastic is a product born from a simple idea:\nlocal problems deserve practical local solutions."
               },
               {
                 "text": "The lantern is locally assembled using materials and craftsmanship available in Nigeria, while selected electronic components are sourced internationally to achieve the required functionality and reliability."
               },
               {
-                "text": "Its wooden body and locally produced packaging and leather handle reflect our commitment to local production and craftsmanship. The diffuser also incorporates recycled plastic waste, giving discarded plastic another useful life."
+                "text": "Its wooden body and locally produced packaging and leather handle reflect our commitment to local production and craftsmanship."
+              },
+              {
+                "text": "The diffuser also incorporates recycled plastic waste, giving discarded plastic another useful life."
               }
             ],
             "image": {
@@ -274,7 +284,7 @@
           "tough": {
             "tag": "Durability",
             "title": "Built Tough",
-            "text": "The OnePlastic body is made from solid wood, giving it a distinctive combination of strength, character, and durability. Unlike lightweight disposable lantern housings, the wooden construction gives OnePlastic a substantial and robust feel.",
+            "text": "The OnePlastic body is made from solid wood, giving it a distinctive combination of strength, character, and durability.\nUnlike lightweight disposable lantern housings, the wooden construction gives OnePlastic a substantial and robust feel.",
             "water": "The lantern is also designed to be water resistant to IP64, helping protect it against dust and water jets under applicable testing conditions.",
             "note": "Please note: IP64 does not mean the lantern is waterproof or designed to be submerged."
           },
@@ -283,10 +293,13 @@
             "title": "A Lantern You Can Keep",
             "paragraphs": [
               {
-                "text": "We are not interested in creating products that are used for a short period and then discarded. We want to create products that stay useful. Products that can be repaired. Products whose parts can be replaced. Products that can move from one person to another instead of becoming waste."
+                "text": "We are not interested in creating products that are used for a short period and then discarded."
               },
               {
-                "text": "That is why we think of OnePlastic as more than a lantern. It is a companion for everyday life."
+                "text": "We want to create products that stay useful.\nProducts that can be repaired.\nProducts whose parts can be replaced.\nProducts that can move from one person to another instead of becoming waste."
+              },
+              {
+                "text": "That is why we think of OnePlastic as more than a lantern.\nIt is a companion for everyday life."
               }
             ],
             "closing": "Buy one. Use it. Maintain it. Repair it. And when the time comes, pass it on.",
@@ -439,11 +452,11 @@
           },
           "protected": {
             "title": "Protected design",
-            "text": "OnePlastic's design and brand are protected through applicable trademark and industrial design registrations held by OneGrid Energies. We are committed to developing original Nigerian products that solve real problems through practical innovation."
+            "text": "OnePlastic's design and brand are protected through applicable trademark and industrial design registrations held by OneGrid Energies.\nWe are committed to developing original Nigerian products that solve real problems through practical innovation."
           },
           "cta": {
-            "title": "A lantern you can *keep*.",
-            "text": "OnePlastic by OneGrid Energies. Local problems. Local solutions. Longer-lasting products."
+            "title": "OnePlastic by OneGrid Energies",
+            "text": "Local problems. Local solutions. Longer-lasting products."
           }
         }
       ]
