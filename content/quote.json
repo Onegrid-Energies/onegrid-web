@@ -246,19 +246,19 @@
         "badge": "Most popular",
         "name": "Standard",
         "subtitle": "Perfect for a 3-bedroom apartment",
-        "size": "4.2",
+        "size": "5",
         "unit": "kVA",
         "price": "₦2,800,000",
         "old_price": "₦2,980,000",
         "materials": [
           {
-            "text": "1 × 4.2kVA Hybrid Inverter"
+            "text": "1 × 5kVA Hybrid Inverter"
           },
           {
             "text": "1 × 7.6kWh Lithium Battery"
           },
           {
-            "text": "5 × 620W Solar Panels"
+            "text": "5 × 620W Bifacial Solar Panels"
           },
           {
             "text": "Accessories"
@@ -295,7 +295,7 @@
             "text": "1 × 7.6kWh Lithium Battery"
           },
           {
-            "text": "10 × 620W Solar Panels"
+            "text": "10 × 620W Bifacial Solar Panels"
           },
           {
             "text": "Accessories"
@@ -332,7 +332,7 @@
             "text": "1 × 15kWh Lithium Battery"
           },
           {
-            "text": "10 × 620W Solar Panels"
+            "text": "10 × 620W Bifacial Solar Panels"
           },
           {
             "text": "Accessories"
@@ -369,7 +369,7 @@
             "text": "2 × 15kWh Lithium Batteries"
           },
           {
-            "text": "24 × 620W Solar Panels"
+            "text": "24 × 620W Bifacial Solar Panels"
           },
           {
             "text": "Accessories"
