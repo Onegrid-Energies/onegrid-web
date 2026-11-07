@@ -68,12 +68,6 @@ export function prepareShop(content) {
   return products;
 }
 
-// Social preview image (1200 × 630, the whole product kept in frame).
-export function socialImage(url) {
-  const sized = cloudinaryImage(url, 1200, 'h_630');
-  return sized.replace(',c_limit,h_630', ',h_630,c_pad,b_auto');
-}
-
 // Product structured data; prices are only included once one is set.
 export function productJsonLd(product, url) {
   const images = [product.image, product.story?.image, product.local?.image, product.repair?.image]

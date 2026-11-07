@@ -26,7 +26,10 @@ const FIELD_HINTS = {
 const seoFields = {
   name: 'seo', label: 'Search & sharing', widget: 'object', collapsed: true, fields: [
     { name: 'title', label: 'Browser tab / search title', widget: 'string' },
-    { name: 'description', label: 'Search description', widget: 'text', hint: 'About 150 characters, shown in search results and link previews.' }
+    { name: 'description', label: 'Search description', widget: 'text', hint: 'About 150 characters, shown in search results and link previews.' },
+    { name: 'share_title', label: 'Preview headline', widget: 'string', required: false, hint: 'Large text on the image shown when this page is shared (WhatsApp, Facebook, LinkedIn, X…). Empty = taken from the title.' },
+    { name: 'image', label: 'Preview photo', widget: 'image', required: false, hint: 'Photo behind the shared-link card (cropped to 1200 × 630, with the logo and headline added). Empty = a photo from this page.' },
+    { name: 'image_alt', label: 'Preview photo description', widget: 'string', required: false }
   ]
 };
 const introFields = {
@@ -64,7 +67,8 @@ const productBasics = [
   { name: 'order_message', label: 'WhatsApp message with a price', widget: 'text', required: false, hint: 'Pre-filled when someone taps “Order on WhatsApp”. {name} and {price} are filled in.' },
   { name: 'seo', label: 'Search & sharing', widget: 'object', collapsed: true, fields: [
     { name: 'title', label: 'Browser tab / search title', widget: 'string', required: false },
-    { name: 'description', label: 'Search description', widget: 'text', required: false, hint: 'About 150 characters, shown in search results and link previews.' }
+    { name: 'description', label: 'Search description', widget: 'text', required: false, hint: 'About 150 characters, shown in search results and link previews.' },
+    { name: 'share_title', label: 'Preview headline', widget: 'string', required: false, hint: 'Large text on the image shown when this product is shared. Empty = the product name. The product photo is used.' }
   ] }
 ];
 const categories = (scopes.shop ?? []).find(field => field.name === 'categories');

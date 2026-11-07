@@ -1,7 +1,8 @@
 import { mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { render } from './scripts/cms/template.mjs';
 import { PAGES, readContent } from './scripts/cms/content.mjs';
-import { prepareShop, productJsonLd, socialImage } from './scripts/cms/shop.mjs';
+import { prepareShop, productJsonLd } from './scripts/cms/shop.mjs';
+import { pageImage, preview } from './scripts/cms/social.mjs';
 
 // src/index.html is the annotated template; content/*.json holds the text and
 // images edited in the admin app (admin-app/). Together they produce index.html and one
@@ -11,12 +12,13 @@ const content = await readContent();
 const template = await readFile('src/index.html', 'utf8');
 const products = prepareShop(content);
 
-// Per-page data the browser script needs when switching pages (SEO and intro video).
-const pageData = Object.fromEntries(PAGES.map(({ name }) => [name, {
-  seo: content[name]?.seo ?? {},
-  intro: content[name]?.intro ?? {}
-}]));
-if (products[0]?.image?.url) pageData.shop.seo = { ...pageData.shop.seo, image: socialImage(products[0].image.url) };
+// Per-page data: SEO (with the link-preview card, see scripts/cms/social.mjs) and intro video.
+// The browser script uses it too when it updates the page's metadata.
+const pageData = Object.fromEntries(PAGES.map(({ name }) => {
+  const seo = content[name]?.seo ?? {};
+  const card = preview(seo, pageImage(name, content, products));
+  return [name, { seo: { ...seo, image: card.image, imageAlt: card.imageAlt }, intro: content[name]?.intro ?? {} }];
+}));
 const pageDataJson = JSON.stringify({ pages: pageData }).replace(/</g, '\\u003c');
 const cmsDataTag = '<script type="application/json" id="cms-data">{}</script>';
 
@@ -28,7 +30,6 @@ if (!template.includes(cmsDataTag)) {
 const renderWith = product => render(template, { ...content, product: product ?? {} })
   .replace(cmsDataTag, cmsDataTag.replace('{}', pageDataJson));
 const source = renderWith(products[0]);
-await writeFile('index.html', source);
 
 function layout(document) {
   const firstPage = document.indexOf('<div class="page active" id="page-home">');
@@ -78,20 +79,36 @@ function setPageMetadata(document, route, seo) {
     result = result
       .replace(/(<meta\s+property="og:image"\s+content=")[^"]*("\s*\/>)/, (_, a, b) => `${a}${image}${b}`)
       .replace(/(<meta\s+property="og:image:alt"\s+content=")[^"]*("\s*\/>)/, (_, a, b) => `${a}${alt}${b}`)
-      .replace(/(<meta\s+name="twitter:image"\s+content=")[^"]*("\s*\/>)/, (_, a, b) => `${a}${image}${b}`);
+      .replace(/(<meta\s+name="twitter:image"\s+content=")[^"]*("\s*\/>)/, (_, a, b) => `${a}${image}${b}`)
+      .replace(/(<meta\s+name="twitter:image:alt"\s+content=")[^"]*("\s*\/>)/, (_, a, b) => `${a}${alt}${b}`);
   }
-  if (seo.jsonLd) {
-    const json = JSON.stringify(seo.jsonLd, null, 2).replace(/</g, '\\u003c').replace(/^/gm, '      ').trim();
+  for (const data of [].concat(seo.jsonLd || [])) {
+    const json = JSON.stringify(data, null, 2).replace(/</g, '\\u003c').replace(/^/gm, '      ').trim();
     result = result.replace('</head>', () => `    <script type="application/ld+json">\n      ${json}\n    </script>\n  </head>`);
   }
   return result;
 }
 
+// Breadcrumbs for search results: Home › Page (› Product).
+function breadcrumbs(...trail) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [{ name: 'Home', path: '/' }, ...trail].map((crumb, index) => ({
+      '@type': 'ListItem', position: index + 1, name: crumb.name, item: `https://onegridenergies.com${crumb.path}`
+    }))
+  };
+}
+
+// index.html is what "/" serves (and what most shared links point to): give it the Home SEO and card.
+const home = PAGES.find(route => route.name === 'home');
+await writeFile('index.html', setPageMetadata(source, home, pageData.home.seo));
+
 // Fixed pages (Home, About, …, Shop)
 const site = layout(source);
 await Promise.all(PAGES.map(async route => {
   const seo = { ...pageData[route.name].seo };
-  if (route.name === 'shop' && products[0]?.image) seo.imageAlt = products[0].image.alt;
+  if (route.name !== 'home') seo.jsonLd = breadcrumbs({ name: route.label, path: route.path });
   let document = setPageMetadata(`${site.header}${pageMarkup(source, route.name)}${site.footer}`, route, seo);
   if (route.name === 'shop' && !pageData.shop.intro?.video) document = withoutIntro(document);
   await mkdir(route.directory, { recursive: true });
@@ -104,12 +121,17 @@ for (const product of products) {
   const route = { directory: `shop/${product.slug}`, path: product._url };
   const document = renderWith(product);
   const own = layout(document);
+  const productSeo = { share_title: product.name, ...product.seo, title: product.seo?.title || `${product.name} | OneGrid Energies` };
+  const card = preview(productSeo, product.image?.url ? { url: product.image.url, alt: product.image.alt, layout: 'product' } : null);
   const seo = {
-    title: product.seo?.title || `${product.name} | OneGrid Energies`,
+    title: productSeo.title,
     description: product.seo?.description || product.summary || '',
-    image: product.image?.url ? socialImage(product.image.url) : '',
-    imageAlt: product.image?.alt,
-    jsonLd: productJsonLd(product, `https://onegridenergies.com${product._url}`)
+    image: card.image,
+    imageAlt: card.imageAlt,
+    jsonLd: [
+      productJsonLd(product, `https://onegridenergies.com${product._url}`),
+      breadcrumbs({ name: 'Shop', path: '/shop/' }, { name: product.name, path: product._url })
+    ]
   };
   await mkdir(route.directory, { recursive: true });
   await writeFile(`${route.directory}/index.html`, withoutIntro(setPageMetadata(`${own.header}${pageMarkup(document, 'product')}${own.footer}`, route, seo)));
